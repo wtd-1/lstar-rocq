@@ -1,3 +1,9 @@
+(rocq.extraction
+ (prelude Extraction)
+ (extracted_modules Lstar Datatypes 
+    Language Specif ListLemmas List)
+ (theories Stdlib lstar))
+
 (library
  (name lstar)
  (public_name lstar)
