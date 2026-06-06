@@ -1,4 +1,4 @@
-.PHONY: default build install uninstall test clean fmt
+.PHONY: default lstar lstar-rocq install uninstall test clean fmt
 .IGNORE: fmt
 
 OPAM ?= opam
@@ -7,26 +7,26 @@ DUNE ?= dune
 
 default: lstar lstar-rocq
 
-fmt:
+fmt: lstar-rocq
 	$(OPAM_EXEC) $(DUNE) build @fmt
 	$(OPAM_EXEC) $(DUNE) promote
 
 lstar-rocq: clean
 	-$(OPAM_EXEC) $(DUNE) build -p lstar-rocq
-	@cp _build/default/lib/*.ml lib
-	@rm -f lib/Bin*.ml lib/PosDef.ml
-	-@grep "^From lstar Require Import ExtrOptimizations" theories/Extraction.v > /dev/null; \
-	if [ $$? -eq 0 ]; then \
-		rm -f lib/Bool.ml lib/ListDef.ml lib/PeanoNat.ml; \
-	fi
+# 	@cp _build/default/lib/*.ml lib
+# 	@rm -f lib/Bin*.ml lib/PosDef.ml
+# 	-@grep "^From lstar Require Import ExtrOptimizations" theories/Extraction.v > /dev/null; \
+# 	if [ $$? -eq 0 ]; then \
+# 		rm -f lib/Bool.ml lib/ListDef.ml lib/PeanoNat.ml; \
+# 	fi
 
-lstar: fmt lstar-rocq
-	$(OPAM_EXEC) $(DUNE) build -p lstar
+lstar: lstar-rocq
+	$(OPAM_EXEC) $(DUNE) build
 
 clean:
 	$(OPAM_EXEC) $(DUNE) clean
 	git clean -dfXq
-	find lib -maxdepth 1 -type f ! -name "Teacher.ml" ! -name "dune" -delete
+	find lib -maxdepth 1 -type f ! -name "Teacher.ml" ! -name "dune" ! -name "Lstar.mli" ! -name "*.v" -delete
 
 test: fmt
 	$(OPAM_EXEC) $(DUNE) exec lstar.alternating

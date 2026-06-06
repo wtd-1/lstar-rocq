@@ -1,4 +1,4 @@
-# lstar
+# lstar-rocq
 
 A formally-verified implementation of [Dana Angluin's L* algorithm](https://doi.org/10.1016/0890-5401(87)90052-6).
 The implementation is based on [these lecture notes](https://www.tifr.res.in/~shibashis.guha/courses/diwali2021/L-starMalharManagoli.pdf) and can be viewed [here](theories/Lstar.v).
@@ -19,7 +19,7 @@ make # will build lstar-rocq, extract, then build lstar
 ```
 
 Optimizations during extraction (such as using OCaml integers) are enabled by
-default, but can be disabled by commenting out this line in [Extraction.v](theories/Extraction.v):
+default, but can be disabled by commenting out this line in [Extraction.v](lib/Extraction.v):
 
 ```
 From lstar Require Import ExtrOptimizations.
@@ -47,3 +47,5 @@ Input       Expected  Got       Correct
 [111]       false     false     Y
 Accuracy: 8/8
 ```
+
+Examples `lstar.div7` and `lstar.mod3` show the learning of DFAs for decimal strings divisible by 7, and binary strings where the number of `1`s is divisible by 3.
