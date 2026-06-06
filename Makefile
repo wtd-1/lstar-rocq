@@ -57,7 +57,7 @@ docs: clean cleandocs lstar-rocq
 	sed -i 's/..\/odoc.support/odoc.support/g' $(DOCS_PATH)index.html
 	sed -i 's/lstar.//g' $(DOCS_PATH)index.html
 
-push: cleandocs build
+push: cleandocs lstar lstar-rocq
 	@read -p "Commit message: " input; \
 	if [ -z "$input" ]; then \
 		echo "Error: Please provide a valid commit message."; \

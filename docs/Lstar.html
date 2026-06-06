@@ -345,13 +345,28 @@ Updating sets of strings
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <span class="id" title="var">s</span> ⇒ <span class="id" title="keyword">if</span> <span class="id" title="var">str_eq</span> <span class="id" title="var">s</span> <span class="id" title="var">k</span> <span class="id" title="keyword">then</span> <span class="id" title="var">b</span> <span class="id" title="keyword">else</span> <span class="id" title="var">S</span> <span class="id" title="var">s</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Notation</span> &quot;s [ k := v ]" := (<span class="id" title="var">str_upd</span> <span class="id" title="var">s</span> <span class="id" title="var">k</span> <span class="id" title="var">v</span>).<br/>
+
+<br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">update_neq</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">k</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> ≠ <span class="id" title="var">y</span> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">str_upd</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">k</span> <span class="id" title="var">y</span> = <span class="id" title="var">S</span> <span class="id" title="var">y</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">S</span>[<span class="id" title="var">x</span> := <span class="id" title="var">k</span>] <span class="id" title="var">y</span> = <span class="id" title="var">S</span> <span class="id" title="var">y</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">update_eq</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">k</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">str_upd</span> <span class="id" title="var">S</span> <span class="id" title="var">x</span> <span class="id" title="var">k</span> <span class="id" title="var">x</span> = <span class="id" title="var">k</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">S</span>[<span class="id" title="var">x</span> := <span class="id" title="var">k</span>] <span class="id" title="var">x</span> = <span class="id" title="var">k</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">usimpl</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="keyword">lazymatch</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [|- <span class="id" title="keyword">context</span>[<span class="id" title="var">str_upd</span> <span class="id" title="var">_</span> ?<span class="id" title="var">x</span> <span class="id" title="var">_</span> ?<span class="id" title="var">x</span>]] ⇒ <span class="id" title="tactic">rewrite</span> <span class="id" title="var">update_eq</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [<span class="id" title="var">H</span>: <span class="id" title="keyword">context</span>[<span class="id" title="var">str_upd</span> <span class="id" title="var">_</span> ?<span class="id" title="var">x</span> <span class="id" title="var">_</span> ?<span class="id" title="var">x</span>] |- <span class="id" title="var">_</span>] ⇒ <span class="id" title="tactic">rewrite</span> <span class="id" title="var">update_eq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [|- <span class="id" title="keyword">context</span>[<span class="id" title="var">str_upd</span> <span class="id" title="var">_</span> ?<span class="id" title="var">x</span> <span class="id" title="var">_</span> ?<span class="id" title="var">y</span>]] ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">update_neq</span> <span class="id" title="tactic">by</span> (<span class="id" title="tactic">discriminate</span> || <span class="id" title="tactic">assumption</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| [<span class="id" title="var">H</span>: <span class="id" title="keyword">context</span>[<span class="id" title="var">str_upd</span> <span class="id" title="var">_</span> ?<span class="id" title="var">x</span> <span class="id" title="var">_</span> ?<span class="id" title="var">y</span>] |- <span class="id" title="var">_</span>] ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="tactic">rewrite</span> <span class="id" title="var">update_neq</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span> <span class="id" title="tactic">by</span> (<span class="id" title="tactic">discriminate</span> || <span class="id" title="tactic">assumption</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">try</span> <span class="id" title="var">easy</span>; <span class="id" title="tactic">auto</span>.<br/>
 
 <br/>
 </div>
@@ -360,9 +375,50 @@ Updating sets of strings
 Given a counter-example, we can always find q_new and t
     to add to Q, T such that Q' and T' are finite and Q' is
     separable wrt T' 
+<div class="paragraph"> </div>
+
+ Define p_i = delta∗(ε, w1w2 ... wi) 
 </div>
 <div class="code">
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">find_separable</span> :<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">p</span> (<span class="id" title="var">H</span> : <span class="id" title="var">HypothesisDFA</span>) (<span class="id" title="var">w</span> : <span class="id" title="var">string</span>) (<span class="id" title="var">i</span> : <span class="id" title="var">nat</span>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">run</span> (<span class="id" title="var">make_dfa</span> <span class="id" title="var">H</span>) (<span class="id" title="var">firstn</span> <span class="id" title="var">i</span> <span class="id" title="var">w</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We say a state p_i is correct if p_i w(i+1) ... w_m ∈ L ⇐⇒ w ∈ L. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">correct</span> (<span class="id" title="var">H</span> : <span class="id" title="var">HypothesisDFA</span>) (<span class="id" title="var">w</span> : <span class="id" title="var">string</span>) (<span class="id" title="var">i</span> : <span class="id" title="var">nat</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">L.member</span> (<span class="id" title="var">proj1_sig</span> (<span class="id" title="var">p</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span> <span class="id" title="var">i</span>) ++ <span class="id" title="var">skipn</span> <span class="id" title="var">i</span> <span class="id" title="var">w</span>) = <span class="id" title="var">L.member</span> <span class="id" title="var">w</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now, ε is correct trivially, and p_m is not correct since w is a counterexample. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <span class="id" title="var">eps_correct</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span>, <span class="id" title="var">correct</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span> 0.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">full_not_correct</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">Hce</span> : <span class="id" title="var">accept_string</span> (<span class="id" title="var">make_dfa</span> <span class="id" title="var">H</span>) <span class="id" title="var">w</span> ≠ <span class="id" title="var">member</span> <span class="id" title="var">w</span>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;¬ <span class="id" title="var">correct</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span> (<span class="id" title="var">length</span> <span class="id" title="var">w</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Correctness is decidable 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">correct_dec</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span> <span class="id" title="var">i</span>, {<span class="id" title="var">correct</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span> <span class="id" title="var">i</span>} + {~ <span class="id" title="var">correct</span> <span class="id" title="var">H</span> <span class="id" title="var">w</span> <span class="id" title="var">i</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">find_separable</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">H</span> : <span class="id" title="var">HypothesisDFA</span>) <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">w</span> : <span class="id" title="var">string</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
@@ -370,8 +426,8 @@ Given a counter-example, we can always find q_new and t
 &nbsp;&nbsp;{ <span class="id" title="var">q_new</span> : <span class="id" title="var">string</span> &amp;<br/>
 &nbsp;&nbsp;{ <span class="id" title="var">t</span>     : <span class="id" title="var">string</span> &amp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">H</span>.(<span class="id" title="var">Q</span>) <span class="id" title="var">q_new</span> = <span class="id" title="var">false</span>) ×<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">Q'</span> := <span class="id" title="var">str_upd</span> <span class="id" title="var">H</span>.(<span class="id" title="var">Q</span>) <span class="id" title="var">q_new</span> <span class="id" title="var">true</span> <span class="id" title="tactic">in</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">T'</span> := <span class="id" title="var">str_upd</span> <span class="id" title="var">H</span>.(<span class="id" title="var">T</span>) <span class="id" title="var">t</span> <span class="id" title="var">true</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">Q'</span> := <span class="id" title="var">H</span>.(<span class="id" title="var">Q</span>) [<span class="id" title="var">q_new</span> := <span class="id" title="var">true</span>] <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">T'</span> := <span class="id" title="var">H</span>.(<span class="id" title="var">T</span>) [<span class="id" title="var">t</span> := <span class="id" title="var">true</span>] <span class="id" title="tactic">in</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">separable</span> <span class="id" title="var">Q'</span> <span class="id" title="var">T'</span> ×<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">finite</span> <span class="id" title="var">Q'</span> ×<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">finite</span> <span class="id" title="var">T'</span> }}.<br/>
@@ -411,7 +467,7 @@ We can add a representative of q to Q to get a new
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">finQ</span> : <span class="id" title="var">finite</span> <span class="id" title="var">Q</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">finT</span> : <span class="id" title="var">finite</span> <span class="id" title="var">T</span>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="var">Q'</span> : <span class="id" title="var">string</span> → <span class="id" title="var">bool</span> &amp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="var">Q'</span> = <span class="id" title="var">str_upd</span> <span class="id" title="var">Q</span> (<span class="id" title="var">q</span> ++ [<span class="id" title="var">a</span>]) <span class="id" title="var">true</span>) + (<span class="id" title="var">Q'</span> = <span class="id" title="var">Q</span>)) ×<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((<span class="id" title="var">Q'</span> = <span class="id" title="var">Q</span> [<span class="id" title="var">q</span> ++ [<span class="id" title="var">a</span>] := <span class="id" title="var">true</span>]) + (<span class="id" title="var">Q'</span> = <span class="id" title="var">Q</span>)) ×<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">separable</span> <span class="id" title="var">Q'</span> <span class="id" title="var">T</span> ×<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">finite</span> <span class="id" title="var">Q'</span> ×<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> <span class="id" title="var">s</span>, <span class="id" title="var">Q</span> <span class="id" title="var">s</span> = <span class="id" title="var">true</span> → <span class="id" title="var">Q'</span> <span class="id" title="var">s</span> = <span class="id" title="var">true</span>) ×<br/>
@@ -452,20 +508,6 @@ Adds a finite number of strings to Q to make it closed wrt T
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">finite</span> <span class="id" title="var">Q''</span> ×<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> <span class="id" title="var">s</span>, <span class="id" title="var">Q'</span> <span class="id" title="var">s</span> = <span class="id" title="var">true</span> → <span class="id" title="var">Q''</span> <span class="id" title="var">s</span> = <span class="id" title="var">true</span>) }.<br/>
 <span class="id" title="keyword">Defined</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-Given a list of bool lists that contains no duplicates, where
-    all of the lists have length <span class="inlinecode"><span class="id" title="var">n</span></span>, the length of the outer list
-    is bounded by 2<sup>n</sup>. 
-</div>
-<div class="code">
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">NoDup_boollist_length</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">vecs</span> : <span class="id" title="var">list</span> (<span class="id" title="var">list</span> <span class="id" title="var">bool</span>)) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">NoDup</span> <span class="id" title="var">vecs</span> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> <span class="id" title="var">v</span>, <span class="id" title="var">In</span> <span class="id" title="var">v</span> <span class="id" title="var">vecs</span> → <span class="id" title="var">length</span> <span class="id" title="var">v</span> = <span class="id" title="var">n</span>) →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">length</span> <span class="id" title="var">vecs</span> ≤ <span class="id" title="var">Nat.pow</span> 2 <span class="id" title="var">n</span>.<br/>
 
 <br/>
 </div>
