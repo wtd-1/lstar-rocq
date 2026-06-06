@@ -24,11 +24,20 @@
  (description "A formally-verified implementation of the L* algorithm in Rocq")
  (depends
    (dune (>= 3.21.0))
-   (rocq-prover (>= 9.1.0))))
+   (rocq-core (>= 9.1.0))
+   rocq-prover
+   rocq-stdlib
+   rocq-runtime))
 
 (package
  (name lstar)
  (synopsis "L* extracted from lstar-rocq")
  (description "A formally-verified implementation of the L* algorithm")
  (depends
-   (dune (>= 3.21.0))))
+   (dune (>= 3.21.0))
+   (rocq-core (>= 9.1.0))
+   rocq-prover
+   rocq-stdlib
+   rocq-runtime
+   lstar-rocq))
+
