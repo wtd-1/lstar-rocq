@@ -320,17 +320,6 @@ Proof.
     destruct str_eq; now subst.
 Qed.
 
-Ltac usimpl :=
-    repeat lazymatch goal with
-    | [|- context[str_upd _ ?x _ ?x]] => rewrite update_eq
-    | [H: context[str_upd _ ?x _ ?x] |- _] => rewrite update_eq in H
-    | [|- context[str_upd _ ?x _ ?y]] =>
-        try rewrite update_neq by (discriminate || assumption)
-    | [H: context[str_upd _ ?x _ ?y] |- _] =>
-        try rewrite update_neq in H by (discriminate || assumption)
-    end;
-    try easy; auto.
-
 (** Given a counter-example, we can always find q_new and t
     to add to Q, T such that Q' and T' are finite and Q' is
     separable wrt T' *)
