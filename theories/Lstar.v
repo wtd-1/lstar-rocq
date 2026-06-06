@@ -1,4 +1,4 @@
-(** https://www.tifr.res.in/~shibashis.guha/courses/diwali2021/L-starMalharManagoli.pdf *)
+ (** https://www.tifr.res.in/~shibashis.guha/courses/diwali2021/L-starMalharManagoli.pdf *)
 
 From lstar Require Import Language DFA ListLemmas.
 From Stdlib Require Import Classes.RelationClasses.
@@ -303,25 +303,70 @@ Defined.
 Definition str_upd (S : string -> bool) k b :=
     fun s => if str_eq s k then b else S s.
 
+Notation "s [ k := v ]" := (str_upd s k v).
+
 Lemma update_neq : forall S x y k,
     x <> y ->
-    str_upd S x k y = S y.
+    S[x := k] y = S y.
 Proof.
     intros. unfold str_upd.
     destruct str_eq; now subst.
 Qed.
 
 Lemma update_eq : forall S x k,
-    str_upd S x k x = k.
+    S[x := k] x = k.
 Proof.
     intros. unfold str_upd.
     destruct str_eq; now subst.
 Qed.
 
+Ltac usimpl :=
+    repeat lazymatch goal with
+    | [|- context[str_upd _ ?x _ ?x]] => rewrite update_eq
+    | [H: context[str_upd _ ?x _ ?x] |- _] => rewrite update_eq in H
+    | [|- context[str_upd _ ?x _ ?y]] =>
+        try rewrite update_neq by (discriminate || assumption)
+    | [H: context[str_upd _ ?x _ ?y] |- _] =>
+        try rewrite update_neq in H by (discriminate || assumption)
+    end;
+    try easy; auto.
+
 (** Given a counter-example, we can always find q_new and t
     to add to Q, T such that Q' and T' are finite and Q' is
     separable wrt T' *)
-Lemma find_separable :
+
+(** Define p_i = delta∗(ε, w1w2 ... wi) *)
+Definition p (H : HypothesisDFA) (w : string) (i : nat) :=
+    run (make_dfa H) (firstn i w).
+
+(** We say a state p_i is correct if p_i w_(i+1) ... w_m ∈ L ⇐⇒ w ∈ L. *)
+Definition correct (H : HypothesisDFA) (w : string) (i : nat) : Prop :=
+    L.member (proj1_sig (p H w i) ++ skipn i w) = L.member w.
+
+(** Now, ε is correct trivially, and p_m is not correct since w is a counterexample. *)
+Example eps_correct : forall H w, correct H w 0.
+Proof. intros. reflexivity. Qed.
+
+Example full_not_correct : forall H w
+    (* w is a counterexample *)
+    (Hce : accept_string (make_dfa H) w <> member w),
+    ~ correct H w (length w).
+Proof.
+    intros H w Hce Contra.
+    unfold correct, p in Contra.
+    rewrite firstn_all, skipn_all, app_nil_r in Contra.
+    apply Hce. unfold accept_string, accept.
+    cbn [make_dfa]. assumption.
+Qed.
+
+(** Correctness is decidable *)
+Lemma correct_dec : forall H w i, {correct H w i} + {~ correct H w i}.
+Proof.
+    intros. unfold correct. destruct member, member;
+    decide equality.
+Qed.
+
+Theorem find_separable :
   forall (H : HypothesisDFA) (* Q is closed and separable wrt T *)
          (w : string)
          (* w is a counterexample *)
@@ -329,86 +374,68 @@ Lemma find_separable :
   { q_new : string &
   { t     : string &
       (H.(Q) q_new = false) *
-      let Q' := str_upd H.(Q) q_new true in
-      let T' := str_upd H.(T) t true in
+      let Q' := H.(Q) [q_new := true] in
+      let T' := H.(T) [t := true] in
       separable Q' T' *
       finite Q' *
       finite T' }}.
     intros.
     (* Define p_i = delta∗(ε, w1w2 ... wi) *)
-    set (p := fun i => run (make_dfa H) (firstn i w)).
+    set (p := p H w).
     (* We say a state p_i is correct if p_i w_(i+1) ... w_m ∈ L ⇐⇒ w ∈ L. *)
-    set (correct (i : nat) :=
-            L.member (proj1_sig (p i) ++ skipn i w) =
-            L.member w).
-    (* Now, ε is correct trivially, and p_m is not correct since w is a counterexample. *)
-    assert (ExEps: correct 0) by reflexivity.
-    assert (ExFull: ~ correct (length w)). {
-        intro Contra. unfold correct, p in Contra.
-        rewrite firstn_all, skipn_all, app_nil_r in Contra.
-        apply Hce. unfold accept_string, accept.
-        cbn [make_dfa]. assumption.
-    }
-    (* Thus, there is some k such that p_(k−1) is correct but p_k is not *)
+    set (correct := correct H w).
+    (* There is some k such that p_(k−1) is correct but p_k is not *)
     assert (ExK: {k : nat | correct k /\ ~ correct (S k)}). {
-        assert (correct_dec : forall i, {correct i} + {~ correct i}). {
-            intros. unfold correct. destruct member, member;
-                decide equality.
-        }
+        pose proof (eps_correct H w).
+        pose proof (full_not_correct H w Hce). 
         induction (length w) as [| n IH].
           contradiction.
-          destruct (correct_dec n) as [Hn | Hn].
+          destruct (correct_dec H w n) as [Hn | Hn].
             now exists n.
             destruct (IH Hn) as [k [Hk HSk]]. now exists k.
     } destruct ExK as (k & KCorrect & SKIncorrect).
     (* Then t = w_(k+1) ... w_m distinguishes p_k and p_(k−1)w_k. *)
     assert (Dist: member (proj1_sig (p k) ++ skipn k w) <>
                   member (proj1_sig (p (S k)) ++ skipn (S k) w)). {
-        unfold correct in KCorrect, SKIncorrect.
+        unfold correct, Lstar.correct, p, Lstar.p in *.
         rewrite KCorrect. now symmetry.
     }
     (* Since p_(k−1)w_k ≡T p_k and p_k ∈ Q, by separability of Q,
        p_(k−1)w_k is T-distinguishable from every element of Q\p_k. *)
     assert (Hlt : k < length w). {
-        destruct (Nat.le_gt_cases (length w) k) as [Hle | Hlt].
-        - exfalso. apply SKIncorrect.
-          unfold correct, p in *.
-          rewrite firstn_all2 in * by lia.
-          rewrite skipn_all2 in * by lia.
-          rewrite app_nil_r in *. assumption.
-        - assumption.
+        destruct (Nat.le_gt_cases (length w) k) as [Hle |]; [|assumption].
+        destruct SKIncorrect.
+        unfold correct, Lstar.correct, p, Lstar.p in *.
+        now rewrite firstn_all2, skipn_all2, app_nil_r in * by lia.
     }
     (* Retrieve w[k] *)
     assert {wk | nth_error w k = Some wk}. {
-        destruct (nth_error w k) eqn:He.
-        - now exists t0.
-        - rewrite nth_error_None in He. lia.
-    } destruct X as (wk & ?).
+        destruct (nth_error w k) eqn:E.
+            now exists t0.
+        rewrite nth_error_None in E. lia.
+    } destruct X as (wk & Hwk).
     (* q_new := p_k w_k *)
     (* t := w[S k:] *)
     exists (proj1_sig (p k) ++ [wk]), (skipn (S k) w).
-    destruct (nth_error_split_sig _ _ _ e) as (l1 & l2 & Hw & Hlen).
+    destruct (nth_error_split_sig _ _ _ Hwk) as (l1 & l2 & Hw & Hlen).
     assert (Hfirstn : firstn (S k) w = firstn k w ++ [wk]). {
-        subst w.
-        rewrite firstn_app, Hlen, Nat.sub_succ_l by lia.
         subst.
-        rewrite firstn_all2 by lia.
-        rewrite firstn_cons. rewrite Nat.sub_diag.
-        rewrite firstn_0. now rewrite firstn_len_app.
+        now rewrite firstn_app, Nat.sub_succ_l,
+                    firstn_all2, firstn_cons, Nat.sub_diag,
+                    firstn_0, firstn_len_app by lia.
     }
     (* Perform a single step of the current DFA *)
     assert (run_step : forall i a, 
           run (make_dfa H) (firstn i w ++ [a]) = 
           (make_dfa H).(transition _) (run (make_dfa H) (firstn i w)) a). {
       intros. unfold run.
-      rewrite fold_left_app. reflexivity.
+      now rewrite fold_left_app.
     }
     assert (HTeq : H.(T) [proj1_sig (p k) ++ [wk] == proj1_sig (p (S k))]). {
-        unfold p. rewrite Hfirstn, run_step. simpl.
+        unfold p, Lstar.p. rewrite Hfirstn, run_step. simpl.
         set (q := run (make_dfa H) (firstn k w)).
-        destruct (delta H.(Q) H.(T) H.(clos) (proj1_sig q)
-                  wk (proj2_sig q)) as [q' [Hq' Heq]].
-        now symmetry.
+        now destruct (delta H.(Q) H.(T) H.(clos) (proj1_sig q)
+                      wk (proj2_sig q)) as [q' [Hq' Heq]].
     }
     repeat split.
     - unfold p. pose proof H.(sep). unfold separable in X.
@@ -425,14 +452,12 @@ Lemma find_separable :
     - intros u v Qu Qv Neq Contra.
       unfold str_upd in Qu, Qv.
       destruct (str_eq u (proj1_sig (p k) ++ [wk])),
-               (str_eq v (proj1_sig (p k) ++ [wk])); try subst u; try subst v.
-      + now apply Neq.
+               (str_eq v (proj1_sig (p k) ++ [wk])); try subst u; try subst v; auto.
       + apply (H.(sep) (proj1_sig (p (S k))) v (proj2_sig (p (S k))) Qv).
           intro Contra'. subst v. unfold T_equiv in Contra.
           apply Dist.
           specialize (Contra (skipn (S k) w) (update_eq _ _ _)).
-          rewrite <- app_assoc in Contra. rewrite <- Contra.
-          now erewrite skipn_S_wk.
+          now erewrite <- Contra, <- app_assoc, skipn_S_wk.
         transitivity (proj1_sig (p k) ++ [wk]).
           now symmetry.
         eapply refined_distinguish; [| apply Contra].
@@ -441,34 +466,34 @@ Lemma find_separable :
           intro Contra'. subst u. unfold T_equiv in Contra.
           apply Dist.
           specialize (Contra (skipn (S k) w) (update_eq _ _ _)).
-          rewrite <- app_assoc in Contra. rewrite Contra.
-          now erewrite skipn_S_wk.
+          now erewrite Contra, <- app_assoc, skipn_S_wk.
         transitivity (proj1_sig (p k) ++ [wk]).
           now symmetry.
         eapply refined_distinguish; [| symmetry; apply Contra].
         intros. unfold str_upd. now destruct str_eq.
       + apply (H.(sep) u v Qu Qv Neq).
-        eapply refined_distinguish. 2: apply Contra.
+        eapply refined_distinguish; [|apply Contra].
         intros t Ht. unfold str_upd.
         now destruct (str_eq t (skipn (S k) w)).
     - unfold finite. destruct H.(fin_Q) as (l & ND & X).
       exists ((proj1_sig (p k) ++ [wk]) :: l). split.
-        apply NoDup_cons; auto. intro Contra.
-        rewrite <- X in Contra.
-        destruct (str_eq (proj1_sig (p k) ++ [wk]) (proj1_sig (p (S k))))
+        apply NoDup_cons; auto.
+        + intro Contra.
+          rewrite <- X in Contra.
+          destruct (str_eq (proj1_sig (p k) ++ [wk]) (proj1_sig (p (S k))))
             as [Heq | Hneq].
             apply Dist. rewrite <- Heq, <- app_assoc.
-            unfold app at 3. now rewrite <- skipn_S_wk.
-        now apply (H.(sep) _ _ Contra (proj2_sig (p (S k)))).
-      split; intros.
-      -- destruct (str_eq s (proj1_sig (p k) ++ [wk])).
+            unfold app. now rewrite <- skipn_S_wk.
+          now apply (H.(sep) _ _ Contra (proj2_sig (p (S k)))).
+        + split; intros.
+        -- destruct (str_eq s (proj1_sig (p k) ++ [wk])).
             subst. now constructor.
             apply in_cons, X. now rewrite update_neq in H0.
-      -- simpl in H0. destruct H0. subst.
+        -- simpl in H0. destruct H0. subst.
             apply update_eq.
-         destruct (str_eq s (proj1_sig (p k) ++ [wk])). subst.
+            destruct (str_eq s (proj1_sig (p k) ++ [wk])). subst.
             apply update_eq.
-         rewrite update_neq. now apply X. now symmetry.
+            rewrite update_neq. now apply X. now symmetry.
     - unfold finite. destruct H.(fin_T) as (l & ND & X).
       exists ((skipn (S k) w) :: l). split.
         apply NoDup_cons; auto. intro Contra.
@@ -476,21 +501,21 @@ Lemma find_separable :
         destruct (str_eq (proj1_sig (p k) ++ [wk]) (proj1_sig (p (S k))))
             as [Heq | Hneq].
             apply Dist. rewrite <- Heq, <- app_assoc.
-            unfold app at 3. now rewrite <- skipn_S_wk.
+            unfold app. now rewrite <- skipn_S_wk.
         apply Dist.
         specialize (HTeq (skipn (S k) w) Contra).
-        rewrite <- app_assoc in HTeq.
-        rewrite <- HTeq. unfold app at 3.
+        rewrite <- HTeq, <- app_assoc.
+        unfold app.
         now rewrite <- skipn_S_wk.
       split; intros.
-      -- destruct (str_eq s (skipn (S k) w)).
-            subst. now constructor.
-            apply in_cons, X. now rewrite update_neq in H0.
-      -- simpl in H0. destruct H0. subst.
-            apply update_eq.
-         destruct (str_eq s (skipn (S k) w)). subst.
-            apply update_eq.
-         rewrite update_neq. now apply X. now symmetry.
+      + destruct (str_eq s (skipn (S k) w)).
+           subst. now constructor.
+           apply in_cons, X. now rewrite update_neq in H0.
+      + simpl in H0. destruct H0. subst.
+           apply update_eq.
+        destruct (str_eq s (skipn (S k) w)). subst.
+           apply update_eq.
+        rewrite update_neq. now apply X. now symmetry.
 Defined.
 
 (** Lemma 3. If Q is separable with respect to T, it is possible to
@@ -506,7 +531,7 @@ Lemma find_representative : forall Q T
     (u : string),
     { r | Q r = true /\ T [u == r] } +
     { forall r, Q r = true -> ~ T [u == r] }.
-Proof.
+Proof with try easy.
     intros Q T finQ finT u.
     destruct finQ as (Ql & HQl).
     destruct (List.find (fun q =>
@@ -516,11 +541,10 @@ Proof.
     - apply List.find_some in Hfind.
       destruct Hfind as [HIn Hcheck].
       left. exists s.
-      destruct (Bool.eqb (Q s) true) eqn:E.
-        destruct (T_equiv_dec T u s finT) as [Heq | Hneq].
-        split.
-            now apply Bool.eqb_prop in E. assumption.
-        discriminate. discriminate.
+      destruct (Bool.eqb (Q s) true) eqn:E...
+        destruct (T_equiv_dec T u s finT) as [Heq | Hneq]...
+        split...
+        now apply Bool.eqb_prop in E.
     - right. intros r Hr Contra.
       apply List.find_none with (x := r) in Hfind.
       + destruct (Bool.eqb (Q r) true) eqn:E.
@@ -537,12 +561,12 @@ Lemma close_step : forall Q T q (a : s.t)
     (finQ : finite Q)
     (finT : finite T),
     { Q' : string -> bool &
-        ((Q' = str_upd Q (q ++ [a]) true) + (Q' = Q)) *
+        ((Q' = Q [q ++ [a] := true]) + (Q' = Q)) *
         separable Q' T *
         finite Q' *
         (forall s, Q s = true -> Q' s = true) *
         { r | Q' r = true /\ T [(q ++ [a]) == r] } }.
-Proof.
+Proof with try easy.
     intros Q T q a sep finQ finT.
     destruct (find_representative Q T finQ finT (q ++ [a])) as [rep | norep].
     - exists Q. repeat split; auto.
@@ -565,16 +589,12 @@ Proof.
             now left.
           right. now apply HQl.
         * intro HIn. unfold str_upd.
-          destruct (str_eq s (q ++ [a])).
-            reflexivity.
-          apply HQl. destruct HIn; subst.
-            now destruct n.
-            assumption.
+          destruct (str_eq s (q ++ [a]))...
+          apply HQl. destruct HIn; subst...
       + intros s Hs. unfold str_upd.
         now destruct (str_eq s (q ++ [a])).
-      + exists (q ++ [a]). split.
-            apply update_eq.
-        reflexivity.
+      + exists (q ++ [a]). split...
+        apply update_eq.
 Defined.
 
 (** If Q is not closed wrt T, we can find a q in Q such that
@@ -621,96 +641,6 @@ Definition union_closed_loop :
         apply Some. exists Q'''. repeat split; auto.
     apply None.
 Defined.
-
-(** Given a list of bool lists that contains no duplicates, where
-    all of the lists have length [n], the length of the outer list
-    is bounded by #2<sup>n</sup>#. *)
-Lemma NoDup_boollist_length : forall (vecs : list (list bool)) (n : nat),
-    NoDup vecs ->
-    (forall v, In v vecs -> length v = n) ->
-    length vecs <= Nat.pow 2 n.
-Proof.
-  intros vecs n. revert vecs.
-  induction n as [| n' IHn]; intros vecs HND Hlen.
-  - destruct vecs as [| v [| v' ?]]; simpl; try lia.
-    exfalso.
-      replace v with (@nil bool) in * by
-        (symmetry; apply length_zero_iff_nil; apply Hlen; now left).
-      replace v' with (@nil bool) in * by
-        (symmetry; apply length_zero_iff_nil; apply Hlen; right; now left).
-      subst. apply NoDup_cons_iff in HND. destruct HND. apply H. now left.
-  - simpl. rewrite Nat.add_0_r.
-    set (vt := filter (fun v => match v with true  :: _ => true | _ => false end) vecs).
-    set (vf := filter (fun v => match v with false :: _ => true | _ => false end) vecs).
-    assert (Hpart : length vecs = length vt + length vf). {
-      unfold vt, vf. clear HND IHn.
-      induction vecs as [| v vs IHvs].
-        reflexivity.
-      assert (Hvl : length v = S n') by (apply Hlen; now left).
-        destruct v; simpl in Hvl; try discriminate; destruct b;
-        simpl; rewrite IHvs; try lia;
-        intros u Hu; apply Hlen; now right. }
-    assert (HltT : length (map (@tl bool) vt) <= Nat.pow 2 n'). {
-        apply IHn.
-        - (* tl is injective on vt since all heads are true *)
-            unfold vt. clear - HND Hlen.
-            induction vecs.
-                constructor.
-            simpl. destruct a eqn:Hv.
-            (* v = [] : length 0 = S n', contradiction *)
-                exfalso. specialize (Hlen nil ltac:(now left)). simpl in Hlen. lia.
-            destruct b.
-            + (* v = true :: _ : goes into vt *)
-                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
-                simpl. constructor.
-                * intro HIn. apply in_map_iff in HIn.
-                  destruct HIn as (w & Htl & HwIn).
-                  apply filter_In in HwIn. destruct HwIn as [HwVs Hwh].
-                  destruct w. discriminate. destruct b;
-                    simpl in Htl; subst.
-                  now apply Hni. discriminate.
-                * apply IHvecs; auto.
-                  intros. apply Hlen. now right.
-            + (* v = false :: _ : filtered out *)
-                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
-                apply IHvecs; auto.
-                intros. apply Hlen. now right.
-        - intros v Hv. apply in_map_iff in Hv.
-            destruct Hv as (u & <- & HuIn).
-            apply filter_In in HuIn. destruct HuIn as [HuV Huh].
-            assert (length u = S n') by (apply Hlen; exact HuV).
-            destruct u; simpl in *; lia. }
-    assert (HltF : length (map (@tl bool) vf) <= Nat.pow 2 n'). {
-        apply IHn.
-        - (* tl is injective on vf since all heads are true *)
-            unfold vf. clear - HND Hlen.
-            induction vecs.
-                constructor.
-            simpl. destruct a eqn:Hv.
-            (* v = [] : length 0 = S n', contradiction *)
-                exfalso. specialize (Hlen nil ltac:(now left)). simpl in Hlen. lia.
-            destruct b.
-            + (* v = true :: _ : filtered out *)
-                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
-                    apply IHvecs; auto. intros. apply Hlen.
-                    now right.
-            + (* v = false :: _ : goes into vf *)
-                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
-                simpl. constructor.
-                    intro HIn. apply in_map_iff in HIn.
-                    destruct HIn as (w & Htl & HwIn).
-                    apply filter_In in HwIn. destruct HwIn as [HwVs Hwh].
-                    destruct w; try discriminate. destruct b. discriminate.
-                    simpl in Htl. subst. now apply Hni. 
-                apply IHvecs; auto.
-                  intros. apply Hlen. now right.
-        - intros v Hv. apply in_map_iff in Hv.
-            destruct Hv as (u & <- & HuIn).
-            apply filter_In in HuIn. destruct HuIn as [HuV Huh].
-            assert (length u = S n') by auto.
-            destruct u; simpl in *; lia. }
-        rewrite length_map in HltT, HltF. lia.
-Qed.
 
 (** union_closed_loop always returns Some with enough fuel *)
 Lemma loop_terminates : forall n Q Q' T
@@ -852,8 +782,8 @@ Fixpoint lstar_opt (fuel : nat) (H : HypothesisDFA)
             by now apply equiv_query_ce.
         destruct (find_separable H s Hce) as
             (q_new & t & HQnew & (sep' & finQ') & finT').
-        set (Q' := str_upd H.(Q) q_new true).
-        set (T' := str_upd H.(T) t true).
+        set (Q' := H.(Q) [q_new := true]).
+        set (T' := H.(T) [t := true]).
         destruct (union_closed Q' T' sep' finQ' finT') as
             (Q'' & ((clos'' & sep'') & finQ'') & sub'').
         assert (eps_in_Q'' : Q'' nil = true). {

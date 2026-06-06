@@ -1,4 +1,6 @@
 From Stdlib Require Import List.
+From Stdlib Require Import PeanoNat.
+From Stdlib Require Import Lia.
 
 Lemma firstn_len_app : forall X (l1 l2 : list X),
     firstn (length l1) (l1 ++ l2) = l1.
@@ -58,3 +60,94 @@ Proof.
     - specialize (IHl H). destruct IHl as (x & InX & Fx).
       exists x. split. now right. assumption.
 Defined.
+
+
+(** Given a list of bool lists that contains no duplicates, where
+    all of the lists have length [n], the length of the outer list
+    is bounded by #2<sup>n</sup>#. *)
+Lemma NoDup_boollist_length : forall (vecs : list (list bool)) (n : nat),
+    NoDup vecs ->
+    (forall v, In v vecs -> length v = n) ->
+    length vecs <= Nat.pow 2 n.
+Proof.
+  intros vecs n. revert vecs.
+  induction n as [| n' IHn]; intros vecs HND Hlen.
+  - destruct vecs as [| v [| v' ?]]; simpl; try lia.
+    exfalso.
+      replace v with (@nil bool) in * by
+        (symmetry; apply length_zero_iff_nil; apply Hlen; now left).
+      replace v' with (@nil bool) in * by
+        (symmetry; apply length_zero_iff_nil; apply Hlen; right; now left).
+      subst. apply NoDup_cons_iff in HND. destruct HND. apply H. now left.
+  - simpl. rewrite Nat.add_0_r.
+    set (vt := filter (fun v => match v with true  :: _ => true | _ => false end) vecs).
+    set (vf := filter (fun v => match v with false :: _ => true | _ => false end) vecs).
+    assert (Hpart : length vecs = length vt + length vf). {
+      unfold vt, vf. clear HND IHn.
+      induction vecs as [| v vs IHvs].
+        reflexivity.
+      assert (Hvl : length v = S n') by (apply Hlen; now left).
+        destruct v; simpl in Hvl; try discriminate; destruct b;
+        simpl; rewrite IHvs; try lia;
+        intros u Hu; apply Hlen; now right. }
+    assert (HltT : length (map (@tl bool) vt) <= Nat.pow 2 n'). {
+        apply IHn.
+        - (* tl is injective on vt since all heads are true *)
+            unfold vt. clear - HND Hlen.
+            induction vecs.
+                constructor.
+            simpl. destruct a eqn:Hv.
+            (* v = [] : length 0 = S n', contradiction *)
+                exfalso. specialize (Hlen nil ltac:(now left)). simpl in Hlen. lia.
+            destruct b.
+            + (* v = true :: _ : goes into vt *)
+                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
+                simpl. constructor.
+                * intro HIn. apply in_map_iff in HIn.
+                  destruct HIn as (w & Htl & HwIn).
+                  apply filter_In in HwIn. destruct HwIn as [HwVs Hwh].
+                  destruct w. discriminate. destruct b;
+                    simpl in Htl; subst.
+                  now apply Hni. discriminate.
+                * apply IHvecs; auto.
+                  intros. apply Hlen. now right.
+            + (* v = false :: _ : filtered out *)
+                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
+                apply IHvecs; auto.
+                intros. apply Hlen. now right.
+        - intros v Hv. apply in_map_iff in Hv.
+            destruct Hv as (u & <- & HuIn).
+            apply filter_In in HuIn. destruct HuIn as [HuV Huh].
+            assert (length u = S n') by (apply Hlen; exact HuV).
+            destruct u; simpl in *; lia. }
+    assert (HltF : length (map (@tl bool) vf) <= Nat.pow 2 n'). {
+        apply IHn.
+        - (* tl is injective on vf since all heads are true *)
+            unfold vf. clear - HND Hlen.
+            induction vecs.
+                constructor.
+            simpl. destruct a eqn:Hv.
+            (* v = [] : length 0 = S n', contradiction *)
+                exfalso. specialize (Hlen nil ltac:(now left)). simpl in Hlen. lia.
+            destruct b.
+            + (* v = true :: _ : filtered out *)
+                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
+                    apply IHvecs; auto. intros. apply Hlen.
+                    now right.
+            + (* v = false :: _ : goes into vf *)
+                apply NoDup_cons_iff in HND. destruct HND as [Hni NDvs].
+                simpl. constructor.
+                    intro HIn. apply in_map_iff in HIn.
+                    destruct HIn as (w & Htl & HwIn).
+                    apply filter_In in HwIn. destruct HwIn as [HwVs Hwh].
+                    destruct w; try discriminate. destruct b. discriminate.
+                    simpl in Htl. subst. now apply Hni. 
+                apply IHvecs; auto.
+                  intros. apply Hlen. now right.
+        - intros v Hv. apply in_map_iff in Hv.
+            destruct Hv as (u & <- & HuIn).
+            apply filter_In in HuIn. destruct HuIn as [HuV Huh].
+            assert (length u = S n') by auto.
+            destruct u; simpl in *; lia. }
+        rewrite length_map in HltT, HltF. lia.
+Qed.
