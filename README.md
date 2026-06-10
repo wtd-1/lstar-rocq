@@ -1,9 +1,13 @@
 # lstar-rocq
 
-A formally-verified implementation of [Dana Angluin's L* algorithm](https://doi.org/10.1016/0890-5401(87)90052-6).
-The implementation is based on [these lecture notes](https://www.tifr.res.in/~shibashis.guha/courses/diwali2021/L-starMalharManagoli.pdf) and can be viewed [here](theories/Lstar.v).
-Functions return sigma types, so each sub-component of the algorithm provides a proof of correctness alongside its computational outputs.
-The extracted OCaml code can be seen [here](lib/Lstar.ml).
+A collection of formally-verified implementations of [automata learning](https://wcventure.github.io/Active-Automata-Learning/) algorithms.
+
+| Algorithm | Resources | Proofs |
+| --- | --- | --- |
+| L* | [Angluin, 1987](https://doi.org/10.1016/0890-5401(87)90052-6), [Lecture Notes](https://www.tifr.res.in/~shibashis.guha/courses/diwali2021/L-starMalharManagoli.pdf) | [Lstar.v](theories/Lstar.v) |
+| Kearns-Vazirani | [Kearns-Vazirani, 1994](https://direct.mit.edu/books/monograph/2604/An-Introduction-to-Computational-Learning-Theory), [Balle, 2010](https://borjaballe.github.io/papers/zulu10.pdf) | [KV.v](theories/KV.v) |
+
+Functions return sigma types, so each sub-component of each algorithm provides a proof of correctness alongside its computational outputs.
 
 ## Building
 

@@ -52,13 +52,16 @@ module Mod3Teacher = struct
     type 'state t =
       { transition: 'state -> S.t -> 'state
       ; initial: 'state
-      ; accept: 'state -> bool }
+      ; accept: 'state -> bool
+      ; states: 'state list }
 
     let transition d = d.transition
 
     let initial d = d.initial
 
     let accept d = d.accept
+
+    let states d = d.states
 
     let run d str = List.fold_left d.transition d.initial str
 
@@ -84,6 +87,9 @@ module Mod3Teacher = struct
 end
 
 module Lstar = Lstar (S) (L) (Mod3Teacher)
+
+(** Kearns-Vazirani (discrimination-tree) implementation *)
+module KV = KV.KV (S) (L) (Mod3Teacher)
 
 let rec enumerate n =
   if n <= 0 then
@@ -120,16 +126,21 @@ let print_results dfa n =
   in
   Printf.printf "Accuracy: %d/%d\n" correct (List.length strings)
 
-let () =
-  match
-    Lstar.lstar_opt Int.max_int
-      { coq_Q= (fun x -> x = [])
-      ; coq_T= (fun x -> x = [])
-      ; clos= (fun _ _ _ -> [])
-      ; fin_Q= [[]]
-      ; fin_T= [[]] }
-  with
+(** Run one learner, reporting its result *)
+let run_learner name result =
+  Printf.printf "\n=== %s ===\n" name ;
+  match result with
   | Error _ ->
       print_endline "No DFA found"
   | Ok (Coq_existT (_, d)) ->
       print_endline "DFA found" ; print_results d 4
+
+let () =
+  run_learner "L*"
+    (Lstar.lstar_opt Int.max_int
+       { coq_Q= (fun x -> x = [])
+       ; coq_T= (fun x -> x = [])
+       ; clos= (fun _ _ _ -> [])
+       ; fin_Q= [[]]
+       ; fin_T= [[]] } ) ;
+  run_learner "KV" (KV.kv_run Int.max_int)

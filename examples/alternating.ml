@@ -50,13 +50,16 @@ module AlternatingTeacher = struct
     type 'state t =
       { transition: 'state -> S.t -> 'state
       ; initial: 'state
-      ; accept: 'state -> bool }
+      ; accept: 'state -> bool
+      ; states: 'state list }
 
     let transition d = d.transition
 
     let initial d = d.initial
 
     let accept d = d.accept
+
+    let states d = d.states
 
     let run d str = List.fold_left d.transition d.initial str
 
@@ -96,6 +99,9 @@ end
 (** L* implementation *)
 module Lstar = Lstar (S) (L) (AlternatingTeacher)
 
+(** Kearns-Vazirani (discrimination-tree) implementation *)
+module KV = KV.KV (S) (L) (AlternatingTeacher)
+
 (** Generate all bit strings of length [n] *)
 let rec enumerate (n : int) : S.string list =
   if n <= 0 then
@@ -134,28 +140,32 @@ let print_results dfa n =
   in
   Printf.printf "Accuracy: %d/%d\n" correct (List.length strings)
 
-(** Main *)
-let () =
-  match
-    Lstar.lstar_opt Int.max_int
-      { coq_Q=
-          (fun x ->
-            if x = [] then
-              true
-            else
-              false )
-      ; coq_T=
-          (fun x ->
-            if x = [] then
-              true
-            else
-              false )
-      ; clos= (fun _ _ _ -> [])
-      ; fin_Q= [[]]
-      ; fin_T= [[]] }
-  with
+(** Run one learner, reporting its result *)
+let run_learner name result =
+  Printf.printf "\n=== %s ===\n" name ;
+  match result with
   | Error _ ->
       print_endline "No DFA found"
   | Ok (Coq_existT (_, d)) ->
-      let open S in
       print_endline "DFA found" ; print_results d 3
+
+(** Main: learn the language with both L* and KV, then test each *)
+let () =
+  run_learner "L*"
+    (Lstar.lstar_opt Int.max_int
+       { coq_Q=
+           (fun x ->
+             if x = [] then
+               true
+             else
+               false )
+       ; coq_T=
+           (fun x ->
+             if x = [] then
+               true
+             else
+               false )
+       ; clos= (fun _ _ _ -> [])
+       ; fin_Q= [[]]
+       ; fin_T= [[]] } ) ;
+  run_learner "KV" (KV.kv_run Int.max_int)

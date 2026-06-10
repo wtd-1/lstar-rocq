@@ -294,9 +294,16 @@ Definition make_dfa (H : HypothesisDFA) : DFA.t {q | H.(Q) q = true}.
         exists q'. apply Qq'.
     }
     set (accept := fun (q : state) => member (proj1_sig q)).
+    destruct H.(fin_Q) as (l & _ & InQ).    
+    assert (ls : list state). {
+        eapply list_with_proof. intros.
+        apply InQ. eassumption.
+    }
+
     apply {|initial    := initial;
             transition := transition;
-            accept     := accept|}.
+            accept     := accept;
+            states     := ls|}.
 Defined.
 
 (** Updating sets of strings *)
@@ -334,7 +341,12 @@ Definition correct (H : HypothesisDFA) (w : string) (i : nat) : Prop :=
 
 (** Now, ε is correct trivially, and p_m is not correct since w is a counterexample. *)
 Example eps_correct : forall H w, correct H w 0.
-Proof. intros. reflexivity. Qed.
+Proof. intros.
+    unfold correct, p, run. simpl.
+    unfold proj1_sig, make_dfa, initial.
+    unfold fin_Q. destruct H, fin_Q0, a.
+    simpl. reflexivity.
+Qed.
 
 Example full_not_correct : forall H w
     (* w is a counterexample *)
@@ -345,7 +357,8 @@ Proof.
     unfold correct, p in Contra.
     rewrite firstn_all, skipn_all, app_nil_r in Contra.
     apply Hce. unfold accept_string, accept.
-    cbn [make_dfa]. assumption.
+    unfold make_dfa. unfold fin_Q.
+    destruct H, fin_Q0, a. simpl. assumption.
 Qed.
 
 (** Correctness is decidable *)
@@ -423,8 +436,13 @@ Theorem find_separable :
     assert (HTeq : H.(T) [proj1_sig (p k) ++ [wk] == proj1_sig (p (S k))]). {
         unfold p, Lstar.p. rewrite Hfirstn, run_step. simpl.
         set (q := run (make_dfa H) (firstn k w)).
-        now destruct (delta H.(Q) H.(T) H.(clos) (proj1_sig q)
+        destruct (delta H.(Q) H.(T) H.(clos) (proj1_sig q)
                       wk (proj2_sig q)) as [q' [Hq' Heq]].
+        destruct H. simpl in *.
+        unfold transition, make_dfa.
+        destruct fin_Q, a.
+        unfold delta. destruct clos, a. simpl in *.
+        easy.
     }
     repeat split.
     - unfold p. pose proof H.(sep). unfold separable in X.

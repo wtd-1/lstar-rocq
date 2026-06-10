@@ -1,6 +1,6 @@
 (rocq.extraction
  (prelude Extraction)
- (extracted_modules Lstar Datatypes Language Specif ListLemmas List)
+ (extracted_modules Lstar KV Datatypes Language Specif ListLemmas List)
  (theories Stdlib lstar))
 
 (library

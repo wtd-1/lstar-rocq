@@ -13,12 +13,6 @@ fmt: lstar-rocq
 
 lstar-rocq: clean
 	-$(OPAM_EXEC) $(DUNE) build -p lstar-rocq
-# 	@cp _build/default/lib/*.ml lib
-# 	@rm -f lib/Bin*.ml lib/PosDef.ml
-# 	-@grep "^From lstar Require Import ExtrOptimizations" theories/Extraction.v > /dev/null; \
-# 	if [ $$? -eq 0 ]; then \
-# 		rm -f lib/Bool.ml lib/ListDef.ml lib/PeanoNat.ml; \
-# 	fi
 
 lstar: lstar-rocq
 	$(OPAM_EXEC) $(DUNE) build
@@ -26,10 +20,12 @@ lstar: lstar-rocq
 clean:
 	$(OPAM_EXEC) $(DUNE) clean
 	git clean -dfXq
-	find lib -maxdepth 1 -type f ! -name "Teacher.ml" ! -name "dune" ! -name "Lstar.mli" ! -name "*.v" -delete
+	find lib -maxdepth 1 -type f ! -name "Teacher.ml" ! -name "dune" ! -name "*.v" -delete
 
 test: fmt
 	$(OPAM_EXEC) $(DUNE) exec lstar.alternating
+	$(OPAM_EXEC) $(DUNE) exec lstar.mod3
+	$(OPAM_EXEC) $(DUNE) exec lstar.div7
 
 DOCS_PATH=docs/
 DOCS_NAME=lstar

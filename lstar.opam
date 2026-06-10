@@ -14,6 +14,7 @@ depends: [
   "rocq-prover"
   "rocq-stdlib"
   "rocq-runtime"
+  "lstar-rocq"
   "odoc" {with-doc}
 ]
 build: [

@@ -151,3 +151,49 @@ Proof.
             destruct u; simpl in *; lia. }
         rewrite length_map in HltT, HltF. lia.
 Qed.
+
+Lemma NoDup_app_intro : forall {X} (l1 l2 : list X),
+    NoDup l1 -> NoDup l2 -> (forall x, In x l1 -> ~ In x l2) -> NoDup (l1 ++ l2).
+Proof.
+    induction l1 as [| a l1 IH]; intros l2 N1 N2 D; simpl; [assumption |].
+    apply NoDup_cons_iff in N1 as [Hni N1]. constructor.
+    - intro Hin. apply in_app_or in Hin. destruct Hin as [Hin | Hin].
+          now apply Hni.
+      apply (D a); [now left | assumption].
+    - apply IH; [assumption.. |]. intros x Hx. apply D. now right.
+Qed.
+
+Lemma NoDup_app_l : forall {A} (l1 l2 : list A), NoDup (l1 ++ l2) -> NoDup l1.
+Proof.
+    induction l1 as [| a l1 IH]; intros l2 H; simpl in H; [constructor |].
+    apply NoDup_cons_iff in H as [Hni H]. constructor.
+        intro Hin. apply Hni, in_or_app. now left.
+    now apply IH with l2.
+Qed.
+
+Lemma NoDup_app_r : forall {A} (l1 l2 : list A), NoDup (l1 ++ l2) -> NoDup l2.
+Proof.
+    induction l1 as [| a l1 IH]; intros l2 H; simpl in H; [assumption |].
+    apply NoDup_cons_iff in H as [_ H]. now apply IH.
+Qed.
+
+Lemma NoDup_app_disj : forall {A} (l1 l2 : list A),
+    NoDup (l1 ++ l2) -> forall x, In x l1 -> ~ In x l2.
+Proof.
+    induction l1 as [| a l1 IH]; intros l2 H x Hx; simpl in *; [contradiction |].
+    apply NoDup_cons_iff in H as [Hni H]. destruct Hx as [-> | Hx].
+        intro. apply Hni, in_or_app. now right.
+    now apply IH.
+Qed.
+
+Lemma list_with_proof : forall {A : Type}
+    (l : list A) (P : A -> Prop)
+    (pf : forall s, In s l -> P s),
+    list {s | P s}.
+Proof.
+    induction l; intros.
+        exact nil.
+    apply cons.
+        exists a. apply pf. now left.
+    apply IHl. intros s Hin. apply pf. now right.
+Qed.

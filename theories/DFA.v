@@ -8,7 +8,8 @@ Module DFA (s : Symbol) (L : L s).
     Record t (state : Type) : Type := {
         transition : state -> s.t -> state;
         initial : state;
-        accept : state -> bool
+        accept : state -> bool;
+        states : list state
     }.
 
     (** Run a DFA on a string and get the resulting state *)

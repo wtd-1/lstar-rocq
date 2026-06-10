@@ -90,18 +90,21 @@ module L = struct
         value mod 7 = 0
 end
 
-module Mod7Teacher = struct
+module Div7Teacher = struct
   module DFA = struct
     type 'state t =
       { transition: 'state -> S.t -> 'state
       ; initial: 'state
-      ; accept: 'state -> bool }
+      ; accept: 'state -> bool
+      ; states: 'state list }
 
     let transition d = d.transition
 
     let initial d = d.initial
 
     let accept d = d.accept
+
+    let states d = d.states
 
     let run d str = List.fold_left d.transition d.initial str
 
@@ -110,7 +113,7 @@ module Mod7Teacher = struct
 
   let equiv_query (dfa : 'a DFA.t) : S.string option =
     let rec bfs depth queue =
-      if depth >= 8192 then
+      if depth >= 4096 then
         None
       else
         match queue with
@@ -126,7 +129,10 @@ module Mod7Teacher = struct
     bfs 0 [[]]
 end
 
-module Lstar = Lstar (S) (L) (Mod7Teacher)
+module Lstar = Lstar (S) (L) (Div7Teacher)
+
+(** Kearns-Vazirani (discrimination-tree) implementation *)
+module KV = KV.KV (S) (L) (Div7Teacher)
 
 (** All digit strings of exactly length [n] *)
 let rec enumerate_exact n =
@@ -186,7 +192,7 @@ let print_results dfa =
   List.iter
     (fun c ->
       let exp = L.member c in
-      let comp = Mod7Teacher.DFA.accept_string dfa c in
+      let comp = Div7Teacher.DFA.accept_string dfa c in
       Printf.printf "%-*s  %-8b  %-8b  %s\n" col_w (S.string_of_string c) exp
         comp
         ( if exp = comp then
@@ -197,21 +203,26 @@ let print_results dfa =
   let correct =
     List.length
       (List.filter
-         (fun c -> L.member c = Mod7Teacher.DFA.accept_string dfa c)
+         (fun c -> L.member c = Div7Teacher.DFA.accept_string dfa c)
          cases )
   in
   Printf.printf "Accuracy: %d/%d\n" correct (List.length cases)
 
-let () =
-  match
-    Lstar.lstar_opt Int.max_int
-      { coq_Q= (fun x -> x = [])
-      ; coq_T= (fun x -> x = [])
-      ; clos= (fun _ _ _ -> [])
-      ; fin_Q= [[]]
-      ; fin_T= [[]] }
-  with
+(** Run one learner, reporting its result *)
+let run_learner name result =
+  Printf.printf "\n=== %s ===\n" name ;
+  match result with
   | Error _ ->
       print_endline "No DFA found"
   | Ok (Coq_existT (_, d)) ->
       print_endline "DFA found" ; print_results d
+
+let () =
+  run_learner "L*"
+    (Lstar.lstar_opt Int.max_int
+       { coq_Q= (fun x -> x = [])
+       ; coq_T= (fun x -> x = [])
+       ; clos= (fun _ _ _ -> [])
+       ; fin_Q= [[]]
+       ; fin_T= [[]] } ) ;
+  run_learner "KV" (KV.kv_run Int.max_int)

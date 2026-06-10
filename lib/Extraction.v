@@ -1,6 +1,6 @@
 From Stdlib Require Import Extraction.
 
-From lstar Require Import Lstar DFA.
+From lstar Require Import Lstar KV DFA.
 
 Extraction Language OCaml.
 
@@ -10,4 +10,4 @@ From lstar Require Import ExtrOptimizations.
 (* Linear let + beta reduction *)
 Set Extraction Flag 1536.
 
-Separate Extraction Lstar.
+Separate Extraction Lstar KV.
