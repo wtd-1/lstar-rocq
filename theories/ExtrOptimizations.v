@@ -17,10 +17,8 @@ Extract Inlined Constant List.existsb => "Stdlib.List.exists".
 Extract Inlined Constant List.forallb => "Stdlib.List.for_all".
 Extract Inlined Constant List.find => "Stdlib.List.find_opt".
 Extract Inlined Constant List.map => "Stdlib.List.map".
-Extract Inlined Constant List.firstn => "Stdlib.List.take".
-Extract Inlined Constant List.skipn => "Stdlib.List.drop".
 Extract Inlined Constant List.nth_error => "Stdlib.List.nth_opt".
-Extract Inlined Constant Nat.pow =>
+Extract Constant Nat.pow =>
 "let rec pow x n =
     if n = 0 then 1
     else x * pow x (n - 1)

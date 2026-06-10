@@ -1,7 +1,7 @@
-(** * The Kearns--Vazirani active learner (discrimination-tree variant)
+(** The Kearns-Vazirani active learner (discrimination-tree variant)
 
     Where #L<sup>*</sup># maintains a flat set of representatives Q and a flat
-    set of distinguishing suffixes T, the Kearns--Vazirani learner stores its
+    set of distinguishing suffixes T, the Kearns-Vazirani learner stores its
     knowledge in a binary _discrimination tree_: internal nodes carry a
     _discriminator_ (a distinguishing suffix), and leaves carry an _access
     string_ (a state representative).
