@@ -8,32 +8,7 @@ From Stdlib Require Import Lia.
 From Stdlib Require Import Recdef.
 From Stdlib Require Import PeanoNat. Require Import Nat.
 Import ListNotations.
-
-(** The #L<sup>*</sup># algorithm can be thought of as a game between two players -
-    a Teacher and a Learner.
-    
-    We play the role of the Learner, who wants to learn a regular language
-    L from the Teacher. *)
-Module Type Teacher (s : Symbol) (L : L s).
-    Import s L.
-    Module DFA := DFA s L.
-    Import DFA.
-
-    (** The teacher answers equivalence queries: whether the given
-        DFA encodes L or not *)
-    Parameter equiv_query : 
-        forall (state : Type),
-        DFA.t state -> option string.
-    (** If the equivalence query returns [None], the DFA encodes L *)
-    Parameter equiv_query_correct : forall (state : Type) d,
-        equiv_query state d = None <-> encodes d.
-    (** If the equivalence query returns [Some x], the DFA does not
-        encode L, and [x] is a counter-example on which the DFA
-        mis-predicts *)
-    Parameter equiv_query_ce : forall (state : Type) d w,
-        equiv_query state d = Some w ->
-        accept_string d w <> member w.
-End Teacher.
+From lstar Require Import Teacher.
 
 Module Lstar (s : Symbol) (L : L s) (T : Teacher s L).
 Import s L T DFA.
@@ -198,7 +173,7 @@ Definition closed (Q T : string -> bool) :=
 Definition closed_dec_witness : forall Q T,
   finite Q ->
   finite T ->
-  closed Q T + 
+  closed Q T +
   { q : string & { a : s.t &
       Q q = true /\
       forall q', Q q' = true -> ~ T [q ++ [a] == q'] }}.
@@ -294,7 +269,7 @@ Definition make_dfa (H : HypothesisDFA) : DFA.t {q | H.(Q) q = true}.
         exists q'. apply Qq'.
     }
     set (accept := fun (q : state) => member (proj1_sig q)).
-    destruct H.(fin_Q) as (l & _ & InQ).    
+    destruct H.(fin_Q) as (l & _ & InQ).
     assert (ls : list state). {
         eapply list_with_proof. intros.
         apply InQ. eassumption.
@@ -389,7 +364,7 @@ Theorem find_separable :
     (* There is some k such that p_(k−1) is correct but p_k is not *)
     assert (ExK: {k : nat | correct k /\ ~ correct (S k)}). {
         pose proof (eps_correct H w).
-        pose proof (full_not_correct H w Hce). 
+        pose proof (full_not_correct H w Hce).
         induction (length w) as [| n IH].
           contradiction.
           destruct (correct_dec H w n) as [Hn | Hn].
@@ -427,8 +402,8 @@ Theorem find_separable :
                     firstn_0, firstn_len_app by lia.
     }
     (* Perform a single step of the current DFA *)
-    assert (run_step : forall i a, 
-          run (make_dfa H) (firstn i w ++ [a]) = 
+    assert (run_step : forall i a,
+          run (make_dfa H) (firstn i w ++ [a]) =
           (make_dfa H).(transition _) (run (make_dfa H) (firstn i w)) a). {
       intros. unfold run.
       now rewrite fold_left_app.
@@ -605,7 +580,7 @@ Proof with try easy.
 Defined.
 
 (** If Q is not closed wrt T, we can find a q in Q such that
-    all q' in Q are T-distinguishable from q ++ [a] for all 
+    all q' in Q are T-distinguishable from q ++ [a] for all
     symbols in the alphabet *)
 Lemma not_closed_impl_distinguishable :
     forall Q T,
@@ -794,7 +769,7 @@ Fixpoint lstar_opt (fuel : nat) (H : HypothesisDFA)
         destruct (union_closed Q' T' sep' finQ' finT') as
             (Q'' & ((clos'' & sep'') & finQ'') & sub'').
         assert (eps_in_Q'' : Q'' nil = true). {
-            apply sub''. unfold Q'. 
+            apply sub''. unfold Q'.
             rewrite update_neq.
             - apply H.(eps_in_Q).
             - (* nil <> q_new *)

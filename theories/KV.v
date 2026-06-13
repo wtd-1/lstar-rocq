@@ -11,7 +11,7 @@
     descend left when it holds and right otherwise; the leaf reached names the
     state of u. *)
 
-From lstar Require Import Language DFA ListLemmas Lstar.
+From lstar Require Import Language DFA ListLemmas Teacher.
 From Stdlib Require Import List.
 From Stdlib Require Import Lia.
 From Stdlib Require Import PeanoNat.

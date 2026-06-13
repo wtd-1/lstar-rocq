@@ -141,7 +141,7 @@ Proof.
                     destruct HIn as (w & Htl & HwIn).
                     apply filter_In in HwIn. destruct HwIn as [HwVs Hwh].
                     destruct w; try discriminate. destruct b. discriminate.
-                    simpl in Htl. subst. now apply Hni. 
+                    simpl in Htl. subst. now apply Hni.
                 apply IHvecs; auto.
                   intros. apply Hlen. now right.
         - intros v Hv. apply in_map_iff in Hv.
