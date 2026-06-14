@@ -1,6 +1,7 @@
 open Lstar
 open DFA
 open Specif
+open Teacher
 open Stdlib
 
 (** Alphabet: decimal digits *)
@@ -80,7 +81,10 @@ end
     class mod 7. The transition on reading digit d from state r is:
         r' = (r * 10 + d) mod 7
     which is the standard streaming divisibility DFA. *)
-module L = struct
+module Teacher : TEACHER with module S = S = struct
+  module S = S
+  module D = DFA (S)
+
   let member (s : S.string) : bool =
     match s with
     | [] ->
@@ -88,30 +92,8 @@ module L = struct
     | _ ->
         let value = List.fold_left (fun acc d -> (acc * 10) + S.to_int d) 0 s in
         value mod 7 = 0
-end
 
-module Div7Teacher = struct
-  module DFA = struct
-    type 'state t =
-      { transition: 'state -> S.t -> 'state
-      ; initial: 'state
-      ; accept: 'state -> bool
-      ; states: 'state list }
-
-    let transition d = d.transition
-
-    let initial d = d.initial
-
-    let accept d = d.accept
-
-    let states d = d.states
-
-    let run d str = List.fold_left d.transition d.initial str
-
-    let accept_string d s = d.accept (run d s)
-  end
-
-  let equiv_query (dfa : 'a DFA.t) : S.string option =
+  let equiv_query (dfa : 'a D.t) : S.string option =
     let rec bfs depth queue =
       if depth >= 4096 then
         None
@@ -120,7 +102,7 @@ module Div7Teacher = struct
         | [] ->
             None
         | s :: rest ->
-            if DFA.accept_string dfa s <> L.member s then
+            if D.accept_string dfa s <> member s then
               Some s
             else
               let children = List.map (fun c -> s @ [c]) S.enum in
@@ -129,10 +111,10 @@ module Div7Teacher = struct
     bfs 0 [[]]
 end
 
-module Lstar = Lstar (S) (L) (Div7Teacher)
+module Lstar = LstarLearner (Teacher)
 
 (** Kearns-Vazirani (discrimination-tree) implementation *)
-module KV = KV.KV (S) (L) (Div7Teacher)
+module KV = KVLearner (Teacher)
 
 (** All digit strings of exactly length [n] *)
 let rec enumerate_exact n =
@@ -142,9 +124,8 @@ let rec enumerate_exact n =
     let prev = enumerate_exact (n - 1) in
     List.concat_map (fun d -> List.map (fun s -> d :: s) prev) S.enum
 
-(** Collect all multiples of 7 up to 3 digits for display *)
+(** Collect interesting multiples of 7 for display *)
 let interesting_cases =
-  (* hand-pick: 0, 7, 14, 21, 42, 49, 77, 98, 105, 119, 126 *)
   let nums = [0; 7; 14; 21; 35; 42; 49; 56; 63; 70; 77; 84; 91; 98] in
   List.map
     (fun n ->
@@ -176,11 +157,11 @@ let interesting_cases =
     nums
 
 let print_results dfa =
-  let multiples = interesting_cases @ [[D0; D7]] in
+  let multiples = interesting_cases @ [[S.D0; S.D7]] in
   let non_multiples =
     List.filteri
       (fun i _ -> i < 8)
-      (List.filter (fun s -> not (L.member s)) (enumerate_exact 2))
+      (List.filter (fun s -> not (Teacher.member s)) (enumerate_exact 2))
   in
   let cases = multiples @ non_multiples in
   let col_w = 12 in
@@ -190,9 +171,9 @@ let print_results dfa =
   in
   print_endline header ;
   List.iter
-    (fun c ->
-      let exp = L.member c in
-      let comp = Div7Teacher.DFA.accept_string dfa c in
+    (fun (c : S.string) ->
+      let exp = Teacher.member c in
+      let comp = Teacher.D.accept_string dfa c in
       Printf.printf "%-*s  %-8b  %-8b  %s\n" col_w (S.string_of_string c) exp
         comp
         ( if exp = comp then
@@ -203,7 +184,7 @@ let print_results dfa =
   let correct =
     List.length
       (List.filter
-         (fun c -> L.member c = Div7Teacher.DFA.accept_string dfa c)
+         (fun (c : S.string) -> Teacher.member c = Teacher.D.accept_string dfa c)
          cases )
   in
   Printf.printf "Accuracy: %d/%d\n" correct (List.length cases)

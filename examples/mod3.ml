@@ -1,6 +1,7 @@
 open Lstar
 open DFA
 open Specif
+open Teacher
 open Stdlib
 
 module S = struct
@@ -33,7 +34,10 @@ end
 (** Language: strings over {0,1} where the number of 1s is divisible by 3.
     The minimal DFA has exactly 3 states (one per residue class mod 3),
     so L* must discover a nontrivial 3-state machine. *)
-module L = struct
+module Teacher : TEACHER with module S = S = struct
+  module S = S
+  module D = DFA (S)
+
   let member (s : S.string) : bool =
     let count =
       List.fold_left
@@ -45,30 +49,8 @@ module L = struct
         0 s
     in
     count mod 3 = 0
-end
 
-module Mod3Teacher = struct
-  module DFA = struct
-    type 'state t =
-      { transition: 'state -> S.t -> 'state
-      ; initial: 'state
-      ; accept: 'state -> bool
-      ; states: 'state list }
-
-    let transition d = d.transition
-
-    let initial d = d.initial
-
-    let accept d = d.accept
-
-    let states d = d.states
-
-    let run d str = List.fold_left d.transition d.initial str
-
-    let accept_string d s = d.accept (run d s)
-  end
-
-  let equiv_query (dfa : 'a DFA.t) : S.string option =
+  let equiv_query (dfa : 'a D.t) : S.string option =
     let rec bfs depth queue =
       if depth >= 4096 then
         None
@@ -77,7 +59,7 @@ module Mod3Teacher = struct
         | [] ->
             None
         | s :: rest ->
-            if DFA.accept_string dfa s <> L.member s then
+            if D.accept_string dfa s <> member s then
               Some s
             else
               bfs (depth + 1)
@@ -86,10 +68,10 @@ module Mod3Teacher = struct
     bfs 0 [[]]
 end
 
-module Lstar = Lstar (S) (L) (Mod3Teacher)
+module Lstar = LstarLearner (Teacher)
 
 (** Kearns-Vazirani (discrimination-tree) implementation *)
-module KV = KV.KV (S) (L) (Mod3Teacher)
+module KV = KVLearner (Teacher)
 
 let rec enumerate n =
   if n <= 0 then
@@ -107,9 +89,9 @@ let print_results dfa n =
   in
   print_endline header ;
   List.iter
-    (fun c ->
-      let exp = L.member c in
-      let comp = Mod3Teacher.DFA.accept_string dfa c in
+    (fun (c : S.string) ->
+      let exp = Teacher.member c in
+      let comp = Teacher.D.accept_string dfa c in
       Printf.printf "%-*s  %-8b  %-8b  %s\n" col_w
         (Printf.sprintf "[%s]" (S.string_of_string c))
         exp comp
@@ -121,7 +103,7 @@ let print_results dfa n =
   let correct =
     List.length
       (List.filter
-         (fun c -> L.member c = Mod3Teacher.DFA.accept_string dfa c)
+         (fun (c : S.string) -> Teacher.member c = Teacher.D.accept_string dfa c)
          strings )
   in
   Printf.printf "Accuracy: %d/%d\n" correct (List.length strings)

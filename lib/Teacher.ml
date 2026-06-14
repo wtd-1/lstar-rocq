@@ -1,24 +1,45 @@
 open Lstar
+open KV
 open DFA
 
-module type Teacher = functor
-  (Coq_s : Symbol)
-  (D : sig
-     type 'state t =
-       { transition: 'state -> Coq_s.t -> 'state
-       ; initial: 'state
-       ; accept: 'state -> bool }
+module type TEACHER = sig
+  module S : Symbol
 
-     val transition : 'a t -> 'a -> Coq_s.t -> 'a
+  module D : module type of DFA (S)
 
-     val initial : 'a t -> 'a
+  val member : S.string -> bool
 
-     val accept : 'a t -> 'a -> bool
+  val equiv_query : 'a D.t -> S.string option
+end
 
-     val run : 'a t -> Coq_s.string -> 'a
+module LstarLearner (T : TEACHER) = struct
+  module Impl =
+    Lstar
+      (T.S)
+      (struct
+        module D = T.D
 
-     val accept_string : 'a t -> Coq_s.string -> bool
-   end)
-  -> sig
-  val equiv_query : 'a D.t -> Coq_s.string option
+        let member = T.member
+      end)
+      (struct
+        let equiv_query = T.equiv_query
+      end)
+
+  include Impl
+end
+
+module KVLearner (T : TEACHER) = struct
+  module Impl =
+    KV
+      (T.S)
+      (struct
+        module D = T.D
+
+        let member = T.member
+      end)
+      (struct
+        let equiv_query = T.equiv_query
+      end)
+
+  include Impl
 end

@@ -10,4 +10,4 @@ From lstar Require Import ExtrOptimizations.
 (* Linear let + beta reduction *)
 Set Extraction Flag 1536.
 
-Separate Extraction Lstar KV.
+Separate Extraction Lstar KV DFA.

@@ -1,6 +1,7 @@
 open Lstar
 open DFA
 open Specif
+open Teacher
 open Stdlib
 
 (** Alphabet *)
@@ -31,8 +32,12 @@ module S = struct
       Coq_right
 end
 
-(** Language *)
-module L = struct
+(** Teacher: owns S and D, defines member and equiv_query against its own D *)
+module Teacher : TEACHER with module S = S = struct
+  module S = S
+  module D = DFA (S)
+
+  (** Language membership: the string is "alternating" *)
   let member (s : S.string) : bool =
     match s with
     | [] ->
@@ -42,41 +47,9 @@ module L = struct
           (List.fold_left
              (fun (last, mem) i -> (i, mem && last <> i))
              (h, true) t )
-end
 
-(** Teacher for L *)
-module AlternatingTeacher = struct
-  module DFA = struct
-    type 'state t =
-      { transition: 'state -> S.t -> 'state
-      ; initial: 'state
-      ; accept: 'state -> bool
-      ; states: 'state list }
-
-    let transition d = d.transition
-
-    let initial d = d.initial
-
-    let accept d = d.accept
-
-    let states d = d.states
-
-    let run d str = List.fold_left d.transition d.initial str
-
-    let accept_string d str = d.accept (run d str)
-  end
-
-  let is_alternating (s : S.t list) : bool =
-    match s with
-    | [] ->
-        true
-    | h :: t ->
-        snd
-          (List.fold_left
-             (fun (last, ok) curr -> (curr, ok && last <> curr))
-             (h, true) t )
-
-  let equiv_query (dfa : 'a DFA.t) : S.string option =
+  (** Teacher equivalence query, typed against D.t (not a fresh DFA(S)) *)
+  let equiv_query (dfa : 'a D.t) : S.string option =
     let rec find_counter_example depth current_strings =
       if depth >= int_of_float (2. ** 12.) then
         None
@@ -85,8 +58,8 @@ module AlternatingTeacher = struct
         | [] ->
             None
         | s :: rest ->
-            let dfa_acc = DFA.accept_string dfa s in
-            let spec_acc = is_alternating s in
+            let dfa_acc = D.accept_string dfa s in
+            let spec_acc = member s in
             if dfa_acc <> spec_acc then
               Some s
             else
@@ -97,10 +70,10 @@ module AlternatingTeacher = struct
 end
 
 (** L* implementation *)
-module Lstar = Lstar (S) (L) (AlternatingTeacher)
+module Lstar = LstarLearner (Teacher)
 
 (** Kearns-Vazirani (discrimination-tree) implementation *)
-module KV = KV.KV (S) (L) (AlternatingTeacher)
+module KV = KVLearner (Teacher)
 
 (** Generate all bit strings of length [n] *)
 let rec enumerate (n : int) : S.string list =
@@ -121,9 +94,9 @@ let print_results dfa n =
   in
   print_endline header ;
   List.iter
-    (fun c ->
-      let exp = L.member c in
-      let comp = AlternatingTeacher.DFA.accept_string dfa c in
+    (fun (c : S.string) ->
+      let exp = Teacher.member c in
+      let comp = Teacher.D.accept_string dfa c in
       Printf.printf "%-*s  %-8b  %-8b  %s\n" col_w
         (Printf.sprintf "[%s]" (S.string_of_string c))
         exp comp
@@ -135,7 +108,7 @@ let print_results dfa n =
   let correct =
     List.length
       (List.filter
-         (fun c -> L.member c = AlternatingTeacher.DFA.accept_string dfa c)
+         (fun (c : S.string) -> Teacher.member c = Teacher.D.accept_string dfa c)
          strings )
   in
   Printf.printf "Accuracy: %d/%d\n" correct (List.length strings)
