@@ -1,4 +1,4 @@
-From Stdlib Require Export List.
+From Stdlib Require Export List String.
 Export ListNotations.
 
 (** Symbol type *)
@@ -31,6 +31,9 @@ Module Type Symbol.
             + right. intro. injection H. intros.
                 contradiction.
     Defined.
+
+    (** For debugging *)
+    Parameter string_of_t : t -> String.string.
 End Symbol.
 
 (** Deterministic Finite Automaton *)

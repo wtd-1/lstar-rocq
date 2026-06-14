@@ -54,11 +54,7 @@ module S = struct
     | D9 ->
         "9"
 
-  let eq_dec x y =
-    if x = y then
-      Coq_left
-    else
-      Coq_right
+  let eq_dec x y = x = y
 
   let enum = all
 
@@ -67,13 +63,8 @@ module S = struct
   let string_of_string s = String.concat "" (List.map string_of_t s)
 
   let str_eq (l1 : string) (l2 : string) =
-    if
-      List.length l1 = List.length l2
-      && List.for_all (fun (x, y) -> x = y) (List.combine l1 l2)
-    then
-      Coq_left
-    else
-      Coq_right
+    List.length l1 = List.length l2
+    && List.for_all (fun (x, y) -> x = y) (List.combine l1 l2)
 end
 
 (** Language: decimal strings (with leading zeros) whose numeric value is
@@ -196,7 +187,7 @@ let run_learner name result =
   | Error _ ->
       print_endline "No DFA found"
   | Ok (Coq_existT (_, d)) ->
-      print_endline "DFA found" ; print_results d
+      Lstar.print_dfa d ; print_endline "DFA found" ; print_results d
 
 let () =
   run_learner "L*"
