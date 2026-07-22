@@ -62,11 +62,16 @@ echo "== building OCaml side (dune build) =="
 echo "== building Java side (mvn package) =="
 (cd "$HARNESS_DIR" && mvn -q -o package -DskipTests)
 
+JAVA_OPTS=(-Dorg.slf4j.simpleLogger.defaultLogLevel=warn)
+
 case "$direction" in
   a)
     size="${4:-small}"
-    echo "== Direction A: Java TeacherServer ($size corpus) vs OCaml $algo =="
-    java -jar "$JAR" teacher "$port" "$size" &
+    # Passing $algo as a 3rd arg also makes TeacherServer run LearnLib's own
+    # learner locally per target and log whether it agrees with ours -- see
+    # TeacherServer's doc comment.
+    echo "== Direction A: Java TeacherServer ($size corpus) vs OCaml $algo, with agreement check =="
+    java "${JAVA_OPTS[@]}" -jar "$JAR" teacher "$port" "$size" "$algo" &
     SERVER_PID=$!
     wait_for_port "$port"
     (cd "$REPO_DIR" && eval "$(opam env)" && dune exec examples/socket_learn.exe -- "$algo" "$port")
@@ -76,7 +81,7 @@ case "$direction" in
     (cd "$REPO_DIR" && eval "$(opam env)" && dune exec examples/socket_teach.exe -- "$port") &
     SERVER_PID=$!
     wait_for_port "$port"
-    java -jar "$JAR" learner localhost "$port" "$algo"
+    java "${JAVA_OPTS[@]}" -jar "$JAR" learner localhost "$port" "$algo"
     ;;
   *)
     usage

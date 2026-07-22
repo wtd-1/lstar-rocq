@@ -6,12 +6,15 @@ import java.io.IOException;
  * CLI entry point for both directions of the harness.
  *
  * <pre>
- *   java -jar learnlib-harness.jar teacher [port] [small]
+ *   java -jar learnlib-harness.jar teacher [port] [small|full] [lstar|kv|ttt]
  *   java -jar learnlib-harness.jar learner [host] [port] [lstar|kv|ttt]
  * </pre>
  *
  * <p>{@code teacher} runs {@link TeacherServer} (Direction A): pair it with
  * lstar-rocq's {@code dune exec examples/socket_learn.exe -- <algo> [port]}.
+ * The third argument, if given, also runs LearnLib's own learner for that
+ * algorithm locally against each target and logs whether it agrees with our
+ * extracted learner's hypothesis (see {@link TeacherServer}'s doc comment).
  * {@code learner} runs {@link LearnerClient} (Direction B): pair it with
  * {@code dune exec examples/socket_teach.exe -- [port]}.
  */

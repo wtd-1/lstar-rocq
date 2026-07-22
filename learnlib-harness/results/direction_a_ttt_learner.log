@@ -1,0 +1,14 @@
+target=alternating          algo=ttt   alphabet=2   states=4     time=0.040s
+target=ends_in_01           algo=ttt   alphabet=2   states=3     time=0.005s
+target=mod3                 algo=ttt   alphabet=2   states=3     time=0.005s
+target=random_n5_a2         algo=ttt   alphabet=2   states=4     time=0.010s
+target=random_n10_a2        algo=ttt   alphabet=2   states=7     time=0.037s
+target=random_n20_a2        algo=ttt   alphabet=2   states=10    time=0.048s
+target=random_n50_a2        algo=ttt   alphabet=2   states=41    time=0.663s
+target=random_n100_a2       algo=ttt   alphabet=2   states=85    time=2.724s
+target=random_n5_a4         algo=ttt   alphabet=4   states=5     time=0.007s
+target=random_n10_a4        algo=ttt   alphabet=4   states=10    time=0.034s
+target=random_n20_a4        algo=ttt   alphabet=4   states=19    time=0.139s
+target=random_n50_a4        algo=ttt   alphabet=4   states=48    time=1.241s
+target=random_n100_a4       algo=ttt   alphabet=4   states=98    time=5.669s
+Ran 13 target(s) with ttt

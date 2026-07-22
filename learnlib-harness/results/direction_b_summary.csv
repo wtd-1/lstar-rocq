@@ -1,0 +1,10 @@
+algo,target,alphabet,states,time
+lstar,alternating,2,4,0.106
+lstar,ends_in_01,2,3,0.088
+lstar,mod3,2,3,0.094
+kv,alternating,2,4,0.101
+kv,ends_in_01,2,3,0.087
+kv,mod3,2,3,0.094
+ttt,alternating,2,4,0.103
+ttt,ends_in_01,2,3,0.089
+ttt,mod3,2,3,0.094

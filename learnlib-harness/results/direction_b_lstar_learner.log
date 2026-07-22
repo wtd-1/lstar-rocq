@@ -1,0 +1,4 @@
+target=alternating          algo=lstar alphabet=2   states=4     time=0.106s
+target=ends_in_01           algo=lstar alphabet=2   states=3     time=0.088s
+target=mod3                 algo=lstar alphabet=2   states=3     time=0.094s
+done

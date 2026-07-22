@@ -1,11 +1,19 @@
 package org.lstarrocq.harness;
 
+import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.oracle.EquivalenceOracle;
+import de.learnlib.oracle.MembershipOracle;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.query.Query;
+import de.learnlib.util.Experiment;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
@@ -21,31 +29,39 @@ import net.automatalib.word.Word;
  * counterexample (see {@link Protocol}'s doc comment on {@code ack}), this
  * server keeps answering a target's queries until the client sends
  * {@code ack}, rather than advancing the moment it replies {@code "NONE"}.
+ *
+ * <p>When a {@code compareAlgo} is given, this also runs LearnLib's own
+ * learner for that same algorithm fully locally (no socket involved) against
+ * each target right after our extracted learner finishes it, and checks
+ * whether the two hypotheses agree -- i.e. whether lstar-rocq's extracted
+ * implementation and LearnLib's own actually converge to the same automaton,
+ * not just that each independently matches the target.
  */
 public final class TeacherServer {
 
     private TeacherServer() {}
 
-    public static void run(int port, List<Corpus.Target> targets) throws IOException {
+    public static void run(int port, List<Corpus.Target> targets, String compareAlgo) throws IOException {
         try (ServerSocket server = new ServerSocket(port)) {
             System.out.printf(
                     "TeacherServer listening on port %d, serving %d target(s)%n", port, targets.size());
             Socket client = server.accept();
             try (Connection conn = Connection.of(client)) {
                 for (Corpus.Target target : targets) {
-                    runTarget(conn, target);
+                    runTarget(conn, target, compareAlgo);
                 }
                 conn.sendLine(Protocol.DONE_LINE);
             }
         }
     }
 
-    private static void runTarget(Connection conn, Corpus.Target target) throws IOException {
+    private static void runTarget(Connection conn, Corpus.Target target, String compareAlgo) throws IOException {
         List<String> alphabetSymbols = target.alphabet().stream().collect(Collectors.toList());
         conn.sendLine(Protocol.configLine(alphabetSymbols, target.name()));
 
         long start = System.nanoTime();
         int queries = 0;
+        CompactDFA<String> lastVerifiedHypothesis = null;
         while (true) {
             String line = conn.readNonBlankLine();
             if (line == null) {
@@ -56,6 +72,13 @@ public final class TeacherServer {
                 System.out.printf(
                         "target=%-20s states=%-5d queries=%-6d time=%.3fs%n",
                         target.name(), target.dfa().size(), queries, seconds);
+                if (compareAlgo != null) {
+                    if (lastVerifiedHypothesis == null) {
+                        throw new IllegalStateException(
+                                "ack received for " + target.name() + " with no verified hypothesis to compare");
+                    }
+                    compareWithLearnLib(target, compareAlgo, lastVerifiedHypothesis);
+                }
                 return;
             } else if (Protocol.isMembershipQuery(line)) {
                 queries++;
@@ -69,12 +92,69 @@ public final class TeacherServer {
                 Word<String> counterexample =
                         Automata.findSeparatingWord(target.dfa(), hypothesisDfa, target.alphabet());
                 if (counterexample == null) {
+                    lastVerifiedHypothesis = hypothesisDfa;
                     conn.sendLine("NONE");
                 } else {
                     conn.sendLine(String.join(",", counterexample.asList()));
                 }
             } else {
                 throw new IOException("unexpected line for target " + target.name() + ": " + line);
+            }
+        }
+    }
+
+    /** Runs LearnLib's own learner for {@code algo} against {@code target} with no socket
+     * involved (a direct in-process {@link MembershipOracle} and an exact
+     * {@link EquivalenceOracle} both backed by {@code target.dfa()} directly), then checks
+     * whether its hypothesis is language-equivalent to {@code ourHypothesis} -- the one our
+     * extracted learner just converged to for the same target. */
+    private static void compareWithLearnLib(Corpus.Target target, String algo, DFA<?, String> ourHypothesis) {
+        CountingMembershipOracle oracle = new CountingMembershipOracle(target.dfa());
+        LearningAlgorithm<DFA<?, String>, String, Boolean> learner =
+                Learners.build(algo, target.alphabet(), oracle);
+        EquivalenceOracle<DFA<?, String>, String, Boolean> exactEquivalence =
+                (hypothesis, alphabetCol) -> {
+                    Word<String> sep = Automata.findSeparatingWord(target.dfa(), hypothesis, alphabetCol);
+                    if (sep == null) {
+                        return null;
+                    }
+                    return new DefaultQuery<>(sep, Boolean.TRUE.equals(target.dfa().computeOutput(sep)));
+                };
+
+        long start = System.nanoTime();
+        Experiment<DFA<?, String>> experiment = new Experiment<>(learner, exactEquivalence, target.alphabet());
+        experiment.setLogModels(false);
+        DFA<?, String> learnlibHypothesis = experiment.run();
+        double seconds = (System.nanoTime() - start) / 1e9;
+
+        boolean agree = Automata.findSeparatingWord(ourHypothesis, learnlibHypothesis, target.alphabet()) == null;
+        System.out.printf(
+                "agree  target=%-20s algo=%-5s ours_states=%-5d learnlib_states=%-5d learnlib_queries=%-7d"
+                        + " learnlib_time=%.3fs agree=%b%n",
+                target.name(),
+                algo,
+                ourHypothesis.size(),
+                learnlibHypothesis.size(),
+                oracle.queries,
+                seconds,
+                agree);
+    }
+
+    /** Counts queries the same way {@link #runTarget} does for our extracted learner, so the
+     * two query counts in the log are directly comparable. */
+    private static final class CountingMembershipOracle implements MembershipOracle<String, Boolean> {
+        private final DFA<?, String> target;
+        private long queries = 0;
+
+        CountingMembershipOracle(DFA<?, String> target) {
+            this.target = target;
+        }
+
+        @Override
+        public void processQueries(Collection<? extends Query<String, Boolean>> queries) {
+            for (Query<String, Boolean> query : queries) {
+                this.queries++;
+                query.answer(Boolean.TRUE.equals(target.computeOutput(query.getInput())));
             }
         }
     }
@@ -98,6 +178,7 @@ public final class TeacherServer {
     public static void main(String[] args) throws IOException {
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 8888;
         boolean small = args.length > 1 && args[1].equals("small");
-        run(port, small ? Corpus.small() : Corpus.all());
+        String compareAlgo = args.length > 2 ? args[2] : null;
+        run(port, small ? Corpus.small() : Corpus.all(), compareAlgo);
     }
 }

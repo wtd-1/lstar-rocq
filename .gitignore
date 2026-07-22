@@ -25,3 +25,6 @@ Makefile.coq.conf
 .vscode
 *.crashrocqide
 *.install
+
+# Maven build output (learnlib-harness/)
+learnlib-harness/target/

@@ -1,0 +1,4 @@
+target=alternating          algo=kv    alphabet=2   states=4     time=0.101s
+target=ends_in_01           algo=kv    alphabet=2   states=3     time=0.087s
+target=mod3                 algo=kv    alphabet=2   states=3     time=0.094s
+done

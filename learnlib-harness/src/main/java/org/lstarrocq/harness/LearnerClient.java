@@ -1,10 +1,6 @@
 package org.lstarrocq.harness;
 
-import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm;
-import de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFABuilder;
-import de.learnlib.algorithm.lstar.dfa.ClassicLStarDFABuilder;
-import de.learnlib.algorithm.ttt.dfa.TTTLearnerDFABuilder;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.query.DefaultQuery;
@@ -59,24 +55,7 @@ public final class LearnerClient {
         EquivalenceOracle<DFA<?, String>, String, Boolean> eqOracle =
                 new SocketEquivalenceOracle(conn, memOracle);
 
-        LearningAlgorithm<DFA<?, String>, String, Boolean> learner =
-                switch (algo) {
-                    case "lstar" -> new ClassicLStarDFABuilder<String>()
-                            .withAlphabet(alphabet)
-                            .withOracle(memOracle)
-                            .create();
-                    case "kv" -> new KearnsVaziraniDFABuilder<String>()
-                            .withAlphabet(alphabet)
-                            .withOracle(memOracle)
-                            .withCounterexampleAnalyzer(AcexAnalyzers.LINEAR_FWD)
-                            .create();
-                    case "ttt" -> new TTTLearnerDFABuilder<String>()
-                            .withAlphabet(alphabet)
-                            .withOracle(memOracle)
-                            .withAnalyzer(AcexAnalyzers.LINEAR_FWD)
-                            .create();
-                    default -> throw new IllegalArgumentException("unknown algorithm: " + algo);
-                };
+        LearningAlgorithm<DFA<?, String>, String, Boolean> learner = Learners.build(algo, alphabet, memOracle);
 
         long start = System.nanoTime();
         Experiment<DFA<?, String>> experiment = new Experiment<>(learner, eqOracle, alphabet);

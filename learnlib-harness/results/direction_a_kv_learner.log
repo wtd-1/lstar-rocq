@@ -1,0 +1,14 @@
+target=alternating          algo=kv    alphabet=2   states=4     time=0.041s
+target=ends_in_01           algo=kv    alphabet=2   states=3     time=0.007s
+target=mod3                 algo=kv    alphabet=2   states=3     time=0.006s
+target=random_n5_a2         algo=kv    alphabet=2   states=4     time=0.015s
+target=random_n10_a2        algo=kv    alphabet=2   states=7     time=0.033s
+target=random_n20_a2        algo=kv    alphabet=2   states=10    time=0.045s
+target=random_n50_a2        algo=kv    alphabet=2   states=41    time=0.658s
+target=random_n100_a2       algo=kv    alphabet=2   states=85    time=2.864s
+target=random_n5_a4         algo=kv    alphabet=4   states=5     time=0.009s
+target=random_n10_a4        algo=kv    alphabet=4   states=10    time=0.041s
+target=random_n20_a4        algo=kv    alphabet=4   states=19    time=0.184s
+target=random_n50_a4        algo=kv    alphabet=4   states=48    time=1.382s
+target=random_n100_a4       algo=kv    alphabet=4   states=98    time=6.512s
+Ran 13 target(s) with kv
