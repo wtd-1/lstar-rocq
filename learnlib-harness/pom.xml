@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.lstarrocq</groupId>
+  <artifactId>learnlib-harness</artifactId>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
+
+  <!--
+    Bridges lstar-rocq's extracted OCaml learners to LearnLib, over the
+    newline-delimited JSON socket protocol implemented on the OCaml side by
+    lib/SocketProtocol.ml. Two directions live here:
+
+      - TeacherServer: LearnLib/AutomataLib supplies the ground-truth target
+        (a hand-built or randomly generated CompactDFA) and an exact
+        equivalence check (Automata.findSeparatingWord); our extracted
+        L*/KV/TTT learner is the socket client (examples/socket_learn.ml).
+      - LearnerClient: LearnLib's own ClassicLStarDFA/KearnsVaziraniDFA/
+        TTTLearnerDFA is the socket client; our OCaml socket_teach.ml is the
+        teacher.
+
+    See Protocol.java for the wire format and the "ack" handshake subtlety:
+    KV/TTT rebuild their final hypothesis right after the last equivalence
+    query, which issues a few more membership queries, so the protocol's ack
+    message is what makes that safe without racing the teacher's move to the
+    next target.
+  -->
+
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <learnlib.version>0.18.0</learnlib.version>
+    <automatalib.version>0.12.1</automatalib.version>
+    <junit.version>5.11.0</junit.version>
+    <slf4j.version>2.0.16</slf4j.version>
+  </properties>
+
+  <dependencies>
+    <!-- LearnLib: learner algorithms + generic oracle/query infrastructure -->
+    <dependency>
+      <groupId>de.learnlib</groupId>
+      <artifactId>learnlib-api</artifactId>
+      <version>${learnlib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.learnlib</groupId>
+      <artifactId>learnlib-lstar</artifactId>
+      <version>${learnlib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.learnlib</groupId>
+      <artifactId>learnlib-kearns-vazirani</artifactId>
+      <version>${learnlib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.learnlib</groupId>
+      <artifactId>learnlib-ttt</artifactId>
+      <version>${learnlib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.learnlib</groupId>
+      <artifactId>learnlib-util</artifactId>
+      <version>${learnlib.version}</version>
+    </dependency>
+    <!-- AcexAnalyzer/AcexAnalyzers, needed to configure KV/TTT's counterexample
+         analysis (the old "learnlib-acex" artifact was folded in here). -->
+    <dependency>
+      <groupId>de.learnlib</groupId>
+      <artifactId>learnlib-counterexamples</artifactId>
+      <version>${learnlib.version}</version>
+    </dependency>
+
+    <!-- AutomataLib: automaton/alphabet representations LearnLib builds on -->
+    <dependency>
+      <groupId>net.automatalib</groupId>
+      <artifactId>automata-api</artifactId>
+      <version>${automatalib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.automatalib</groupId>
+      <artifactId>automata-core</artifactId>
+      <version>${automatalib.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.automatalib</groupId>
+      <artifactId>automata-util</artifactId>
+      <version>${automatalib.version}</version>
+    </dependency>
+
+    <!-- LearnLib logs through slf4j; provide a runtime binding. -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>learnlib-harness</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.lstarrocq.harness.HarnessMain</mainClass>
+                </transformer>
+              </transformers>
+              <filters>
+                <filter>
+                  <!-- Strip JPMS module descriptors: the shaded jar merges
+                       several modules' classes and isn't itself modular. -->
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>module-info.class</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

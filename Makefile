@@ -1,0 +1,79 @@
+.PHONY: default lstar lstar-rocq install uninstall test clean fmt harness-build harness-test
+.IGNORE: fmt
+
+OPAM ?= opam
+OPAM_EXEC ?= $(OPAM) exec --
+DUNE ?= dune
+
+default: lstar lstar-rocq
+
+fmt: lstar-rocq
+	$(OPAM_EXEC) $(DUNE) build @fmt
+	$(OPAM_EXEC) $(DUNE) promote
+
+lstar-rocq:
+	-$(OPAM_EXEC) $(DUNE) build -p lstar-rocq
+
+lstar: lstar-rocq
+	$(OPAM_EXEC) $(DUNE) build
+
+clean:
+	$(OPAM_EXEC) $(DUNE) clean
+	git clean -dfXq
+
+test: fmt
+	$(OPAM_EXEC) $(DUNE) exec dfa.alternating | grep Accuracy
+	$(OPAM_EXEC) $(DUNE) exec dfa.alternating_socket | grep Accuracy
+	$(OPAM_EXEC) $(DUNE) exec dfa.mod3 | grep Accuracy
+	$(OPAM_EXEC) $(DUNE) exec dfa.div7 | grep Accuracy
+	$(OPAM_EXEC) $(DUNE) exec moore.traffic | grep Accuracy
+	$(OPAM_EXEC) $(DUNE) exec mealy.vending | grep Accuracy
+	$(OPAM_EXEC) $(DUNE) exec nfa.suffix | grep Accuracy
+
+# LearnLib interop harness (learnlib-harness/): bridges our extracted
+# L*/KV/TTT learners to LearnLib over lib/SocketProtocol.ml's socket
+# protocol, in both directions. See learnlib-harness/run.sh.
+harness-build: lstar
+	mvn -f learnlib-harness/pom.xml -q package
+
+harness-test: harness-build
+	learnlib-harness/run.sh a lstar 8898 small | grep -q 'Ran 3 target(s)'
+	learnlib-harness/run.sh a kv 8898 small | grep -q 'Ran 3 target(s)'
+	learnlib-harness/run.sh a ttt 8898 small | grep -q 'Ran 3 target(s)'
+	learnlib-harness/run.sh b lstar 8898 | grep -q '^done$$'
+	learnlib-harness/run.sh b kv 8898 | grep -q '^done$$'
+	learnlib-harness/run.sh b ttt 8898 | grep -q '^done$$'
+
+DOCS_PATH=docs/
+DOCS_NAME=lstar
+DOCS_DESCR=L* implementation in Rocq
+DOCS_INDEX_TITLE=$(DOCS_NAME) - $(DOCS_DESCR)
+define DOCS_EMBED
+<meta content="$(DOCS_NAME)" property="og:title" />\
+<meta content="$(DOCS_DESCR)" property="og:description" />\
+<meta content="https://github.com/CharlesAverill/lstar-rocq" property="og:url" />
+endef
+
+cleandocs:
+	if [ ! -d $(DOCS_PATH) ]; then \
+		mkdir $(DOCS_PATH); \
+	fi
+	rm -rf $(DOCS_PATH)lstar-rocq $(DOCS_PATH)odoc.support $(DOCS_PATH)*.html $(DOCS_PATH)*.css
+
+docs: clean cleandocs lstar-rocq
+	$(OPAM_EXEC) rocq doc --multi-index -g --utf8 _build/default/theories/*.v -d $(DOCS_PATH)
+	
+	@echo "Preparing Index\n--------------"
+	# Header
+	sed -i 's/<title>.*<\/title>/<title>$(DOCS_INDEX_TITLE)<\/title>/g' $(DOCS_PATH)index.html
+	sed -i 's@</head>@$(DOCS_EMBED)\n</head>@g' $(DOCS_PATH)index.html
+	sed -i 's/..\/odoc.support/odoc.support/g' $(DOCS_PATH)index.html
+	sed -i 's/lstar.//g' $(DOCS_PATH)index.html
+
+push: cleandocs lstar lstar-rocq
+	@read -p "Commit message: " input; \
+	if [ -z "$input" ]; then \
+		echo "Error: Please provide a valid commit message."; \
+		exit 1; \
+	fi; \
+	git add . && git commit -m "$$input" && git push origin main

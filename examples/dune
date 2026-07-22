@@ -1,0 +1,25 @@
+(executables
+ (names
+  alternating
+  mod3
+  div7
+  alternating_socket
+  traffic
+  vending
+  suffix
+  socket_learn
+  socket_teach)
+ (public_names
+  dfa.alternating
+  dfa.mod3
+  dfa.div7
+  dfa.alternating_socket
+  moore.traffic
+  mealy.vending
+  nfa.suffix
+  dfa.socket_learn
+  dfa.socket_teach)
+ (libraries lstar unix threads str)
+ (flags
+  (:standard -w -26))
+ (package lstar))

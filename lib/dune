@@ -1,0 +1,34 @@
+(rocq.extraction
+ (prelude Extraction)
+ (extracted_modules
+  Lstar
+  Lstar_Moore
+  Lstar_Mealy
+  KV
+  Datatypes
+  Bool
+  DFA
+  NFA
+  Mealy
+  Moore
+  Alphabet
+  Specif
+  ListLemmas
+  List
+  ListDef
+  NLstar
+  PeanoNat
+  Nat
+  RS
+  SetLemmas
+  TTT)
+ (theories Stdlib lstar))
+
+(library
+ (name lstar)
+ (public_name lstar)
+ (modules :standard)
+ (wrapped false)
+ (flags
+  (:standard -w -20))
+ (libraries unix str))
