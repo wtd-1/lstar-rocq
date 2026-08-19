@@ -1,0 +1,14 @@
+test_case,seconds
+OCamlLearningAlgorithm[lstar-rocq]/ExampleTinyDFA,0.086
+OCamlLearningAlgorithm[kv-rocq]/ExampleKeylock,58.807
+OCamlLearningAlgorithm[ttt-rocq]/ExampleTinyDFA,0.014
+OCamlLearningAlgorithm[ttt-rocq]/ExampleAngluin,0.010
+OCamlLearningAlgorithm[lstar-rocq]/ExamplePaulAndMary,0.056
+OCamlLearningAlgorithm[ttt-rocq]/ExampleKeylock,58.676
+OCamlLearningAlgorithm[lstar-rocq]/ExampleAngluin,0.020
+OCamlLearningAlgorithm[kv-rocq]/ExampleAngluin,0.009
+OCamlLearningAlgorithm[ttt-rocq]/ExamplePaulAndMary,0.014
+OCamlLearningAlgorithm[kv-rocq]/ExampleKeylock,57.708
+OCamlLearningAlgorithm[kv-rocq]/ExamplePaulAndMary,0.017
+OCamlLearningAlgorithm[ttt-rocq]/ExampleKeylock,60.607
+OCamlLearningAlgorithm[kv-rocq]/ExampleTinyDFA,0.013

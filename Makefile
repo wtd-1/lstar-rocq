@@ -1,4 +1,4 @@
-.PHONY: default lstar lstar-rocq install uninstall test clean fmt harness-build harness-test
+.PHONY: default lstar lstar-rocq install uninstall test clean fmt harness-build harness-test harness-it
 .IGNORE: fmt
 
 OPAM ?= opam
@@ -43,6 +43,16 @@ harness-test: harness-build
 	learnlib-harness/run.sh b lstar 8898 | grep -q '^done$$'
 	learnlib-harness/run.sh b kv 8898 | grep -q '^done$$'
 	learnlib-harness/run.sh b ttt 8898 | grep -q '^done$$'
+
+# Runs LearnLib's own DFA learner integration test suite (its real, shipped
+# JUnit/TestNG tests, not a custom-built comparable check) directly against
+# our extracted L*/KV/TTT, via learnlib-harness/src/test/java/.../it/. See
+# OCamlLearningAlgorithm's doc comment for how a LearningAlgorithm interface
+# expecting external step-wise refinement is bridged to our monolithic
+# extracted learners, and LstarOCamlDFAIT's for why L* excludes two of
+# LearnLib's five built-in DFA examples.
+harness-it: lstar
+	mvn -f learnlib-harness/pom.xml -q verify
 
 DOCS_PATH=docs/
 DOCS_NAME=lstar

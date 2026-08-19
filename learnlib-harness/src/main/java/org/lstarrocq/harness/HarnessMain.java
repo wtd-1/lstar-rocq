@@ -6,7 +6,7 @@ import java.io.IOException;
  * CLI entry point for both directions of the harness.
  *
  * <pre>
- *   java -jar learnlib-harness.jar teacher [port] [small|full] [lstar|kv|ttt]
+ *   java -jar learnlib-harness.jar teacher [port] [small|builtin|full] [lstar|kv|ttt]
  *   java -jar learnlib-harness.jar learner [host] [port] [lstar|kv|ttt]
  * </pre>
  *

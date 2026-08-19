@@ -1,4 +1,4 @@
-target=alternating          algo=ttt   alphabet=2   states=4     time=0.103s
-target=ends_in_01           algo=ttt   alphabet=2   states=3     time=0.089s
-target=mod3                 algo=ttt   alphabet=2   states=3     time=0.094s
+target=alternating          algo=ttt   alphabet=2   states=4     time=0.100s
+target=ends_in_01           algo=ttt   alphabet=2   states=3     time=0.087s
+target=mod3                 algo=ttt   alphabet=2   states=3     time=0.092s
 done

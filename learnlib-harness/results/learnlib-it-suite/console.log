@@ -1,0 +1,745 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< org.lstarrocq:learnlib-harness >-------------------
+[INFO] Building learnlib-harness 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ learnlib-harness ---
+[INFO] skip non existing resourceDirectory /Users/wtdoan/Downloads/lstar-rocq-main/learnlib-harness/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ learnlib-harness ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ learnlib-harness ---
+[INFO] skip non existing resourceDirectory /Users/wtdoan/Downloads/lstar-rocq-main/learnlib-harness/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ learnlib-harness ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.0:test (default-test) @ learnlib-harness ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.lstarrocq.harness.ProtocolTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in org.lstarrocq.harness.ProtocolTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ learnlib-harness ---
+[INFO] 
+[INFO] --- shade:3.6.0:shade (default) @ learnlib-harness ---
+[INFO] Including de.learnlib:learnlib-api:jar:0.18.0 in the shaded jar.
+[INFO] Including net.automatalib:automata-commons-util:jar:0.12.0 in the shaded jar.
+[INFO] Including org.slf4j:slf4j-api:jar:2.0.16 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-lstar:jar:0.18.0 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-datastructures:jar:0.18.0 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-kearns-vazirani:jar:0.18.0 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-ttt:jar:0.18.0 in the shaded jar.
+[INFO] Including net.automatalib:automata-commons-smartcollections:jar:0.12.0 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-util:jar:0.18.0 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-statistics:jar:0.18.0 in the shaded jar.
+[INFO] Including de.learnlib:learnlib-counterexamples:jar:0.18.0 in the shaded jar.
+[INFO] Including de.learnlib.testsupport:learnlib-learning-examples:jar:0.18.0 in the shaded jar.
+[INFO] Including net.automatalib:automata-serialization-learnlibv2:jar:0.12.0 in the shaded jar.
+[INFO] Including net.automatalib:automata-api:jar:0.12.1 in the shaded jar.
+[INFO] Including net.automatalib:automata-commons-settings:jar:0.12.1 in the shaded jar.
+[INFO] Including net.automatalib:automata-core:jar:0.12.1 in the shaded jar.
+[INFO] Including net.automatalib:automata-util:jar:0.12.1 in the shaded jar.
+[INFO] Including org.slf4j:slf4j-simple:jar:2.0.16 in the shaded jar.
+[INFO] Dependency-reduced POM written at: /Users/wtdoan/Downloads/lstar-rocq-main/learnlib-harness/dependency-reduced-pom.xml
+[WARNING] learnlib-harness.jar, learnlib-kearns-vazirani-0.18.0.jar define 13 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-kearns-vazirani/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-kearns-vazirani/pom.xml
+[WARNING]   - de.learnlib.algorithm.kv.StateInfo
+[WARNING]   - de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA
+[WARNING]   - de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA$BuilderDefaults
+[WARNING]   - de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFA$KVAbstractCounterexample
+[WARNING]   - de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFABuilder
+[WARNING]   - de.learnlib.algorithm.kv.dfa.KearnsVaziraniDFAState
+[WARNING]   - de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy
+[WARNING]   - de.learnlib.algorithm.kv.mealy.KearnsVaziraniMealy$BuilderDefaults
+[WARNING]   - 3 more...
+[WARNING] learnlib-harness.jar, learnlib-util-0.18.0.jar define 21 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-util/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-util/pom.xml
+[WARNING]   - de.learnlib.util.AbstractBFOracle
+[WARNING]   - de.learnlib.util.Experiment
+[WARNING]   - de.learnlib.util.Experiment$DFAExperiment
+[WARNING]   - de.learnlib.util.Experiment$ExperimentImpl
+[WARNING]   - de.learnlib.util.Experiment$MealyExperiment
+[WARNING]   - de.learnlib.util.Experiment$MooreExperiment
+[WARNING]   - de.learnlib.util.MQUtil
+[WARNING]   - de.learnlib.util.mealy.MealyLearnerWrapper
+[WARNING]   - 11 more...
+[WARNING] learnlib-datastructures-0.18.0.jar, learnlib-harness.jar define 69 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-datastructures/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-datastructures/pom.xml
+[WARNING]   - de.learnlib.datastructure.discriminationtree.BinaryDTNode
+[WARNING]   - de.learnlib.datastructure.discriminationtree.BinaryDTree
+[WARNING]   - de.learnlib.datastructure.discriminationtree.MultiDTNode
+[WARNING]   - de.learnlib.datastructure.discriminationtree.MultiDTree
+[WARNING]   - de.learnlib.datastructure.discriminationtree.SplitData
+[WARNING]   - de.learnlib.datastructure.discriminationtree.iterators.DiscriminationTreeIterators
+[WARNING]   - de.learnlib.datastructure.discriminationtree.iterators.NodeIterator
+[WARNING]   - de.learnlib.datastructure.discriminationtree.model.AbstractDTNode
+[WARNING]   - 59 more...
+[WARNING] learnlib-harness.jar, learnlib-learning-examples-0.18.0.jar define 63 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib.testsupport/learnlib-learning-examples/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib.testsupport/learnlib-learning-examples/pom.xml
+[WARNING]   - automata/learnlibv2/peterson2.dfa.gz
+[WARNING]   - automata/learnlibv2/peterson3.dfa.gz
+[WARNING]   - automata/learnlibv2/pots2.dfa.gz
+[WARNING]   - automata/learnlibv2/pots3.dfa.gz
+[WARNING]   - de.learnlib.testsupport.example.DefaultLearningExample
+[WARNING]   - de.learnlib.testsupport.example.DefaultLearningExample$DefaultDFALearningExample
+[WARNING]   - de.learnlib.testsupport.example.DefaultLearningExample$DefaultMealyLearningExample
+[WARNING]   - de.learnlib.testsupport.example.DefaultLearningExample$DefaultMooreLearningExample
+[WARNING]   - 53 more...
+[WARNING] learnlib-harness.jar, slf4j-api-2.0.16.jar define 57 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/org.slf4j/slf4j-api/pom.properties
+[WARNING]   - META-INF/maven/org.slf4j/slf4j-api/pom.xml
+[WARNING]   - org.slf4j.ILoggerFactory
+[WARNING]   - org.slf4j.IMarkerFactory
+[WARNING]   - org.slf4j.Logger
+[WARNING]   - org.slf4j.LoggerFactory
+[WARNING]   - org.slf4j.LoggerFactoryFriend
+[WARNING]   - org.slf4j.MDC
+[WARNING]   - org.slf4j.MDC$1
+[WARNING]   - org.slf4j.MDC$MDCCloseable
+[WARNING]   - 47 more...
+[WARNING] automata-util-0.12.1.jar, learnlib-harness.jar define 244 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-util/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-util/pom.xml
+[WARNING]   - net.automatalib.util.automaton.Automata
+[WARNING]   - net.automatalib.util.automaton.Automata$ResultStateRecord
+[WARNING]   - net.automatalib.util.automaton.Automata$ResultTransRecord
+[WARNING]   - net.automatalib.util.automaton.ads.ADS
+[WARNING]   - net.automatalib.util.automaton.ads.ADSUtil
+[WARNING]   - net.automatalib.util.automaton.ads.BacktrackingSearch
+[WARNING]   - net.automatalib.util.automaton.ads.BacktrackingSearch$1
+[WARNING]   - net.automatalib.util.automaton.ads.BacktrackingSearch$CostAggregator
+[WARNING]   - 234 more...
+[WARNING] learnlib-counterexamples-0.18.0.jar, learnlib-harness.jar define 30 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-counterexamples/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-counterexamples/pom.xml
+[WARNING]   - de.learnlib.acex.AbstractBaseCounterexample
+[WARNING]   - de.learnlib.acex.AbstractCounterexample
+[WARNING]   - de.learnlib.acex.AbstractNamedAcexAnalyzer
+[WARNING]   - de.learnlib.acex.AcexAnalysisAlgorithms
+[WARNING]   - de.learnlib.acex.AcexAnalyzer
+[WARNING]   - de.learnlib.acex.AcexAnalyzers
+[WARNING]   - de.learnlib.acex.AcexAnalyzers$1
+[WARNING]   - de.learnlib.acex.AcexAnalyzers$2
+[WARNING]   - 20 more...
+[WARNING] automata-commons-settings-0.12.1.jar, learnlib-harness.jar define 10 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-commons-settings/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-commons-settings/pom.xml
+[WARNING]   - META-INF/services/net.automatalib.common.setting.AutomataLibSettingsSource
+[WARNING]   - net.automatalib.common.setting.AutomataLibLocalPropertiesSource
+[WARNING]   - net.automatalib.common.setting.AutomataLibPropertiesSource
+[WARNING]   - net.automatalib.common.setting.AutomataLibProperty
+[WARNING]   - net.automatalib.common.setting.AutomataLibSettings
+[WARNING]   - net.automatalib.common.setting.AutomataLibSettingsSource
+[WARNING]   - net.automatalib.common.setting.AutomataLibSystemPropertiesSource
+[WARNING]   - net.automatalib.common.setting.package-info
+[WARNING] learnlib-harness.jar, slf4j-api-2.0.16.jar, slf4j-simple-2.0.16.jar define 2 overlapping class and resource: 
+[WARNING]   - META-INF.versions.9.module-info
+[WARNING]   - META-INF/LICENSE.txt
+[WARNING] learnlib-harness.jar, learnlib-statistics-0.18.0.jar define 23 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-statistics/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-statistics/pom.xml
+[WARNING]   - de.learnlib.filter.statistic.AbstractStatisticData
+[WARNING]   - de.learnlib.filter.statistic.Counter
+[WARNING]   - de.learnlib.filter.statistic.CounterCollection
+[WARNING]   - de.learnlib.filter.statistic.HistogramDataSet
+[WARNING]   - de.learnlib.filter.statistic.learner.DFARefinementCounterLearner
+[WARNING]   - de.learnlib.filter.statistic.learner.MealyRefinementCounterLearner
+[WARNING]   - de.learnlib.filter.statistic.learner.MooreRefinementCounterLearner
+[WARNING]   - de.learnlib.filter.statistic.learner.RefinementCounterLearner
+[WARNING]   - 13 more...
+[WARNING] learnlib-harness.jar, slf4j-simple-2.0.16.jar define 9 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/org.slf4j/slf4j-simple/pom.properties
+[WARNING]   - META-INF/maven/org.slf4j/slf4j-simple/pom.xml
+[WARNING]   - META-INF/services/org.slf4j.spi.SLF4JServiceProvider
+[WARNING]   - org.slf4j.simple.OutputChoice
+[WARNING]   - org.slf4j.simple.OutputChoice$OutputChoiceType
+[WARNING]   - org.slf4j.simple.SimpleLogger
+[WARNING]   - org.slf4j.simple.SimpleLoggerConfiguration
+[WARNING]   - org.slf4j.simple.SimpleLoggerFactory
+[WARNING]   - org.slf4j.simple.SimpleServiceProvider
+[WARNING] automata-commons-util-0.12.0.jar, learnlib-harness.jar define 105 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-commons-util/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-commons-util/pom.xml
+[WARNING]   - net.automatalib.common.util.HashUtil
+[WARNING]   - net.automatalib.common.util.Holder
+[WARNING]   - net.automatalib.common.util.IOUtil
+[WARNING]   - net.automatalib.common.util.IntDisjointSets
+[WARNING]   - net.automatalib.common.util.Pair
+[WARNING]   - net.automatalib.common.util.ReflectUtil
+[WARNING]   - net.automatalib.common.util.Triple
+[WARNING]   - net.automatalib.common.util.UnionFind
+[WARNING]   - 95 more...
+[WARNING] automata-core-0.12.1.jar, learnlib-harness.jar define 134 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-core/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-core/pom.xml
+[WARNING]   - net.automatalib.alphabet.impl.AbstractAlphabet
+[WARNING]   - net.automatalib.alphabet.impl.AbstractAlphabet$1
+[WARNING]   - net.automatalib.alphabet.impl.AbstractSymbol
+[WARNING]   - net.automatalib.alphabet.impl.AbstractVPAlphabet
+[WARNING]   - net.automatalib.alphabet.impl.AlphabetCollector
+[WARNING]   - net.automatalib.alphabet.impl.Alphabets
+[WARNING]   - net.automatalib.alphabet.impl.ArrayAlphabet
+[WARNING]   - net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet
+[WARNING]   - 124 more...
+[WARNING] automata-api-0.12.1.jar, automata-commons-settings-0.12.1.jar, automata-commons-smartcollections-0.12.0.jar, automata-commons-util-0.12.0.jar, automata-core-0.12.1.jar, automata-serialization-learnlibv2-0.12.0.jar, automata-util-0.12.1.jar, learnlib-api-0.18.0.jar, learnlib-counterexamples-0.18.0.jar, learnlib-datastructures-0.18.0.jar, learnlib-harness.jar, learnlib-kearns-vazirani-0.18.0.jar, learnlib-learning-examples-0.18.0.jar, learnlib-lstar-0.18.0.jar, learnlib-statistics-0.18.0.jar, learnlib-ttt-0.18.0.jar, learnlib-util-0.18.0.jar, slf4j-api-2.0.16.jar, slf4j-simple-2.0.16.jar define 1 overlapping resource: 
+[WARNING]   - META-INF/MANIFEST.MF
+[WARNING] learnlib-harness.jar, learnlib-lstar-0.18.0.jar define 47 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-lstar/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-lstar/pom.xml
+[WARNING]   - de.learnlib.algorithm.lstar.AbstractAutomatonLStar
+[WARNING]   - de.learnlib.algorithm.lstar.AbstractAutomatonLStar$StateInfo
+[WARNING]   - de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar
+[WARNING]   - de.learnlib.algorithm.lstar.AbstractExtensibleAutomatonLStar$BuilderDefaults
+[WARNING]   - de.learnlib.algorithm.lstar.AbstractLStar
+[WARNING]   - de.learnlib.algorithm.lstar.AutomatonLStarState
+[WARNING]   - de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandler
+[WARNING]   - de.learnlib.algorithm.lstar.ce.ObservationTableCEXHandlers
+[WARNING]   - 37 more...
+[WARNING] automata-serialization-learnlibv2-0.12.0.jar, learnlib-harness.jar define 3 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-serialization-learnlibv2/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-serialization-learnlibv2/pom.xml
+[WARNING]   - net.automatalib.serialization.learnlibv2.LearnLibV2Serialization
+[WARNING] automata-api-0.12.1.jar, learnlib-harness.jar define 250 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-api/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-api/pom.xml
+[WARNING]   - net.automatalib.alphabet.Alphabet
+[WARNING]   - net.automatalib.alphabet.GrowingAlphabet
+[WARNING]   - net.automatalib.alphabet.ProceduralInputAlphabet
+[WARNING]   - net.automatalib.alphabet.ProceduralInputAlphabet$1
+[WARNING]   - net.automatalib.alphabet.ProceduralOutputAlphabet
+[WARNING]   - net.automatalib.alphabet.SupportsGrowingAlphabet
+[WARNING]   - net.automatalib.alphabet.VPAlphabet
+[WARNING]   - net.automatalib.alphabet.VPAlphabet$1
+[WARNING]   - 240 more...
+[WARNING] learnlib-harness.jar, learnlib-ttt-0.18.0.jar define 40 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-ttt/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-ttt/pom.xml
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractBaseDTNode
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis$GraphView
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis$GraphView$1
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTHypothesis$TTTEdge
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTLearner
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTLearner$BuilderDefaults
+[WARNING]   - de.learnlib.algorithm.ttt.base.AbstractTTTLearner$ExtractRecord
+[WARNING]   - 30 more...
+[WARNING] automata-commons-smartcollections-0.12.0.jar, learnlib-harness.jar define 41 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/net.automatalib/automata-commons-smartcollections/pom.properties
+[WARNING]   - META-INF/maven/net.automatalib/automata-commons-smartcollections/pom.xml
+[WARNING]   - net.automatalib.common.smartcollection.AWUtil
+[WARNING]   - net.automatalib.common.smartcollection.AbstractBasicLinkedListEntry
+[WARNING]   - net.automatalib.common.smartcollection.AbstractLinkedList
+[WARNING]   - net.automatalib.common.smartcollection.AbstractLinkedList$ElementIterator
+[WARNING]   - net.automatalib.common.smartcollection.AbstractLinkedList$LinkedListEntryIterator
+[WARNING]   - net.automatalib.common.smartcollection.AbstractSmartCollection
+[WARNING]   - net.automatalib.common.smartcollection.ArrayWritable
+[WARNING]   - net.automatalib.common.smartcollection.BackedGeneralPriorityQueue
+[WARNING]   - 31 more...
+[WARNING] learnlib-api-0.18.0.jar, learnlib-harness.jar define 99 overlapping classes and resources: 
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-api/pom.properties
+[WARNING]   - META-INF/maven/de.learnlib/learnlib-api/pom.xml
+[WARNING]   - de.learnlib.AccessSequenceProvider
+[WARNING]   - de.learnlib.AccessSequenceTransformer
+[WARNING]   - de.learnlib.Mapper
+[WARNING]   - de.learnlib.Mapper$AsynchronousMapper
+[WARNING]   - de.learnlib.Mapper$SynchronousMapper
+[WARNING]   - de.learnlib.Resumable
+[WARNING]   - de.learnlib.algorithm.GlobalSuffixLearner
+[WARNING]   - de.learnlib.algorithm.GlobalSuffixLearner$GlobalSuffixLearnerDFA
+[WARNING]   - 89 more...
+[WARNING] maven-shade-plugin has detected that some files are
+[WARNING] present in two or more JARs. When this happens, only one
+[WARNING] single version of the file is copied to the uber jar.
+[WARNING] Usually this is not harmful and you can skip these warnings,
+[WARNING] otherwise try to manually exclude artifacts based on
+[WARNING] mvn dependency:tree -Ddetail=true and the above output.
+[WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
+[INFO] Replacing original artifact with shaded artifact.
+[INFO] Replacing /Users/wtdoan/Downloads/lstar-rocq-main/learnlib-harness/target/learnlib-harness.jar with /Users/wtdoan/Downloads/lstar-rocq-main/learnlib-harness/target/learnlib-harness-0.1.0-shaded.jar
+[INFO] 
+[INFO] --- failsafe:3.5.0:integration-test (default) @ learnlib-harness ---
+[INFO] Using configured provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running TestSuite
+  [lstar] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.005s elapsed=0.0s counterexample=true
+  [lstar] eq #2    hyp_states=2    mq_so_far=33       eq_check=0.001s elapsed=0.0s counterexample=true
+  [lstar] eq #3    hyp_states=3    mq_so_far=174      eq_check=0.001s elapsed=0.1s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[lstar-rocq]/ExampleTinyDFA ... took [0.086s]
+  [kv] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.003s elapsed=0.0s counterexample=true
+  [kv] eq #2    hyp_states=2    mq_so_far=21       eq_check=0.002s elapsed=0.0s counterexample=true
+  [kv] eq #3    hyp_states=3    mq_so_far=158      eq_check=0.001s elapsed=0.0s counterexample=true
+  [kv] eq #4    hyp_states=4    mq_so_far=379      eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #5    hyp_states=5    mq_so_far=676      eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #6    hyp_states=6    mq_so_far=1066     eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #7    hyp_states=7    mq_so_far=1540     eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #8    hyp_states=8    mq_so_far=2103     eq_check=0.001s elapsed=0.2s counterexample=true
+  [kv] eq #9    hyp_states=9    mq_so_far=2795     eq_check=0.002s elapsed=0.2s counterexample=true
+  [kv] eq #10   hyp_states=10   mq_so_far=3563     eq_check=0.002s elapsed=0.2s counterexample=true
+  [kv] eq #11   hyp_states=11   mq_so_far=4400     eq_check=0.001s elapsed=0.3s counterexample=true
+  [kv] eq #12   hyp_states=12   mq_so_far=5397     eq_check=0.001s elapsed=0.3s counterexample=true
+  [kv] eq #13   hyp_states=13   mq_so_far=6509     eq_check=0.001s elapsed=0.4s counterexample=true
+  [kv] eq #14   hyp_states=14   mq_so_far=7778     eq_check=0.001s elapsed=0.4s counterexample=true
+  [kv] eq #15   hyp_states=15   mq_so_far=9259     eq_check=0.002s elapsed=0.5s counterexample=true
+  [kv] eq #16   hyp_states=16   mq_so_far=10855    eq_check=0.002s elapsed=0.5s counterexample=true
+  [kv] eq #17   hyp_states=17   mq_so_far=12493    eq_check=0.002s elapsed=0.6s counterexample=true
+  [kv] eq #18   hyp_states=18   mq_so_far=14406    eq_check=0.001s elapsed=0.7s counterexample=true
+  [kv] eq #19   hyp_states=19   mq_so_far=16421    eq_check=0.001s elapsed=0.8s counterexample=true
+  [kv] eq #20   hyp_states=20   mq_so_far=18484    eq_check=0.002s elapsed=0.9s counterexample=true
+  [kv] eq #21   hyp_states=21   mq_so_far=20901    eq_check=0.002s elapsed=1.0s counterexample=true
+  [kv] eq #22   hyp_states=22   mq_so_far=23456    eq_check=0.002s elapsed=1.1s counterexample=true
+  [kv] eq #23   hyp_states=23   mq_so_far=25969    eq_check=0.002s elapsed=1.2s counterexample=true
+  [kv] eq #24   hyp_states=24   mq_so_far=28920    eq_check=0.002s elapsed=1.3s counterexample=true
+  [kv] eq #25   hyp_states=25   mq_so_far=32022    eq_check=0.002s elapsed=1.4s counterexample=true
+  [kv] eq #26   hyp_states=26   mq_so_far=35582    eq_check=0.002s elapsed=1.5s counterexample=true
+  [kv] eq #27   hyp_states=27   mq_so_far=39671    eq_check=0.002s elapsed=1.7s counterexample=true
+  [kv] eq #28   hyp_states=28   mq_so_far=43924    eq_check=0.002s elapsed=1.8s counterexample=true
+  [kv] eq #29   hyp_states=29   mq_so_far=48024    eq_check=0.002s elapsed=2.0s counterexample=true
+  [kv] eq #30   hyp_states=30   mq_so_far=52743    eq_check=0.002s elapsed=2.2s counterexample=true
+  [kv] eq #31   hyp_states=31   mq_so_far=57627    eq_check=0.002s elapsed=2.4s counterexample=true
+  [kv] eq #32   hyp_states=32   mq_so_far=62396    eq_check=0.002s elapsed=2.6s counterexample=true
+  [kv] eq #33   hyp_states=33   mq_so_far=67904    eq_check=0.002s elapsed=2.8s counterexample=true
+  [kv] eq #34   hyp_states=34   mq_so_far=73601    eq_check=0.003s elapsed=3.0s counterexample=true
+  [kv] eq #35   hyp_states=35   mq_so_far=78997    eq_check=0.002s elapsed=3.2s counterexample=true
+  [kv] eq #36   hyp_states=36   mq_so_far=85228    eq_check=0.002s elapsed=3.5s counterexample=true
+  [kv] eq #37   hyp_states=37   mq_so_far=91637    eq_check=0.002s elapsed=3.7s counterexample=true
+  [kv] eq #38   hyp_states=38   mq_so_far=98029    eq_check=0.002s elapsed=4.0s counterexample=true
+  [kv] eq #39   hyp_states=39   mq_so_far=105421   eq_check=0.002s elapsed=4.3s counterexample=true
+  [kv] eq #40   hyp_states=40   mq_so_far=113044   eq_check=0.002s elapsed=4.6s counterexample=true
+  [kv] eq #41   hyp_states=41   mq_so_far=120201   eq_check=0.002s elapsed=4.9s counterexample=true
+  [kv] eq #42   hyp_states=42   mq_so_far=128466   eq_check=0.002s elapsed=5.2s counterexample=true
+  [kv] eq #43   hyp_states=43   mq_so_far=136945   eq_check=0.002s elapsed=5.5s counterexample=true
+  [kv] eq #44   hyp_states=44   mq_so_far=144990   eq_check=0.002s elapsed=5.9s counterexample=true
+  [kv] eq #45   hyp_states=45   mq_so_far=154293   eq_check=0.003s elapsed=6.3s counterexample=true
+  [kv] eq #46   hyp_states=46   mq_so_far=163828   eq_check=0.002s elapsed=6.6s counterexample=true
+  [kv] eq #47   hyp_states=47   mq_so_far=173781   eq_check=0.002s elapsed=7.0s counterexample=true
+  [kv] eq #48   hyp_states=48   mq_so_far=183978   eq_check=0.002s elapsed=7.4s counterexample=true
+  [kv] eq #49   hyp_states=49   mq_so_far=194472   eq_check=0.002s elapsed=7.8s counterexample=true
+  [kv] eq #50   hyp_states=50   mq_so_far=205174   eq_check=0.002s elapsed=8.2s counterexample=true
+  [kv] eq #51   hyp_states=51   mq_so_far=217534   eq_check=0.002s elapsed=8.6s counterexample=true
+  [kv] eq #52   hyp_states=52   mq_so_far=231598   eq_check=0.002s elapsed=9.2s counterexample=true
+  [kv] eq #53   hyp_states=53   mq_so_far=246001   eq_check=0.002s elapsed=9.7s counterexample=true
+  [kv] eq #54   hyp_states=54   mq_so_far=259476   eq_check=0.002s elapsed=10.2s counterexample=true
+  [kv] eq #55   hyp_states=55   mq_so_far=274795   eq_check=0.002s elapsed=10.8s counterexample=true
+  [kv] eq #56   hyp_states=56   mq_so_far=290429   eq_check=0.002s elapsed=11.3s counterexample=true
+  [kv] eq #57   hyp_states=57   mq_so_far=305173   eq_check=0.002s elapsed=11.9s counterexample=true
+  [kv] eq #58   hyp_states=58   mq_so_far=321956   eq_check=0.002s elapsed=12.5s counterexample=true
+  [kv] eq #59   hyp_states=59   mq_so_far=339078   eq_check=0.002s elapsed=13.2s counterexample=true
+  [kv] eq #60   hyp_states=60   mq_so_far=354949   eq_check=0.002s elapsed=13.8s counterexample=true
+  [kv] eq #61   hyp_states=61   mq_so_far=373005   eq_check=0.002s elapsed=14.5s counterexample=true
+  [kv] eq #62   hyp_states=62   mq_so_far=391364   eq_check=0.002s elapsed=15.3s counterexample=true
+  [kv] eq #63   hyp_states=63   mq_so_far=408931   eq_check=0.002s elapsed=16.0s counterexample=true
+  [kv] eq #64   hyp_states=64   mq_so_far=428948   eq_check=0.002s elapsed=16.7s counterexample=true
+  [kv] eq #65   hyp_states=65   mq_so_far=449346   eq_check=0.002s elapsed=17.5s counterexample=true
+  [kv] eq #66   hyp_states=66   mq_so_far=468178   eq_check=0.002s elapsed=18.2s counterexample=true
+  [kv] eq #67   hyp_states=67   mq_so_far=489618   eq_check=0.002s elapsed=19.0s counterexample=true
+  [kv] eq #68   hyp_states=68   mq_so_far=511397   eq_check=0.002s elapsed=19.8s counterexample=true
+  [kv] eq #69   hyp_states=69   mq_so_far=531642   eq_check=0.002s elapsed=20.6s counterexample=true
+  [kv] eq #70   hyp_states=70   mq_so_far=554720   eq_check=0.002s elapsed=21.5s counterexample=true
+  [kv] eq #71   hyp_states=71   mq_so_far=578155   eq_check=0.002s elapsed=22.4s counterexample=true
+  [kv] eq #72   hyp_states=72   mq_so_far=602233   eq_check=0.002s elapsed=23.3s counterexample=true
+  [kv] eq #73   hyp_states=73   mq_so_far=626680   eq_check=0.002s elapsed=24.2s counterexample=true
+  [kv] eq #74   hyp_states=74   mq_so_far=651574   eq_check=0.002s elapsed=25.1s counterexample=true
+  [kv] eq #75   hyp_states=75   mq_so_far=676776   eq_check=0.002s elapsed=26.0s counterexample=true
+  [kv] eq #76   hyp_states=76   mq_so_far=701637   eq_check=0.002s elapsed=26.9s counterexample=true
+  [kv] eq #77   hyp_states=77   mq_so_far=729950   eq_check=0.002s elapsed=28.0s counterexample=true
+  [kv] eq #78   hyp_states=78   mq_so_far=758723   eq_check=0.002s elapsed=29.0s counterexample=true
+  [kv] eq #79   hyp_states=79   mq_so_far=785112   eq_check=0.002s elapsed=30.0s counterexample=true
+  [kv] eq #80   hyp_states=80   mq_so_far=815137   eq_check=0.002s elapsed=31.1s counterexample=true
+  [kv] eq #81   hyp_states=81   mq_so_far=845567   eq_check=0.002s elapsed=32.2s counterexample=true
+  [kv] eq #82   hyp_states=82   mq_so_far=873645   eq_check=0.002s elapsed=33.2s counterexample=true
+  [kv] eq #83   hyp_states=83   mq_so_far=905623   eq_check=0.002s elapsed=34.4s counterexample=true
+  [kv] eq #84   hyp_states=84   mq_so_far=938024   eq_check=0.002s elapsed=35.6s counterexample=true
+  [kv] eq #85   hyp_states=85   mq_so_far=967531   eq_check=0.002s elapsed=36.7s counterexample=true
+  [kv] eq #86   hyp_states=86   mq_so_far=1001128  eq_check=0.002s elapsed=37.9s counterexample=true
+  [kv] eq #87   hyp_states=87   mq_so_far=1035081  eq_check=0.001s elapsed=39.2s counterexample=true
+  [kv] eq #88   hyp_states=88   mq_so_far=1066768  eq_check=0.001s elapsed=40.4s counterexample=true
+  [kv] eq #89   hyp_states=89   mq_so_far=1102904  eq_check=0.001s elapsed=41.7s counterexample=true
+  [kv] eq #90   hyp_states=90   mq_so_far=1139493  eq_check=0.001s elapsed=43.1s counterexample=true
+  [kv] eq #91   hyp_states=91   mq_so_far=1172711  eq_check=0.001s elapsed=44.3s counterexample=true
+  [kv] eq #92   hyp_states=92   mq_so_far=1210580  eq_check=0.001s elapsed=45.7s counterexample=true
+  [kv] eq #93   hyp_states=93   mq_so_far=1248829  eq_check=0.001s elapsed=47.1s counterexample=true
+  [kv] eq #94   hyp_states=94   mq_so_far=1283733  eq_check=0.001s elapsed=48.4s counterexample=true
+  [kv] eq #95   hyp_states=95   mq_so_far=1323582  eq_check=0.001s elapsed=49.9s counterexample=true
+  [kv] eq #96   hyp_states=96   mq_so_far=1363823  eq_check=0.001s elapsed=51.4s counterexample=true
+  [kv] eq #97   hyp_states=97   mq_so_far=1404840  eq_check=0.001s elapsed=53.0s counterexample=true
+  [kv] eq #98   hyp_states=98   mq_so_far=1446257  eq_check=0.001s elapsed=54.7s counterexample=true
+  [kv] eq #99   hyp_states=99   mq_so_far=1488175  eq_check=0.001s elapsed=56.7s counterexample=true
+  [kv] eq #100  hyp_states=100  mq_so_far=1530403  eq_check=0.054s elapsed=58.8s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleKeylock ... took [58.807s]
+  [ttt] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #2    hyp_states=2    mq_so_far=15       eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #3    hyp_states=3    mq_so_far=47       eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleTinyDFA ... took [0.014s]
+  [ttt] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #2    hyp_states=2    mq_so_far=15       eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #3    hyp_states=3    mq_so_far=49       eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #4    hyp_states=4    mq_so_far=113      eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleAngluin ... took [0.010s]
+  [lstar] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #2    hyp_states=2    mq_so_far=71       eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #3    hyp_states=3    mq_so_far=330      eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #4    hyp_states=4    mq_so_far=938      eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #5    hyp_states=5    mq_so_far=1583     eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[lstar-rocq]/ExamplePaulAndMary ... took [0.056s]
+  [ttt] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.001s elapsed=0.0s counterexample=true
+  [ttt] eq #2    hyp_states=2    mq_so_far=121      eq_check=0.001s elapsed=0.0s counterexample=true
+  [ttt] eq #3    hyp_states=3    mq_so_far=358      eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #4    hyp_states=4    mq_so_far=706      eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #5    hyp_states=5    mq_so_far=1162     eq_check=0.001s elapsed=0.0s counterexample=true
+  [ttt] eq #6    hyp_states=6    mq_so_far=1744     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #7    hyp_states=7    mq_so_far=2431     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #8    hyp_states=8    mq_so_far=3250     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #9    hyp_states=9    mq_so_far=4219     eq_check=0.001s elapsed=0.2s counterexample=true
+  [ttt] eq #10   hyp_states=10   mq_so_far=5293     eq_check=0.001s elapsed=0.2s counterexample=true
+  [ttt] eq #11   hyp_states=11   mq_so_far=6449     eq_check=0.001s elapsed=0.2s counterexample=true
+  [ttt] eq #12   hyp_states=12   mq_so_far=7784     eq_check=0.001s elapsed=0.3s counterexample=true
+  [ttt] eq #13   hyp_states=13   mq_so_far=9221     eq_check=0.001s elapsed=0.3s counterexample=true
+  [ttt] eq #14   hyp_states=14   mq_so_far=10919    eq_check=0.001s elapsed=0.4s counterexample=true
+  [ttt] eq #15   hyp_states=15   mq_so_far=12848    eq_check=0.001s elapsed=0.5s counterexample=true
+  [ttt] eq #16   hyp_states=16   mq_so_far=14888    eq_check=0.001s elapsed=0.6s counterexample=true
+  [ttt] eq #17   hyp_states=17   mq_so_far=16959    eq_check=0.001s elapsed=0.6s counterexample=true
+  [ttt] eq #18   hyp_states=18   mq_so_far=19308    eq_check=0.001s elapsed=0.7s counterexample=true
+  [ttt] eq #19   hyp_states=19   mq_so_far=21765    eq_check=0.001s elapsed=0.8s counterexample=true
+  [ttt] eq #20   hyp_states=20   mq_so_far=24316    eq_check=0.001s elapsed=0.9s counterexample=true
+  [ttt] eq #21   hyp_states=21   mq_so_far=27208    eq_check=0.002s elapsed=1.0s counterexample=true
+  [ttt] eq #22   hyp_states=22   mq_so_far=30211    eq_check=0.002s elapsed=1.1s counterexample=true
+  [ttt] eq #23   hyp_states=23   mq_so_far=33153    eq_check=0.002s elapsed=1.2s counterexample=true
+  [ttt] eq #24   hyp_states=24   mq_so_far=36504    eq_check=0.002s elapsed=1.4s counterexample=true
+  [ttt] eq #25   hyp_states=25   mq_so_far=39966    eq_check=0.002s elapsed=1.5s counterexample=true
+  [ttt] eq #26   hyp_states=26   mq_so_far=44250    eq_check=0.002s elapsed=1.6s counterexample=true
+  [ttt] eq #27   hyp_states=27   mq_so_far=49047    eq_check=0.002s elapsed=1.8s counterexample=true
+  [ttt] eq #28   hyp_states=28   mq_so_far=53979    eq_check=0.002s elapsed=2.0s counterexample=true
+  [ttt] eq #29   hyp_states=29   mq_so_far=58744    eq_check=0.002s elapsed=2.2s counterexample=true
+  [ttt] eq #30   hyp_states=30   mq_so_far=64105    eq_check=0.002s elapsed=2.4s counterexample=true
+  [ttt] eq #31   hyp_states=31   mq_so_far=69598    eq_check=0.002s elapsed=2.6s counterexample=true
+  [ttt] eq #32   hyp_states=32   mq_so_far=75023    eq_check=0.002s elapsed=2.8s counterexample=true
+  [ttt] eq #33   hyp_states=33   mq_so_far=81143    eq_check=0.002s elapsed=3.0s counterexample=true
+  [ttt] eq #34   hyp_states=34   mq_so_far=87398    eq_check=0.002s elapsed=3.2s counterexample=true
+  [ttt] eq #35   hyp_states=35   mq_so_far=93322    eq_check=0.002s elapsed=3.4s counterexample=true
+  [ttt] eq #36   hyp_states=36   mq_so_far=100045   eq_check=0.002s elapsed=3.7s counterexample=true
+  [ttt] eq #37   hyp_states=37   mq_so_far=106903   eq_check=0.002s elapsed=3.9s counterexample=true
+  [ttt] eq #38   hyp_states=38   mq_so_far=113972   eq_check=0.002s elapsed=4.2s counterexample=true
+  [ttt] eq #39   hyp_states=39   mq_so_far=121967   eq_check=0.002s elapsed=4.4s counterexample=true
+  [ttt] eq #40   hyp_states=40   mq_so_far=130109   eq_check=0.002s elapsed=4.7s counterexample=true
+  [ttt] eq #41   hyp_states=41   mq_so_far=137731   eq_check=0.002s elapsed=5.0s counterexample=true
+  [ttt] eq #42   hyp_states=42   mq_so_far=146401   eq_check=0.002s elapsed=5.3s counterexample=true
+  [ttt] eq #43   hyp_states=43   mq_so_far=155218   eq_check=0.002s elapsed=5.7s counterexample=true
+  [ttt] eq #44   hyp_states=44   mq_so_far=163653   eq_check=0.003s elapsed=6.0s counterexample=true
+  [ttt] eq #45   hyp_states=45   mq_so_far=173274   eq_check=0.002s elapsed=6.3s counterexample=true
+  [ttt] eq #46   hyp_states=46   mq_so_far=183048   eq_check=0.002s elapsed=6.7s counterexample=true
+  [ttt] eq #47   hyp_states=47   mq_so_far=193244   eq_check=0.002s elapsed=7.0s counterexample=true
+  [ttt] eq #48   hyp_states=48   mq_so_far=203597   eq_check=0.003s elapsed=7.4s counterexample=true
+  [ttt] eq #49   hyp_states=49   mq_so_far=214200   eq_check=0.002s elapsed=7.8s counterexample=true
+  [ttt] eq #50   hyp_states=50   mq_so_far=224961   eq_check=0.002s elapsed=8.2s counterexample=true
+  [ttt] eq #51   hyp_states=51   mq_so_far=239095   eq_check=0.002s elapsed=8.7s counterexample=true
+  [ttt] eq #52   hyp_states=52   mq_so_far=254817   eq_check=0.002s elapsed=9.2s counterexample=true
+  [ttt] eq #53   hyp_states=53   mq_so_far=270749   eq_check=0.002s elapsed=9.8s counterexample=true
+  [ttt] eq #54   hyp_states=54   mq_so_far=285664   eq_check=0.002s elapsed=10.4s counterexample=true
+  [ttt] eq #55   hyp_states=55   mq_so_far=302325   eq_check=0.002s elapsed=11.0s counterexample=true
+  [ttt] eq #56   hyp_states=56   mq_so_far=319193   eq_check=0.002s elapsed=11.6s counterexample=true
+  [ttt] eq #57   hyp_states=57   mq_so_far=335218   eq_check=0.002s elapsed=12.2s counterexample=true
+  [ttt] eq #58   hyp_states=58   mq_so_far=353163   eq_check=0.002s elapsed=12.8s counterexample=true
+  [ttt] eq #59   hyp_states=59   mq_so_far=371318   eq_check=0.002s elapsed=13.5s counterexample=true
+  [ttt] eq #60   hyp_states=60   mq_so_far=388142   eq_check=0.002s elapsed=14.1s counterexample=true
+  [ttt] eq #61   hyp_states=61   mq_so_far=407065   eq_check=0.002s elapsed=14.8s counterexample=true
+  [ttt] eq #62   hyp_states=62   mq_so_far=426198   eq_check=0.002s elapsed=15.5s counterexample=true
+  [ttt] eq #63   hyp_states=63   mq_so_far=444917   eq_check=0.002s elapsed=16.2s counterexample=true
+  [ttt] eq #64   hyp_states=64   mq_so_far=465937   eq_check=0.002s elapsed=16.9s counterexample=true
+  [ttt] eq #65   hyp_states=65   mq_so_far=487179   eq_check=0.002s elapsed=17.7s counterexample=true
+  [ttt] eq #66   hyp_states=66   mq_so_far=506751   eq_check=0.002s elapsed=18.4s counterexample=true
+  [ttt] eq #67   hyp_states=67   mq_so_far=528821   eq_check=0.002s elapsed=19.2s counterexample=true
+  [ttt] eq #68   hyp_states=68   mq_so_far=551113   eq_check=0.002s elapsed=20.1s counterexample=true
+  [ttt] eq #69   hyp_states=69   mq_so_far=571948   eq_check=0.002s elapsed=20.8s counterexample=true
+  [ttt] eq #70   hyp_states=70   mq_so_far=595494   eq_check=0.002s elapsed=21.7s counterexample=true
+  [ttt] eq #71   hyp_states=71   mq_so_far=619268   eq_check=0.002s elapsed=22.6s counterexample=true
+  [ttt] eq #72   hyp_states=72   mq_so_far=643689   eq_check=0.002s elapsed=23.5s counterexample=true
+  [ttt] eq #73   hyp_states=73   mq_so_far=668342   eq_check=0.002s elapsed=24.4s counterexample=true
+  [ttt] eq #74   hyp_states=74   mq_so_far=693370   eq_check=0.002s elapsed=25.4s counterexample=true
+  [ttt] eq #75   hyp_states=75   mq_so_far=718631   eq_check=0.002s elapsed=26.3s counterexample=true
+  [ttt] eq #76   hyp_states=76   mq_so_far=744816   eq_check=0.002s elapsed=27.3s counterexample=true
+  [ttt] eq #77   hyp_states=77   mq_so_far=774263   eq_check=0.002s elapsed=28.6s counterexample=true
+  [ttt] eq #78   hyp_states=78   mq_so_far=803970   eq_check=0.002s elapsed=29.7s counterexample=true
+  [ttt] eq #79   hyp_states=79   mq_so_far=831161   eq_check=0.002s elapsed=30.7s counterexample=true
+  [ttt] eq #80   hyp_states=80   mq_so_far=861850   eq_check=0.002s elapsed=31.8s counterexample=true
+  [ttt] eq #81   hyp_states=81   mq_so_far=892799   eq_check=0.002s elapsed=33.0s counterexample=true
+  [ttt] eq #82   hyp_states=82   mq_so_far=921484   eq_check=0.002s elapsed=34.1s counterexample=true
+  [ttt] eq #83   hyp_states=83   mq_so_far=953919   eq_check=0.002s elapsed=35.3s counterexample=true
+  [ttt] eq #84   hyp_states=84   mq_so_far=986620   eq_check=0.002s elapsed=36.5s counterexample=true
+  [ttt] eq #85   hyp_states=85   mq_so_far=1016347  eq_check=0.001s elapsed=37.6s counterexample=true
+  [ttt] eq #86   hyp_states=86   mq_so_far=1050081  eq_check=0.001s elapsed=38.8s counterexample=true
+  [ttt] eq #87   hyp_states=87   mq_so_far=1084084  eq_check=0.001s elapsed=40.1s counterexample=true
+  [ttt] eq #88   hyp_states=88   mq_so_far=1116408  eq_check=0.001s elapsed=41.3s counterexample=true
+  [ttt] eq #89   hyp_states=89   mq_so_far=1153019  eq_check=0.001s elapsed=42.6s counterexample=true
+  [ttt] eq #90   hyp_states=90   mq_so_far=1189914  eq_check=0.001s elapsed=44.0s counterexample=true
+  [ttt] eq #91   hyp_states=91   mq_so_far=1223352  eq_check=0.001s elapsed=45.2s counterexample=true
+  [ttt] eq #92   hyp_states=92   mq_so_far=1261352  eq_check=0.001s elapsed=46.7s counterexample=true
+  [ttt] eq #93   hyp_states=93   mq_so_far=1299639  eq_check=0.001s elapsed=48.1s counterexample=true
+  [ttt] eq #94   hyp_states=94   mq_so_far=1334760  eq_check=0.001s elapsed=49.4s counterexample=true
+  [ttt] eq #95   hyp_states=95   mq_so_far=1374734  eq_check=0.001s elapsed=50.9s counterexample=true
+  [ttt] eq #96   hyp_states=96   mq_so_far=1415004  eq_check=0.001s elapsed=52.4s counterexample=true
+  [ttt] eq #97   hyp_states=97   mq_so_far=1456140  eq_check=0.001s elapsed=53.9s counterexample=true
+  [ttt] eq #98   hyp_states=98   mq_so_far=1497578  eq_check=0.001s elapsed=55.5s counterexample=true
+  [ttt] eq #99   hyp_states=99   mq_so_far=1539512  eq_check=0.001s elapsed=57.0s counterexample=true
+  [ttt] eq #100  hyp_states=100  mq_so_far=1581751  eq_check=0.045s elapsed=58.7s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleKeylock ... took [58.676s]
+  [lstar] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #2    hyp_states=2    mq_so_far=33       eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #3    hyp_states=3    mq_so_far=154      eq_check=0.000s elapsed=0.0s counterexample=true
+  [lstar] eq #4    hyp_states=4    mq_so_far=436      eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[lstar-rocq]/ExampleAngluin ... took [0.020s]
+  [kv] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #2    hyp_states=2    mq_so_far=13       eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #3    hyp_states=3    mq_so_far=44       eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #4    hyp_states=4    mq_so_far=105      eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleAngluin ... took [0.009s]
+  [ttt] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #2    hyp_states=2    mq_so_far=23       eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #3    hyp_states=3    mq_so_far=78       eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #4    hyp_states=4    mq_so_far=173      eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #5    hyp_states=5    mq_so_far=348      eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExamplePaulAndMary ... took [0.014s]
+  [kv] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #2    hyp_states=2    mq_so_far=21       eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #3    hyp_states=3    mq_so_far=159      eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #4    hyp_states=4    mq_so_far=409      eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #5    hyp_states=5    mq_so_far=768      eq_check=0.001s elapsed=0.0s counterexample=true
+  [kv] eq #6    hyp_states=6    mq_so_far=1254     eq_check=0.001s elapsed=0.0s counterexample=true
+  [kv] eq #7    hyp_states=7    mq_so_far=1846     eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #8    hyp_states=8    mq_so_far=2571     eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #9    hyp_states=9    mq_so_far=3447     eq_check=0.001s elapsed=0.1s counterexample=true
+  [kv] eq #10   hyp_states=10   mq_so_far=4429     eq_check=0.001s elapsed=0.2s counterexample=true
+  [kv] eq #11   hyp_states=11   mq_so_far=5494     eq_check=0.001s elapsed=0.2s counterexample=true
+  [kv] eq #12   hyp_states=12   mq_so_far=6739     eq_check=0.001s elapsed=0.2s counterexample=true
+  [kv] eq #13   hyp_states=13   mq_so_far=8087     eq_check=0.001s elapsed=0.3s counterexample=true
+  [kv] eq #14   hyp_states=14   mq_so_far=9697     eq_check=0.001s elapsed=0.3s counterexample=true
+  [kv] eq #15   hyp_states=15   mq_so_far=11539    eq_check=0.001s elapsed=0.4s counterexample=true
+  [kv] eq #16   hyp_states=16   mq_so_far=13493    eq_check=0.001s elapsed=0.5s counterexample=true
+  [kv] eq #17   hyp_states=17   mq_so_far=15479    eq_check=0.001s elapsed=0.6s counterexample=true
+  [kv] eq #18   hyp_states=18   mq_so_far=17744    eq_check=0.001s elapsed=0.6s counterexample=true
+  [kv] eq #19   hyp_states=19   mq_so_far=20118    eq_check=0.001s elapsed=0.7s counterexample=true
+  [kv] eq #20   hyp_states=20   mq_so_far=22587    eq_check=0.002s elapsed=0.8s counterexample=true
+  [kv] eq #21   hyp_states=21   mq_so_far=25398    eq_check=0.001s elapsed=0.9s counterexample=true
+  [kv] eq #22   hyp_states=22   mq_so_far=28321    eq_check=0.001s elapsed=1.0s counterexample=true
+  [kv] eq #23   hyp_states=23   mq_so_far=31184    eq_check=0.002s elapsed=1.1s counterexample=true
+  [kv] eq #24   hyp_states=24   mq_so_far=34457    eq_check=0.002s elapsed=1.2s counterexample=true
+  [kv] eq #25   hyp_states=25   mq_so_far=37842    eq_check=0.002s elapsed=1.4s counterexample=true
+  [kv] eq #26   hyp_states=26   mq_so_far=42050    eq_check=0.002s elapsed=1.5s counterexample=true
+  [kv] eq #27   hyp_states=27   mq_so_far=46772    eq_check=0.002s elapsed=1.7s counterexample=true
+  [kv] eq #28   hyp_states=28   mq_so_far=51630    eq_check=0.002s elapsed=1.8s counterexample=true
+  [kv] eq #29   hyp_states=29   mq_so_far=56322    eq_check=0.002s elapsed=2.0s counterexample=true
+  [kv] eq #30   hyp_states=30   mq_so_far=61611    eq_check=0.002s elapsed=2.2s counterexample=true
+  [kv] eq #31   hyp_states=31   mq_so_far=67033    eq_check=0.002s elapsed=2.4s counterexample=true
+  [kv] eq #32   hyp_states=32   mq_so_far=72388    eq_check=0.002s elapsed=2.6s counterexample=true
+  [kv] eq #33   hyp_states=33   mq_so_far=78439    eq_check=0.002s elapsed=2.8s counterexample=true
+  [kv] eq #34   hyp_states=34   mq_so_far=84626    eq_check=0.002s elapsed=3.0s counterexample=true
+  [kv] eq #35   hyp_states=35   mq_so_far=90483    eq_check=0.002s elapsed=3.3s counterexample=true
+  [kv] eq #36   hyp_states=36   mq_so_far=97140    eq_check=0.002s elapsed=3.5s counterexample=true
+  [kv] eq #37   hyp_states=37   mq_so_far=103933   eq_check=0.002s elapsed=3.7s counterexample=true
+  [kv] eq #38   hyp_states=38   mq_so_far=110938   eq_check=0.002s elapsed=4.0s counterexample=true
+  [kv] eq #39   hyp_states=39   mq_so_far=118870   eq_check=0.002s elapsed=4.3s counterexample=true
+  [kv] eq #40   hyp_states=40   mq_so_far=126950   eq_check=0.002s elapsed=4.6s counterexample=true
+  [kv] eq #41   hyp_states=41   mq_so_far=134511   eq_check=0.002s elapsed=4.8s counterexample=true
+  [kv] eq #42   hyp_states=42   mq_so_far=143121   eq_check=0.002s elapsed=5.1s counterexample=true
+  [kv] eq #43   hyp_states=43   mq_so_far=151879   eq_check=0.002s elapsed=5.4s counterexample=true
+  [kv] eq #44   hyp_states=44   mq_so_far=160256   eq_check=0.002s elapsed=5.7s counterexample=true
+  [kv] eq #45   hyp_states=45   mq_so_far=169820   eq_check=0.002s elapsed=6.1s counterexample=true
+  [kv] eq #46   hyp_states=46   mq_so_far=179538   eq_check=0.002s elapsed=6.4s counterexample=true
+  [kv] eq #47   hyp_states=47   mq_so_far=189679   eq_check=0.002s elapsed=6.8s counterexample=true
+  [kv] eq #48   hyp_states=48   mq_so_far=199978   eq_check=0.002s elapsed=7.2s counterexample=true
+  [kv] eq #49   hyp_states=49   mq_so_far=210528   eq_check=0.002s elapsed=7.5s counterexample=true
+  [kv] eq #50   hyp_states=50   mq_so_far=221237   eq_check=0.002s elapsed=7.9s counterexample=true
+  [kv] eq #51   hyp_states=51   mq_so_far=235320   eq_check=0.002s elapsed=8.4s counterexample=true
+  [kv] eq #52   hyp_states=52   mq_so_far=250992   eq_check=0.002s elapsed=9.0s counterexample=true
+  [kv] eq #53   hyp_states=53   mq_so_far=266875   eq_check=0.002s elapsed=9.6s counterexample=true
+  [kv] eq #54   hyp_states=54   mq_so_far=281742   eq_check=0.002s elapsed=10.1s counterexample=true
+  [kv] eq #55   hyp_states=55   mq_so_far=298356   eq_check=0.002s elapsed=10.7s counterexample=true
+  [kv] eq #56   hyp_states=56   mq_so_far=315178   eq_check=0.002s elapsed=11.3s counterexample=true
+  [kv] eq #57   hyp_states=57   mq_so_far=331158   eq_check=0.002s elapsed=11.9s counterexample=true
+  [kv] eq #58   hyp_states=58   mq_so_far=349059   eq_check=0.002s elapsed=12.5s counterexample=true
+  [kv] eq #59   hyp_states=59   mq_so_far=367171   eq_check=0.002s elapsed=13.2s counterexample=true
+  [kv] eq #60   hyp_states=60   mq_so_far=383953   eq_check=0.002s elapsed=13.8s counterexample=true
+  [kv] eq #61   hyp_states=61   mq_so_far=402835   eq_check=0.002s elapsed=14.5s counterexample=true
+  [kv] eq #62   hyp_states=62   mq_so_far=421928   eq_check=0.002s elapsed=15.1s counterexample=true
+  [kv] eq #63   hyp_states=63   mq_so_far=440608   eq_check=0.002s elapsed=15.8s counterexample=true
+  [kv] eq #64   hyp_states=64   mq_so_far=461590   eq_check=0.002s elapsed=16.6s counterexample=true
+  [kv] eq #65   hyp_states=65   mq_so_far=482795   eq_check=0.002s elapsed=17.3s counterexample=true
+  [kv] eq #66   hyp_states=66   mq_so_far=502331   eq_check=0.002s elapsed=18.1s counterexample=true
+  [kv] eq #67   hyp_states=67   mq_so_far=524366   eq_check=0.002s elapsed=18.9s counterexample=true
+  [kv] eq #68   hyp_states=68   mq_so_far=546624   eq_check=0.002s elapsed=19.7s counterexample=true
+  [kv] eq #69   hyp_states=69   mq_so_far=567426   eq_check=0.002s elapsed=20.4s counterexample=true
+  [kv] eq #70   hyp_states=70   mq_so_far=590940   eq_check=0.002s elapsed=21.3s counterexample=true
+  [kv] eq #71   hyp_states=71   mq_so_far=614683   eq_check=0.002s elapsed=22.1s counterexample=true
+  [kv] eq #72   hyp_states=72   mq_so_far=639074   eq_check=0.002s elapsed=23.0s counterexample=true
+  [kv] eq #73   hyp_states=73   mq_so_far=663698   eq_check=0.002s elapsed=23.9s counterexample=true
+  [kv] eq #74   hyp_states=74   mq_so_far=688698   eq_check=0.002s elapsed=24.8s counterexample=true
+  [kv] eq #75   hyp_states=75   mq_so_far=713932   eq_check=0.002s elapsed=25.7s counterexample=true
+  [kv] eq #76   hyp_states=76   mq_so_far=740091   eq_check=0.002s elapsed=26.7s counterexample=true
+  [kv] eq #77   hyp_states=77   mq_so_far=769513   eq_check=0.002s elapsed=27.8s counterexample=true
+  [kv] eq #78   hyp_states=78   mq_so_far=799196   eq_check=0.002s elapsed=28.9s counterexample=true
+  [kv] eq #79   hyp_states=79   mq_so_far=826364   eq_check=0.002s elapsed=29.9s counterexample=true
+  [kv] eq #80   hyp_states=80   mq_so_far=857031   eq_check=0.002s elapsed=31.0s counterexample=true
+  [kv] eq #81   hyp_states=81   mq_so_far=887959   eq_check=0.002s elapsed=32.1s counterexample=true
+  [kv] eq #82   hyp_states=82   mq_so_far=916624   eq_check=0.002s elapsed=33.2s counterexample=true
+  [kv] eq #83   hyp_states=83   mq_so_far=949040   eq_check=0.002s elapsed=34.4s counterexample=true
+  [kv] eq #84   hyp_states=84   mq_so_far=981723   eq_check=0.002s elapsed=35.6s counterexample=true
+  [kv] eq #85   hyp_states=85   mq_so_far=1011433  eq_check=0.002s elapsed=36.7s counterexample=true
+  [kv] eq #86   hyp_states=86   mq_so_far=1045151  eq_check=0.001s elapsed=37.9s counterexample=true
+  [kv] eq #87   hyp_states=87   mq_so_far=1079139  eq_check=0.001s elapsed=39.2s counterexample=true
+  [kv] eq #88   hyp_states=88   mq_so_far=1111449  eq_check=0.001s elapsed=40.4s counterexample=true
+  [kv] eq #89   hyp_states=89   mq_so_far=1148047  eq_check=0.001s elapsed=41.7s counterexample=true
+  [kv] eq #90   hyp_states=90   mq_so_far=1184930  eq_check=0.001s elapsed=43.1s counterexample=true
+  [kv] eq #91   hyp_states=91   mq_so_far=1218357  eq_check=0.001s elapsed=44.3s counterexample=true
+  [kv] eq #92   hyp_states=92   mq_so_far=1256347  eq_check=0.001s elapsed=45.7s counterexample=true
+  [kv] eq #93   hyp_states=93   mq_so_far=1294625  eq_check=0.001s elapsed=47.2s counterexample=true
+  [kv] eq #94   hyp_states=94   mq_so_far=1329738  eq_check=0.001s elapsed=48.5s counterexample=true
+  [kv] eq #95   hyp_states=95   mq_so_far=1369705  eq_check=0.001s elapsed=49.9s counterexample=true
+  [kv] eq #96   hyp_states=96   mq_so_far=1409969  eq_check=0.001s elapsed=51.4s counterexample=true
+  [kv] eq #97   hyp_states=97   mq_so_far=1451100  eq_check=0.001s elapsed=53.0s counterexample=true
+  [kv] eq #98   hyp_states=98   mq_so_far=1492534  eq_check=0.001s elapsed=54.5s counterexample=true
+  [kv] eq #99   hyp_states=99   mq_so_far=1534465  eq_check=0.001s elapsed=56.1s counterexample=true
+  [kv] eq #100  hyp_states=100  mq_so_far=1576702  eq_check=0.034s elapsed=57.7s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleKeylock ... took [57.708s]
+  [kv] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #2    hyp_states=2    mq_so_far=19       eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #3    hyp_states=3    mq_so_far=71       eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #4    hyp_states=4    mq_so_far=164      eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #5    hyp_states=5    mq_so_far=334      eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExamplePaulAndMary ... took [0.017s]
+  [ttt] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #2    hyp_states=2    mq_so_far=121      eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #3    hyp_states=3    mq_so_far=357      eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #4    hyp_states=4    mq_so_far=676      eq_check=0.000s elapsed=0.0s counterexample=true
+  [ttt] eq #5    hyp_states=5    mq_so_far=1070     eq_check=0.001s elapsed=0.0s counterexample=true
+  [ttt] eq #6    hyp_states=6    mq_so_far=1556     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #7    hyp_states=7    mq_so_far=2125     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #8    hyp_states=8    mq_so_far=2782     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #9    hyp_states=9    mq_so_far=3567     eq_check=0.001s elapsed=0.1s counterexample=true
+  [ttt] eq #10   hyp_states=10   mq_so_far=4427     eq_check=0.001s elapsed=0.2s counterexample=true
+  [ttt] eq #11   hyp_states=11   mq_so_far=5355     eq_check=0.001s elapsed=0.2s counterexample=true
+  [ttt] eq #12   hyp_states=12   mq_so_far=6442     eq_check=0.001s elapsed=0.2s counterexample=true
+  [ttt] eq #13   hyp_states=13   mq_so_far=7643     eq_check=0.001s elapsed=0.3s counterexample=true
+  [ttt] eq #14   hyp_states=14   mq_so_far=9000     eq_check=0.001s elapsed=0.3s counterexample=true
+  [ttt] eq #15   hyp_states=15   mq_so_far=10568    eq_check=0.002s elapsed=0.4s counterexample=true
+  [ttt] eq #16   hyp_states=16   mq_so_far=12250    eq_check=0.001s elapsed=0.5s counterexample=true
+  [ttt] eq #17   hyp_states=17   mq_so_far=13973    eq_check=0.001s elapsed=0.6s counterexample=true
+  [ttt] eq #18   hyp_states=18   mq_so_far=15970    eq_check=0.001s elapsed=0.6s counterexample=true
+  [ttt] eq #19   hyp_states=19   mq_so_far=18068    eq_check=0.001s elapsed=0.7s counterexample=true
+  [ttt] eq #20   hyp_states=20   mq_so_far=20213    eq_check=0.001s elapsed=0.8s counterexample=true
+  [ttt] eq #21   hyp_states=21   mq_so_far=22711    eq_check=0.001s elapsed=0.9s counterexample=true
+  [ttt] eq #22   hyp_states=22   mq_so_far=25346    eq_check=0.002s elapsed=1.0s counterexample=true
+  [ttt] eq #23   hyp_states=23   mq_so_far=27938    eq_check=0.002s elapsed=1.2s counterexample=true
+  [ttt] eq #24   hyp_states=24   mq_so_far=30967    eq_check=0.002s elapsed=1.3s counterexample=true
+  [ttt] eq #25   hyp_states=25   mq_so_far=34146    eq_check=0.002s elapsed=1.4s counterexample=true
+  [ttt] eq #26   hyp_states=26   mq_so_far=37782    eq_check=0.002s elapsed=1.6s counterexample=true
+  [ttt] eq #27   hyp_states=27   mq_so_far=41946    eq_check=0.002s elapsed=1.7s counterexample=true
+  [ttt] eq #28   hyp_states=28   mq_so_far=46273    eq_check=0.002s elapsed=1.9s counterexample=true
+  [ttt] eq #29   hyp_states=29   mq_so_far=50446    eq_check=0.002s elapsed=2.1s counterexample=true
+  [ttt] eq #30   hyp_states=30   mq_so_far=55237    eq_check=0.002s elapsed=2.3s counterexample=true
+  [ttt] eq #31   hyp_states=31   mq_so_far=60192    eq_check=0.002s elapsed=2.5s counterexample=true
+  [ttt] eq #32   hyp_states=32   mq_so_far=65031    eq_check=0.002s elapsed=2.6s counterexample=true
+  [ttt] eq #33   hyp_states=33   mq_so_far=70608    eq_check=0.002s elapsed=2.9s counterexample=true
+  [ttt] eq #34   hyp_states=34   mq_so_far=76373    eq_check=0.002s elapsed=3.1s counterexample=true
+  [ttt] eq #35   hyp_states=35   mq_so_far=81836    eq_check=0.002s elapsed=3.3s counterexample=true
+  [ttt] eq #36   hyp_states=36   mq_so_far=88133    eq_check=0.002s elapsed=3.6s counterexample=true
+  [ttt] eq #37   hyp_states=37   mq_so_far=94607    eq_check=0.002s elapsed=3.8s counterexample=true
+  [ttt] eq #38   hyp_states=38   mq_so_far=101063   eq_check=0.002s elapsed=4.1s counterexample=true
+  [ttt] eq #39   hyp_states=39   mq_so_far=108518   eq_check=0.002s elapsed=4.3s counterexample=true
+  [ttt] eq #40   hyp_states=40   mq_so_far=116203   eq_check=0.002s elapsed=4.6s counterexample=true
+  [ttt] eq #41   hyp_states=41   mq_so_far=123421   eq_check=0.002s elapsed=4.9s counterexample=true
+  [ttt] eq #42   hyp_states=42   mq_so_far=131746   eq_check=0.002s elapsed=5.2s counterexample=true
+  [ttt] eq #43   hyp_states=43   mq_so_far=140284   eq_check=0.002s elapsed=5.5s counterexample=true
+  [ttt] eq #44   hyp_states=44   mq_so_far=148387   eq_check=0.002s elapsed=5.8s counterexample=true
+  [ttt] eq #45   hyp_states=45   mq_so_far=157747   eq_check=0.002s elapsed=6.1s counterexample=true
+  [ttt] eq #46   hyp_states=46   mq_so_far=167338   eq_check=0.002s elapsed=6.5s counterexample=true
+  [ttt] eq #47   hyp_states=47   mq_so_far=177346   eq_check=0.002s elapsed=6.8s counterexample=true
+  [ttt] eq #48   hyp_states=48   mq_so_far=187597   eq_check=0.002s elapsed=7.2s counterexample=true
+  [ttt] eq #49   hyp_states=49   mq_so_far=198144   eq_check=0.002s elapsed=7.6s counterexample=true
+  [ttt] eq #50   hyp_states=50   mq_so_far=208898   eq_check=0.002s elapsed=8.0s counterexample=true
+  [ttt] eq #51   hyp_states=51   mq_so_far=221309   eq_check=0.002s elapsed=8.4s counterexample=true
+  [ttt] eq #52   hyp_states=52   mq_so_far=235423   eq_check=0.002s elapsed=8.9s counterexample=true
+  [ttt] eq #53   hyp_states=53   mq_so_far=249875   eq_check=0.002s elapsed=9.5s counterexample=true
+  [ttt] eq #54   hyp_states=54   mq_so_far=263398   eq_check=0.002s elapsed=9.9s counterexample=true
+  [ttt] eq #55   hyp_states=55   mq_so_far=278764   eq_check=0.002s elapsed=10.5s counterexample=true
+  [ttt] eq #56   hyp_states=56   mq_so_far=294444   eq_check=0.002s elapsed=11.1s counterexample=true
+  [ttt] eq #57   hyp_states=57   mq_so_far=309233   eq_check=0.002s elapsed=11.6s counterexample=true
+  [ttt] eq #58   hyp_states=58   mq_so_far=326060   eq_check=0.002s elapsed=12.2s counterexample=true
+  [ttt] eq #59   hyp_states=59   mq_so_far=343225   eq_check=0.002s elapsed=12.8s counterexample=true
+  [ttt] eq #60   hyp_states=60   mq_so_far=359138   eq_check=0.002s elapsed=13.4s counterexample=true
+  [ttt] eq #61   hyp_states=61   mq_so_far=377235   eq_check=0.002s elapsed=14.1s counterexample=true
+  [ttt] eq #62   hyp_states=62   mq_so_far=395634   eq_check=0.002s elapsed=14.7s counterexample=true
+  [ttt] eq #63   hyp_states=63   mq_so_far=413240   eq_check=0.002s elapsed=15.4s counterexample=true
+  [ttt] eq #64   hyp_states=64   mq_so_far=433295   eq_check=0.002s elapsed=16.1s counterexample=true
+  [ttt] eq #65   hyp_states=65   mq_so_far=453730   eq_check=0.002s elapsed=16.9s counterexample=true
+  [ttt] eq #66   hyp_states=66   mq_so_far=472598   eq_check=0.002s elapsed=17.5s counterexample=true
+  [ttt] eq #67   hyp_states=67   mq_so_far=494073   eq_check=0.002s elapsed=18.4s counterexample=true
+  [ttt] eq #68   hyp_states=68   mq_so_far=515886   eq_check=0.002s elapsed=19.2s counterexample=true
+  [ttt] eq #69   hyp_states=69   mq_so_far=536164   eq_check=0.002s elapsed=19.9s counterexample=true
+  [ttt] eq #70   hyp_states=70   mq_so_far=559274   eq_check=0.002s elapsed=20.8s counterexample=true
+  [ttt] eq #71   hyp_states=71   mq_so_far=582740   eq_check=0.002s elapsed=21.6s counterexample=true
+  [ttt] eq #72   hyp_states=72   mq_so_far=606848   eq_check=0.002s elapsed=22.5s counterexample=true
+  [ttt] eq #73   hyp_states=73   mq_so_far=631324   eq_check=0.002s elapsed=23.6s counterexample=true
+  [ttt] eq #74   hyp_states=74   mq_so_far=656246   eq_check=0.002s elapsed=24.6s counterexample=true
+  [ttt] eq #75   hyp_states=75   mq_so_far=681475   eq_check=0.002s elapsed=25.8s counterexample=true
+  [ttt] eq #76   hyp_states=76   mq_so_far=706362   eq_check=0.002s elapsed=26.8s counterexample=true
+  [ttt] eq #77   hyp_states=77   mq_so_far=734700   eq_check=0.002s elapsed=27.8s counterexample=true
+  [ttt] eq #78   hyp_states=78   mq_so_far=763497   eq_check=0.002s elapsed=28.9s counterexample=true
+  [ttt] eq #79   hyp_states=79   mq_so_far=789909   eq_check=0.002s elapsed=29.9s counterexample=true
+  [ttt] eq #80   hyp_states=80   mq_so_far=819956   eq_check=0.002s elapsed=31.0s counterexample=true
+  [ttt] eq #81   hyp_states=81   mq_so_far=850407   eq_check=0.002s elapsed=32.3s counterexample=true
+  [ttt] eq #82   hyp_states=82   mq_so_far=878505   eq_check=0.002s elapsed=33.5s counterexample=true
+  [ttt] eq #83   hyp_states=83   mq_so_far=910502   eq_check=0.002s elapsed=34.8s counterexample=true
+  [ttt] eq #84   hyp_states=84   mq_so_far=942921   eq_check=0.002s elapsed=36.1s counterexample=true
+  [ttt] eq #85   hyp_states=85   mq_so_far=972445   eq_check=0.002s elapsed=37.3s counterexample=true
+  [ttt] eq #86   hyp_states=86   mq_so_far=1006058  eq_check=0.002s elapsed=38.7s counterexample=true
+  [ttt] eq #87   hyp_states=87   mq_so_far=1040026  eq_check=0.001s elapsed=40.2s counterexample=true
+  [ttt] eq #88   hyp_states=88   mq_so_far=1071727  eq_check=0.001s elapsed=41.5s counterexample=true
+  [ttt] eq #89   hyp_states=89   mq_so_far=1107876  eq_check=0.001s elapsed=43.0s counterexample=true
+  [ttt] eq #90   hyp_states=90   mq_so_far=1144477  eq_check=0.001s elapsed=44.4s counterexample=true
+  [ttt] eq #91   hyp_states=91   mq_so_far=1177706  eq_check=0.001s elapsed=45.7s counterexample=true
+  [ttt] eq #92   hyp_states=92   mq_so_far=1215585  eq_check=0.001s elapsed=47.1s counterexample=true
+  [ttt] eq #93   hyp_states=93   mq_so_far=1253843  eq_check=0.001s elapsed=48.7s counterexample=true
+  [ttt] eq #94   hyp_states=94   mq_so_far=1288755  eq_check=0.001s elapsed=50.1s counterexample=true
+  [ttt] eq #95   hyp_states=95   mq_so_far=1328611  eq_check=0.001s elapsed=51.7s counterexample=true
+  [ttt] eq #96   hyp_states=96   mq_so_far=1368858  eq_check=0.001s elapsed=53.4s counterexample=true
+  [ttt] eq #97   hyp_states=97   mq_so_far=1409880  eq_check=0.001s elapsed=55.2s counterexample=true
+  [ttt] eq #98   hyp_states=98   mq_so_far=1451301  eq_check=0.001s elapsed=57.0s counterexample=true
+  [ttt] eq #99   hyp_states=99   mq_so_far=1493222  eq_check=0.001s elapsed=58.9s counterexample=true
+  [ttt] eq #100  hyp_states=100  mq_so_far=1535452  eq_check=0.034s elapsed=60.6s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleKeylock ... took [60.607s]
+  [kv] eq #1    hyp_states=1    mq_so_far=1        eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #2    hyp_states=2    mq_so_far=13       eq_check=0.000s elapsed=0.0s counterexample=true
+  [kv] eq #3    hyp_states=3    mq_so_far=41       eq_check=0.000s elapsed=0.0s counterexample=false
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleTinyDFA ... took [0.013s]
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 236.3 s -- in TestSuite
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.0:verify (default) @ learnlib-harness ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:58 min
+[INFO] Finished at: 2026-08-18T19:47:30-05:00
+[INFO] ------------------------------------------------------------------------

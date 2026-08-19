@@ -177,8 +177,14 @@ public final class TeacherServer {
 
     public static void main(String[] args) throws IOException {
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 8888;
-        boolean small = args.length > 1 && args[1].equals("small");
+        String corpus = args.length > 1 ? args[1] : "full";
         String compareAlgo = args.length > 2 ? args[2] : null;
-        run(port, small ? Corpus.small() : Corpus.all(), compareAlgo);
+        List<Corpus.Target> targets =
+                switch (corpus) {
+                    case "small" -> Corpus.small();
+                    case "builtin" -> Corpus.builtinExamples();
+                    default -> Corpus.all();
+                };
+        run(port, targets, compareAlgo);
     }
 }

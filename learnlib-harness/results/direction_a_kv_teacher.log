@@ -1,27 +1,37 @@
-TeacherServer listening on port 8852, serving 13 target(s)
-target=alternating          states=4     queries=98     time=0.041s
+TeacherServer listening on port 8852, serving 18 target(s)
+target=alternating          states=4     queries=98     time=0.040s
 agree  target=alternating          algo=kv    ours_states=4     learnlib_states=4     learnlib_queries=20      learnlib_time=0.003s agree=true
 target=ends_in_01           states=3     queries=51     time=0.007s
 agree  target=ends_in_01           algo=kv    ours_states=3     learnlib_states=3     learnlib_queries=14      learnlib_time=0.000s agree=true
-target=mod3                 states=3     queries=54     time=0.006s
+target=mod3                 states=3     queries=54     time=0.007s
 agree  target=mod3                 algo=kv    ours_states=3     learnlib_states=3     learnlib_queries=14      learnlib_time=0.000s agree=true
-target=random_n5_a2         states=4     queries=122    time=0.016s
+target=learnlib_angluin     states=4     queries=110    time=0.014s
+agree  target=learnlib_angluin     algo=kv    ours_states=4     learnlib_states=4     learnlib_queries=27      learnlib_time=0.000s agree=true
+target=learnlib_paul_and_mary states=5     queries=314    time=0.022s
+agree  target=learnlib_paul_and_mary algo=kv    ours_states=5     learnlib_states=5     learnlib_queries=68      learnlib_time=0.000s agree=true
+target=learnlib_tiny_dfa    states=3     queries=46     time=0.003s
+agree  target=learnlib_tiny_dfa    algo=kv    ours_states=3     learnlib_states=3     learnlib_queries=11      learnlib_time=0.000s agree=true
+target=learnlib_keylock_small states=3     queries=39     time=0.003s
+agree  target=learnlib_keylock_small algo=kv    ours_states=3     learnlib_states=3     learnlib_queries=7       learnlib_time=0.000s agree=true
+target=learnlib_keylock_large states=8     queries=664    time=0.035s
+agree  target=learnlib_keylock_large algo=kv    ours_states=8     learnlib_states=8     learnlib_queries=113     learnlib_time=0.001s agree=true
+target=random_n5_a2         states=4     queries=122    time=0.005s
 agree  target=random_n5_a2         algo=kv    ours_states=4     learnlib_states=4     learnlib_queries=29      learnlib_time=0.000s agree=true
-target=random_n10_a2        states=7     queries=537    time=0.034s
-agree  target=random_n10_a2        algo=kv    ours_states=7     learnlib_states=7     learnlib_queries=93      learnlib_time=0.001s agree=true
-target=random_n20_a2        states=10    queries=952    time=0.045s
+target=random_n10_a2        states=7     queries=537    time=0.022s
+agree  target=random_n10_a2        algo=kv    ours_states=7     learnlib_states=7     learnlib_queries=93      learnlib_time=0.000s agree=true
+target=random_n20_a2        states=10    queries=952    time=0.040s
 agree  target=random_n20_a2        algo=kv    ours_states=10    learnlib_states=10    learnlib_queries=144     learnlib_time=0.001s agree=true
-target=random_n50_a2        states=41    queries=21316  time=0.658s
-agree  target=random_n50_a2        algo=kv    ours_states=41    learnlib_states=41    learnlib_queries=1390    learnlib_time=0.005s agree=true
-target=random_n100_a2       states=85    queries=101224 time=2.864s
+target=random_n50_a2        states=41    queries=21316  time=0.635s
+agree  target=random_n50_a2        algo=kv    ours_states=41    learnlib_states=41    learnlib_queries=1390    learnlib_time=0.003s agree=true
+target=random_n100_a2       states=85    queries=101224 time=2.643s
 agree  target=random_n100_a2       algo=kv    ours_states=85    learnlib_states=85    learnlib_queries=4067    learnlib_time=0.005s agree=true
 target=random_n5_a4         states=5     queries=317    time=0.009s
 agree  target=random_n5_a4         algo=kv    ours_states=5     learnlib_states=5     learnlib_queries=68      learnlib_time=0.000s agree=true
-target=random_n10_a4        states=10    queries=1540   time=0.041s
+target=random_n10_a4        states=10    queries=1540   time=0.040s
 agree  target=random_n10_a4        algo=kv    ours_states=10    learnlib_states=10    learnlib_queries=196     learnlib_time=0.000s agree=true
-target=random_n20_a4        states=19    queries=6337   time=0.184s
+target=random_n20_a4        states=19    queries=6337   time=0.164s
 agree  target=random_n20_a4        algo=kv    ours_states=19    learnlib_states=19    learnlib_queries=475     learnlib_time=0.001s agree=true
-target=random_n50_a4        states=48    queries=51190  time=1.382s
+target=random_n50_a4        states=48    queries=51190  time=1.330s
 agree  target=random_n50_a4        algo=kv    ours_states=48    learnlib_states=48    learnlib_queries=1842    learnlib_time=0.002s agree=true
-target=random_n100_a4       states=98    queries=249741 time=6.513s
+target=random_n100_a4       states=98    queries=249741 time=6.363s
 agree  target=random_n100_a4       algo=kv    ours_states=98    learnlib_states=98    learnlib_queries=4763    learnlib_time=0.003s agree=true

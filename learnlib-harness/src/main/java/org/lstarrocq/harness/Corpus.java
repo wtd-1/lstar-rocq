@@ -1,5 +1,10 @@
 package org.lstarrocq.harness;
 
+import de.learnlib.testsupport.example.LearningExample.DFALearningExample;
+import de.learnlib.testsupport.example.dfa.ExampleAngluin;
+import de.learnlib.testsupport.example.dfa.ExampleKeylock;
+import de.learnlib.testsupport.example.dfa.ExamplePaulAndMary;
+import de.learnlib.testsupport.example.dfa.ExampleTinyDFA;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,7 +12,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
+import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.random.RandomAutomata;
 
 /**
@@ -18,9 +26,13 @@ import net.automatalib.util.automaton.random.RandomAutomata;
  *
  * <p>Three small hand-built targets mirror exactly the languages
  * examples/socket_teach.ml serves on the OCaml side (Direction B), so the
- * same languages get learned from both directions. The rest are randomly
- * generated DFAs of increasing size, per the "LearnLib's built-in examples +
- * random automata" corpus the harness was scoped to use.
+ * same languages get learned from both directions. {@link #builtinExamples()}
+ * pulls in LearnLib's own shipped learning examples (from the
+ * learnlib-learning-examples artifact) rather than hand-rolling equivalents,
+ * so the corpus includes automata that are actually part of LearnLib's own
+ * test/benchmark suite. The rest are randomly generated DFAs of increasing
+ * size, per the "LearnLib's built-in examples + random automata" corpus the
+ * harness was scoped to use.
  */
 public final class Corpus {
 
@@ -39,6 +51,7 @@ public final class Corpus {
         targets.add(alternating());
         targets.add(endsIn01());
         targets.add(mod3());
+        targets.addAll(builtinExamples());
         targets.addAll(random());
         return targets;
     }
@@ -97,6 +110,40 @@ public final class Corpus {
         dfa.addTransition(r2, "0", r1, null);
         dfa.addTransition(r2, "1", r2, null);
         return new Target("mod3", alphabet, dfa);
+    }
+
+    /** LearnLib's own shipped learning examples (from learnlib-learning-examples), converted
+     * to a decimal-index string alphabet the same way the rest of the corpus is, so the
+     * OCaml side never needs to know these come from LearnLib rather than being hand-built. */
+    public static List<Target> builtinExamples() {
+        List<Target> targets = new ArrayList<>();
+        targets.add(fromExample("learnlib_angluin", ExampleAngluin.createExample()));
+        targets.add(fromExample("learnlib_paul_and_mary", ExamplePaulAndMary.createExample()));
+        targets.add(fromExample("learnlib_tiny_dfa", ExampleTinyDFA.createExample()));
+        targets.add(fromExample("learnlib_keylock_small", ExampleKeylock.createExample(3, false)));
+        targets.add(fromExample("learnlib_keylock_large", ExampleKeylock.createExample(8, true)));
+        return targets;
+    }
+
+    /** Re-hosts a LearnLib DFALearningExample (arbitrary input symbol type, e.g. Integer,
+     * Character, String) onto the decimal-index String alphabet the rest of this corpus and
+     * the OCaml side use, preserving states/transitions/acceptance exactly. */
+    private static <I> Target fromExample(String name, DFALearningExample<I> example) {
+        Alphabet<I> sourceAlphabet = example.getAlphabet();
+        DFA<?, I> reference = example.getReferenceAutomaton();
+        Alphabet<String> alphabet =
+                Alphabets.fromList(
+                        IntStream.range(0, sourceAlphabet.size())
+                                .mapToObj(String::valueOf)
+                                .collect(Collectors.toList()));
+        CompactDFA<String> dfa = new CompactDFA<>(alphabet);
+        AutomatonLowLevelCopy.copy(
+                AutomatonCopyMethod.STATE_BY_STATE,
+                reference,
+                sourceAlphabet,
+                dfa,
+                i -> alphabet.getSymbol(sourceAlphabet.getSymbolIndex(i)));
+        return new Target(name, alphabet, dfa);
     }
 
     /** Randomly generated DFAs of increasing size and alphabet, for scaling the corpus up

@@ -12,6 +12,25 @@
         <version>3.5.0</version>
       </plugin>
       <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-testng</artifactId>
+            <version>3.5.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.6.0</version>
         <executions>
@@ -64,11 +83,48 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>de.learnlib.testsupport</groupId>
+      <artifactId>learnlib-learner-it-support</artifactId>
+      <version>0.18.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>learnlib-drivers-simulator</artifactId>
+          <groupId>de.learnlib</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>learnlib-equivalence-oracles</artifactId>
+          <groupId>de.learnlib</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>learnlib-membership-oracles</artifactId>
+          <groupId>de.learnlib</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>7.10.2</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>jcommander</artifactId>
+          <groupId>com.beust</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jquery</artifactId>
+          <groupId>org.webjars</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <automatalib.version>0.12.1</automatalib.version>
     <learnlib.version>0.18.0</learnlib.version>
+    <testng.version>7.10.2</testng.version>
     <slf4j.version>2.0.16</slf4j.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.11.0</junit.version>
