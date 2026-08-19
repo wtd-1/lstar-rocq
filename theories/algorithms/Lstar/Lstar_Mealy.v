@@ -1,6 +1,7 @@
 (** L* for Mealy machines *)
 
-From lstar Require Import automata.Mealy ListLemmas SetLemmas Teacher.
+From lstar Require Import automata.Mealy ListLemmas SetLemmas Teacher RS.
+From lstar Require Import normalization.norm_mealy.
 From Stdlib Require Import Classes.RelationClasses.
 From Stdlib Require Import Setoids.Setoid.
 From Stdlib Require Import List.
@@ -17,12 +18,6 @@ Import s O L Tch M.
 
 Definition obs : str -> str -> option O.t := M.tobs output_lang.
 Definition mealy_output : str -> s.t -> str -> O.t := M.tgt_last output_lang.
-
-Lemma obs_cons : forall q a w, obs q (a :: w) = Some (mealy_output q a w).
-Proof. reflexivity. Qed.
-
-Lemma obs_nil : forall q, obs q nil = None.
-Proof. reflexivity. Qed.
 
 Lemma obs_single : forall q a, obs q [a] = Some (output_lang q a).
 Proof. reflexivity. Qed.
@@ -65,10 +60,6 @@ Proof.
       unfold obs, tobs in *.
       rewrite H, IH. now rewrite <- app_assoc.
 Qed.
-
-Lemma obs_app_single : forall u t a,
-    obs u (t ++ [a]) = Some (output_lang (u ++ t) a).
-Proof. intros. now rewrite obs_shift_app, obs_single. Qed.
 
 Lemma encodes_obs : forall {state} (m : M.t state),
     encodes m <-> (forall t, M.mobs m m.(M.initial _) t = obs nil t).
@@ -142,14 +133,6 @@ Proof.
     assumption.
 Qed.
 
-Lemma total_refinement : forall T u v,
-    (fun _ => true) [u == v] -> T [u == v].
-Proof.
-    intros. intros t Tt.
-    specialize (H t eq_refl).
-    assumption.
-Qed.
-
 Definition finite := SetLemmas.finite str.
 Notation update := (SetLemmas.update str str_eq).
 Notation "s [ k := v ]" := (update s k v).
@@ -187,13 +170,13 @@ Proof.
 Defined.
 
 (** Q is separable wrt T when elements are pairwise T-distinguishable. *)
-Definition separable (Q T : str -> bool) : Type :=
+Definition separable (Q T : str -> bool) : Set :=
     forall (u v : str), Q u = true -> Q v = true ->
         u <> v ->
         ~ T [u == v].
 
 (** Q is closed wrt T when every q·a has a T-equivalent representative. *)
-Definition closed (Q T : str -> bool) :=
+Definition closed (Q T : str -> bool) : Set :=
     forall q a,
         Q q = true ->
         {q' : str | Q q' = true /\ T [(q ++ [a]) == q']}.
@@ -235,20 +218,6 @@ Proof.
         now apply Qfin.
         apply s.t_enumerable.
 Qed.
-
-Definition closed_dec : forall Q T,
-    finite Q ->
-    finite T ->
-    closed Q T + (closed Q T -> Empty_set).
-Proof.
-    intros. destruct (closed_dec_witness Q T X X0).
-        now left.
-    right. intros Contra.
-    destruct s as (q & a & Qq & Tdist).
-    specialize (Contra q a Qq).
-    destruct Contra as (q' & Qq' & Teq).
-    destruct (Tdist q' Qq' Teq).
-Defined.
 
 (** Lemma 1: the transition function is well defined. *)
 Definition delta Q T (c : closed Q T) (q : str) (a : s.t) (Qq : Q q = true) :
@@ -302,37 +271,26 @@ Defined.
 (** Shahbaz-Groz Counterexample analysis
     https://doi.org/10.1007/978-3-642-05089-3_14 *)
 
-Lemma eps_in_H : forall (H : HypothesisMealy),
+Module SGSetup <: MealySG_Setup s O L.
+  Definition obt := HypothesisMealy.
+  Definition P (o : obt) (q : str) : Prop := o.(Q) q = true.
+  Definition make_mealy (o : obt) : M.t { q | P o q } := make_mealy o.
+
+Lemma eps_in_H : forall (H : obt),
     proj1_sig (make_mealy H).(initial _) = nil.
 Proof.
   intro H. unfold make_mealy, initial, fin_Q. simpl.
   now destruct H, fin_Q0, a.
 Qed.
 
-Lemma out_correct : forall (H : HypothesisMealy) q a,
-    output _ (make_mealy H) q a = output_lang (proj1_sig q) a.
+Lemma out_correct : forall (H : obt) q a,
+    output {s : str | P H s} (make_mealy H) q a = output_lang (proj1_sig q) a.
 Proof.
-  intros H q a. unfold make_mealy, output.
+  intros H q a. unfold make_mealy, MealyLstar.make_mealy, output.
   now destruct fin_Q, a0.
 Qed.
 
-(** [pi H w i] is the access string of the state the hypothesis reaches
-    after reading the length-[i] prefix of [w]. *)
-Definition pi (H : HypothesisMealy) (w : str) (i : nat) : str :=
-    proj1_sig (run (make_mealy H) (firstn i w)).
-
-Lemma pi_0 : forall H w, pi H w 0 = nil.
-Proof.
-  intros H w. unfold pi.
-  change (firstn 0 w) with (@nil s.t).
-  unfold run. simpl (fold_left _ nil _).
-  apply eps_in_H.
-Qed.
-
-Lemma pi_in_Q : forall H w i, H.(Q) (pi H w i) = true.
-Proof.
-  intros. unfold pi. exact (proj2_sig (run (make_mealy H) (firstn i w))).
-Qed.
+Definition obs : str -> str -> option O.t := obs.
 
 (** The hypothesis's own prediction for [w' ++ [a]] is the target's
     transition output at the access string reached after [w']. *)
@@ -340,123 +298,19 @@ Lemma prediction_is_obs_at_access : forall H w' a,
     mobs (make_mealy H) (make_mealy H).(initial _) (w' ++ a :: nil)
       = obs (proj1_sig (run (make_mealy H) w')) (a :: nil).
 Proof.
-  intros H w' a.
-  rewrite M.mobs_snoc, out_correct, obs_single. reflexivity.
+  intros H w' a. rewrite M.mobs_snoc.
+  change {q : str | Q H q = true} with {q : str | P H q}.
+  rewrite out_correct, obs_single. reflexivity.
 Qed.
+End SGSetup.
 
-Section SG.
-Context (H : HypothesisMealy) (w' : str) (a : s.t).
+Module SG := MealySG s O L SGSetup.
+Import SG.
 
-Definition sg (i : nat) : option O.t :=
-    obs (pi H w' i) (skipn i w' ++ [a]).
-
-(** Index [i] is _correct_ when the reconstructed observation still agrees
-    with the target's value on the whole counterexample. *)
-Definition correct (i : nat) : Prop := sg i = obs nil (w' ++ [a]).
-
-Lemma correct_dec : forall i, {correct i} + {~ correct i}.
+Lemma pi_in_Q : forall H w i, H.(Q) (pi H w i) = true.
 Proof.
-  intro i. unfold correct.
-  destruct (sg i) as [x|] eqn:E1, (obs nil (w' ++ [a])) as [y|] eqn:E2.
-  - destruct (O.eq_dec x y); [left; now subst | right; congruence].
-  - right; congruence.
-  - right; congruence.
-  - left; reflexivity.
-Defined.
-
-Lemma sg_0 : correct 0.
-Proof.
-  unfold correct, sg. rewrite pi_0.
-  change (skipn 0 w') with w'. reflexivity.
+  intros. unfold pi. exact (proj2_sig (run (make_mealy H) (firstn i w))).
 Qed.
-
-Lemma sg_last :
-    sg (List.length w')
-      = mobs (make_mealy H) (make_mealy H).(initial _) (w' ++ [a]).
-Proof.
-  unfold sg, pi.
-  rewrite firstn_all, skipn_all. simpl ((nil : str) ++ [a]).
-  now rewrite prediction_is_obs_at_access.
-Qed.
-
-Lemma last_not_correct :
-    mobs (make_mealy H) (make_mealy H).(initial _) (w' ++ [a])
-      <> obs nil (w' ++ [a]) ->
-    ~ correct (List.length w').
-Proof.
-  intros Hce Contra. unfold correct in Contra.
-  rewrite sg_last in Contra. contradiction.
-Qed.
-
-(** Linear search for an adjacent correctness flip *)
-Theorem sg_partition_linear :
-    mobs (make_mealy H) (make_mealy H).(initial _) (w' ++ [a])
-      <> obs nil (w' ++ [a]) ->
-    {k | correct k /\ ~ correct (S k) /\ k < List.length w'}.
-Proof.
-  intro Hce.
-  pose proof sg_0 as C0.
-  pose proof (last_not_correct Hce) as Cm.
-  (* Walk down from |w'| looking for the last correct index. *)
-  assert (search : forall n, n <= List.length w' ->
-            ~ correct n ->
-            {k | correct k /\ ~ correct (S k) /\ k < List.length w'}). {
-    induction n as [| n IH]; intros Hn Hnc.
-    - contradiction.
-    - destruct (correct_dec n) as [Cn | NCn].
-      + exists n. split; [assumption | split; [assumption | lia]].
-      + destruct (IH ltac:(lia) NCn) as (k & Ck & NCk & Hk).
-        exists k. split; [assumption | split; [assumption | lia]].
-  }
-  apply (search (List.length w')); [lia | assumption].
-Defined.
-
-Theorem sg_partition_binary :
-    mobs (make_mealy H) (make_mealy H).(initial _) (w' ++ [a])
-      <> obs nil (w' ++ [a]) ->
-    {k | correct k /\ ~ correct (S k) /\ k < List.length w'}.
-Proof.
-    intro Hce.
-    pose proof sg_0 as C0.
-    pose proof (last_not_correct Hce) as Cm.
-    (* Search [lo, hi] with correct lo, ~correct hi, lo < hi, by strong
-       induction on the gap (hi - lo). *)
-    assert (search : forall gap lo hi,
-        hi - lo <= gap ->
-        lo < hi <= List.length w' ->
-        correct lo ->
-        ~ correct hi ->
-        {k | correct k /\ ~ correct (S k) /\ k < List.length w'}). {
-      induction gap as [| gap IHgap]; intros lo hi Hgap Hlt Clo Chi.
-        lia.
-      (* if hi = S lo, the flip is at lo.
-         Otherwise, look for the midpoint *)
-        destruct (Nat.eqb hi (S lo)) eqn:E.
-        - exists lo. split; [assumption|].
-          apply Nat.eqb_eq in E. rewrite <- E. split. assumption. lia.
-        - (* lo + 1 < hi, so there is a midpoint strictly between *)
-          set (mid := Nat.div2 (lo + hi)).
-          assert (Hmid_lo : lo < mid). {
-            unfold mid.
-            apply Nat.div2_le_lower_bound.
-            apply Nat.eqb_neq in E. lia. }
-          assert (Hmid_hi : mid < hi). {
-            unfold mid. rewrite Nat.div2_div.
-            apply Nat.Div0.div_lt_upper_bound. lia. }
-          destruct (correct_dec mid).
-          (* correct at mid: recurse on [mid, hi] *)
-            apply (IHgap mid hi); now try lia.
-          (* incorrect at mid: recurse on [lo, mid] *)
-            apply (IHgap lo mid); now try lia.
-    }
-    (* search(length w, 0 length w) *)
-    destruct (Nat.eqb (List.length w') 0) eqn:E.
-    - destruct Cm. apply Nat.eqb_eq in E. now rewrite E.
-    - apply Nat.eqb_neq in E.
-      apply (search (List.length w') 0 (List.length w')); now try lia.
-Defined.
-
-End SG.
 
 (** Analyze a counterexample [w] to extract a new access string and a new
     distinguishing suffix that strictly refine the table. *)
@@ -479,7 +333,8 @@ Proof.
       intro Hw. subst w. apply Hce. reflexivity. }
     destruct (exists_last Hne) as (w' & a & Hw). subst w.
     (* Shahbaz-Groz search: a flip strictly inside w'. *)
-    destruct (sg_partition_binary H w' a Hce) as (k & KCorrect & SKIncorrect & Hlt).
+    destruct (sg_partition_binary _ _ _ Hce)
+        as (k & KCorrect & SKIncorrect & Hlt).
     (* The two adjacent reconstructions differ. *)
     assert (Dist : sg H w' a k <> sg H w' a (S k)). {
       unfold correct in KCorrect, SKIncorrect.
@@ -525,6 +380,7 @@ Proof.
       rewrite Hskipn. fold t.
       (* obs (pi k) (wk :: t) = obs (pi k ++ [wk]) t  by obs_shift *)
       change ((wk :: skipn (S k) w') ++ [a]) with (wk :: t).
+      unfold SGSetup.obs.
       rewrite (obs_shift (pi H w' k) wk t Htne).
       fold t. exact Hbad.
     }
@@ -659,19 +515,6 @@ Proof with try easy.
         now destruct (str_eq s (q ++ [a])).
       + exists (q ++ [a]). split...
         apply update_eq.
-Defined.
-
-Lemma not_closed_impl_distinguishable :
-    forall Q T,
-        (closed Q T -> False) ->
-        finite Q -> finite T ->
-        {q : str & {a : s.t | Q q = true /\
-            forall q', Q q' = true -> ~ T [q ++ [a] == q'] }}.
-Proof.
-    intros Q T QNC Qfin Tfin.
-    destruct (closed_dec_witness Q T Qfin Tfin).
-        contradiction.
-    destruct s as (q & a & Qq & Tdist); eauto.
 Defined.
 
 Definition union_closed_loop :
@@ -972,9 +815,39 @@ Proof.
   rewrite HH'' in *. lia.
 Qed.
 
+Module Norm := NormalizeMealy s O M.
+
+Definition state_eq_dec (H : HypothesisMealy) :
+    forall (x y : {q | H.(Q) q = true}), {x = y} + {x <> y}.
+Proof.
+  intros [x Hx] [y Hy].
+  destruct (str_eq x y) as [Heq | Hne].
+  - left. subst y. f_equal. apply UIP_dec, Bool.bool_dec.
+  - right. intro C. inversion C. contradiction.
+Defined.
+
+Lemma make_mealy_trans_closed (H : HypothesisMealy) :
+    Norm.TransClosed (make_mealy H).
+Proof.
+  unfold Norm.TransClosed. intros [q Hq] a _.
+  set (tgt := M.transition _ (make_mealy H) (exist _ q Hq) a).
+  unfold M.states, make_mealy. cbn.
+  destruct H.(fin_Q) as (l & ND & InQ) eqn:HF.
+  assert (Hmem : In (proj1_sig tgt) l)
+    by (apply (proj1 (InQ (proj1_sig tgt))); exact (proj2_sig tgt)).
+  replace tgt
+    with (exist (fun q0 => Q H q0 = true) (proj1_sig tgt)
+                (proj2 (InQ (proj1_sig tgt)) Hmem)); cycle 1.
+    destruct tgt as [v pf]. cbn. f_equal. apply UIP_dec, Bool.bool_dec.
+  apply (list_with_proof_complete l (fun q0 => Q H q0 = true)
+           (fun x0 p0 q0 => UIP_dec Bool.bool_dec p0 q0)
+           (fun x0 Hin => proj2 (InQ x0) Hin)
+           (proj1_sig tgt) Hmem).
+Qed.
+
 Fixpoint mlstar_fuel (H : HypothesisMealy) (fuel : nat)
     (LE : L.num_states_in_minimal - num_states H <= fuel)
-    : { T : Type & {m : M.t T | minimal m} }.
+    : { m : M.t nat | minimal m }.
   destruct (equiv_query (make_mealy H)) eqn:Heq.
   - destruct fuel as [| n].
     + exfalso.
@@ -1022,13 +895,23 @@ Fixpoint mlstar_fuel (H : HypothesisMealy) (fuel : nat)
           now destruct (str_eq y q_new) as [e|n']. }
       unfold num_states at 2.
       etransitivity; eassumption.
-  - exists {q : str | H.(Q) q = true}.
-    exists (make_mealy H).
-    exact (make_mealy_minimal H Heq).
+  - pose (m0   := make_mealy H).
+    pose (edec := state_eq_dec H).
+    pose (tc   := make_mealy_trans_closed H).
+    exists (Norm.normalize edec m0 tc).
+    pose proof (make_mealy_minimal H Heq) as [Henc0 Hmin0].
+    split.
+    + intros a w. unfold m0 in *.
+      rewrite (Norm.normalize_last_output edec _ tc a w).
+      exact (Henc0 a w).
+    + intros state' dfa' Henc'.
+      unfold Norm.normalize, Norm.build, M.states, Norm.ND.n_states. cbn.
+      rewrite length_seq.
+      etransitivity; eauto using dedup_length_le.
 Defined.
 
 (** The total L* implementation for Mealy machines. *)
-Definition mlstar (_ : unit) : { T : Type & {m : M.t T | minimal m} }.
+Definition mlstar (_ : unit) : { m : M.t nat | minimal m }.
     eapply mlstar_fuel with (fuel := num_states_in_minimal).
         lia.
     Unshelve.

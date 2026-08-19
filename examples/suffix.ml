@@ -1,4 +1,3 @@
-open Lstar
 open DFA
 open NFA
 open Specif
@@ -75,7 +74,7 @@ module NTeacher : NFATEACHER with module S = S = struct
   let member = member
 
   let equiv_query (nfa : 'a R.N.t) : S.str option =
-    counterexample (R.N.accept_string_dedup (=) nfa)
+    counterexample (R.N.accept_string_dedup ( = ) nfa)
 
   let fuel : int = Int.max_int
 end
@@ -127,19 +126,21 @@ let report_dfa name dfa k =
   Printf.printf "\n=== %s ===\n" name ;
   print_endline "DFA found" ;
   DP.print_dfa dfa ;
-  Printf.printf "DOT file at %s\n" (DP.to_dot ~name:(name ^ "_suffix") dfa) ;
+  Printf.printf "DOT file at %s\n"
+    (DP.to_dot ~name:(name ^ "_suffix_(DFA)") dfa) ;
   print_table (DTeacher.D.accept_string dfa) k
 
 let report_nfa name nfa k =
   Printf.printf "\n=== %s ===\n" name ;
   print_endline "RFSA found" ;
   NP.print_nfa nfa ;
-  Printf.printf "DOT file at %s\n" (NP.to_dot ~name:(name ^ "_suffix") nfa) ;
-  print_table (NTeacher.R.N.accept_string_dedup (=) nfa) (3 * k)
+  Printf.printf "DOT file at %s\n"
+    (NP.to_dot ~name:(name ^ "_suffix_(NFA)") nfa) ;
+  print_table (NTeacher.R.N.accept_string_dedup ( = ) nfa) (3 * k)
 
 let () =
   let dfa = Lstar.lstar () in
-  let nfa = NLstar.nfa () in
+  let nfa = NLstar.nlstar () in
   report_dfa "L*" dfa (n + 2) ;
   report_nfa "NL*" nfa (n + 2) ;
   let dfa_states, _ = DP.discover dfa in

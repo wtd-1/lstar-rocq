@@ -1,16 +1,26 @@
 (rocq.extraction
  (prelude Extraction)
  (extracted_modules
-  Lstar
+  Lstar_DFA
   Lstar_Moore
   Lstar_Mealy
-  KV
+  KV_DFA
+  KV_Moore_Binary
+  KV_Mealy_Binary
+  TTT_DFA
+  TTT_Moore_Binary
+  TTT_Mealy_Binary
   Datatypes
   Bool
   DFA
   NFA
   Mealy
   Moore
+  norm_lemmas
+  norm_dfa
+  norm_moore
+  norm_mealy
+  norm_nfa
   Alphabet
   Specif
   ListLemmas
@@ -20,8 +30,7 @@
   PeanoNat
   Nat
   RS
-  SetLemmas
-  TTT)
+  SetLemmas)
  (theories Stdlib lstar))
 
 (library

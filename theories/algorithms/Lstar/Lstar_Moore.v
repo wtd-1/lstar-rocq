@@ -1,6 +1,7 @@
 (** L* for Moore machines *)
 
 From lstar Require Import automata.Moore ListLemmas SetLemmas RS Teacher.
+From lstar Require Import normalization.norm_moore.
 From Stdlib Require Import Classes.RelationClasses.
 From Stdlib Require Import Setoids.Setoid.
 From Stdlib Require Import List.
@@ -73,14 +74,6 @@ Proof.
     assumption.
 Qed.
 
-Lemma total_refinement : forall T u v,
-    (fun _ => true) [u == v] -> T [u == v].
-Proof.
-    intros. intros t Tt.
-    specialize (H t eq_refl).
-    assumption.
-Qed.
-
 Definition finite := SetLemmas.finite str.
 Notation update := (SetLemmas.update str str_eq).
 Notation "s [ k := v ]" := (update s k v).
@@ -108,13 +101,13 @@ Proof.
 Defined.
 
 (** Q is separable wrt T when elements are pairwise T-distinguishable. *)
-Definition separable (Q T : str -> bool) : Type :=
+Definition separable (Q T : str -> bool) : Set :=
     forall (u v : str), Q u = true -> Q v = true ->
         u <> v ->
         ~ T [u == v].
 
 (** Q is closed wrt T when every q·a has a T-equivalent representative. *)
-Definition closed (Q T : str -> bool) :=
+Definition closed (Q T : str -> bool) : Set :=
     forall q a,
         Q q = true ->
         {q' : str | Q q' = true /\ T [(q ++ [a]) == q']}.
@@ -156,20 +149,6 @@ Proof.
         now apply Qfin.
         apply s.t_enumerable.
 Qed.
-
-Definition closed_dec : forall Q T,
-    finite Q ->
-    finite T ->
-    closed Q T + (closed Q T -> Empty_set).
-Proof.
-    intros. destruct (closed_dec_witness Q T X X0).
-        now left.
-    right. intros Contra.
-    destruct s as (q & a & Qq & Tdist).
-    specialize (Contra q a Qq).
-    destruct Contra as (q' & Qq' & Teq).
-    destruct (Tdist q' Qq' Teq).
-Defined.
 
 (** Lemma 1: the transition function is well defined. *)
 Definition delta Q T (c : closed Q T) (q : str) (a : s.t) (Qq : Q q = true) :
@@ -275,7 +254,7 @@ Theorem find_separable :
         destruct (nth_error w k) eqn:E.
             now exists t0.
         rewrite nth_error_None in E. lia.
-    } destruct X as (wk & Hwk).
+    } destruct H0 as (wk & Hwk).
     exists (pi H w k ++ [wk]), (skipn (S k) w).
     destruct (nth_error_split_sig _ _ _ Hwk) as (l1 & l2 & Hw & Hlen).
     assert (Hfirstn : firstn (S k) w = firstn k w ++ [wk]). {
@@ -300,7 +279,7 @@ Theorem find_separable :
     assert (H.(Q) (pi H w (S k)) = true) by
         exact (proj2_sig (run (make_moore H) (firstn (S k) w))).
     repeat split.
-    - pose proof H.(sep). unfold separable in X.
+    - pose proof H.(sep). unfold separable in H1.
       destruct (H.(Q) (pi H w k ++ [wk])) eqn:HQ; auto.
       destruct Dist.
       assert (pi H w k ++ [wk] = pi H w (S k)). {
@@ -308,7 +287,7 @@ Theorem find_separable :
             easy.
           destruct (H.(sep) _ _ HQ H0 Hneq HTeq).
       } subst.
-      now rewrite <- H1, skipn_len_app, skipn_Slen_cons_app, <- app_assoc.
+      now rewrite <- H2, skipn_len_app, skipn_Slen_cons_app, <- app_assoc.
     - intros u v Qu Qv Neq Contra.
       unfold update, SetLemmas.update in Qu, Qv.
       destruct (str_eq u (pi H w k ++ [wk])),
@@ -444,19 +423,6 @@ Proof with try easy.
         now destruct (str_eq s (q ++ [a])).
       + exists (q ++ [a]). split...
         apply update_eq.
-Defined.
-
-Lemma not_closed_impl_distinguishable :
-    forall Q T,
-        (closed Q T -> False) ->
-        finite Q -> finite T ->
-        {q : str & {a : s.t | Q q = true /\
-            forall q', Q q' = true -> ~ T [q ++ [a] == q'] }}.
-Proof.
-    intros Q T QNC Qfin Tfin.
-    destruct (closed_dec_witness Q T Qfin Tfin).
-        contradiction.
-    destruct s as (q & a & Qq & Tdist); eauto.
 Defined.
 
 Definition union_closed_loop :
@@ -745,9 +711,42 @@ Proof.
   rewrite HH'' in *. lia.
 Qed.
 
+Module Norm := NormalizeMoore s O M.
+
+Definition state_eq_dec (H : HypothesisMoore) :
+    forall (x y : {q | H.(Q) q = true}), {x = y} + {x <> y}.
+Proof.
+  intros [x Hx] [y Hy].
+  destruct (str_eq x y) as [Heq | Hne].
+  - left. subst y. f_equal. apply UIP_dec, Bool.bool_dec.
+  - right. intro C. inversion C. contradiction.
+Defined.
+
+Lemma make_moore_trans_closed (H : HypothesisMoore) :
+    Norm.TransClosed (make_moore H).
+Proof.
+  unfold Norm.TransClosed. intros [q Hq] a _.
+  set (tgt := M.transition _ (make_moore H) (exist _ q Hq) a).
+  unfold M.states, make_moore. cbn.
+  destruct H.(fin_Q) as (l & ND & InQ) eqn:HF.
+  assert (Hmem : In (proj1_sig tgt) l)
+    by (apply (proj1 (InQ (proj1_sig tgt))); exact (proj2_sig tgt)).
+  replace tgt
+    with (exist (fun q0 => Q H q0 = true) (proj1_sig tgt)
+                (proj2 (InQ (proj1_sig tgt)) Hmem)); cycle 1.
+    destruct tgt as [v pf]. cbn. f_equal. apply UIP_dec, Bool.bool_dec.
+  apply (list_with_proof_complete l (fun q0 => Q H q0 = true)
+           (fun x0 p0 q0 => UIP_dec Bool.bool_dec p0 q0)
+           (fun x0 Hin => proj2 (InQ x0) Hin)
+           (proj1_sig tgt) Hmem).
+Qed.
+
+Definition odefault (H : HypothesisMoore) : O.t :=
+  M.output _ (make_moore H) (make_moore H).(initial _).
+
 Fixpoint mlstar_fuel (H : HypothesisMoore) (fuel : nat)
     (LE : L.num_states_in_minimal - num_states H <= fuel)
-    : { T : Type & {m : M.t T | minimal m} }.
+    : { m : M.t nat | minimal m }.
   destruct (equiv_query (make_moore H)) eqn:Heq.
   - destruct fuel as [| n].
     + exfalso.
@@ -795,13 +794,23 @@ Fixpoint mlstar_fuel (H : HypothesisMoore) (fuel : nat)
           now destruct (str_eq y q_new) as [e|n']. }
       unfold num_states at 2.
       etransitivity; eassumption.
-  - exists {q : str | H.(Q) q = true}.
-    exists (make_moore H).
-    exact (make_moore_minimal H Heq).
+  - pose (m0   := make_moore H).
+    pose (edec := state_eq_dec H).
+    pose (tc   := make_moore_trans_closed H).
+    exists (Norm.normalize edec m0 tc (odefault H)).
+    pose proof (make_moore_minimal H Heq) as [Henc0 Hmin0].
+    split.
+    + intro w. unfold m0 in *.
+      rewrite (Norm.normalize_output_string edec _ tc (odefault H) w).
+      exact (Henc0 w).
+    + intros state' dfa' Henc'.
+      unfold Norm.normalize, Norm.build, M.states, Norm.ND.n_states. cbn.
+      rewrite length_seq.
+      etransitivity; eauto using dedup_length_le.
 Defined.
 
 (** The total L* implementation for Moore machines. *)
-Definition mlstar (_ : unit) : { T : Type & {m : M.t T | minimal m} }.
+Definition mlstar (_ : unit) : { m : M.t nat | minimal m }.
     eapply mlstar_fuel with (fuel := num_states_in_minimal).
         lia.
     Unshelve.

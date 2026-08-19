@@ -4,13 +4,13 @@
 From Stdlib Require Import Lia PeanoNat Bool.
 From Stdlib Require Import Eqdep_dec.
 From lstar Require Import automata.DFA Teacher ListLemmas RS.
+From lstar Require Import normalization.norm_dfa.
 Import ListNotations.
 
 Module TTT (s : Symbol) (L : RegularLanguage s) (Tch : DFATeacher s L).
 Import s L Tch D.
 
-(** Trees are now tagged with whether their discriminators are
-    _final_ or _temporary_ *)
+(** Discriminators are tagged with whether their discriminators are _final_ or _temporary_ *)
 Inductive disc : Type :=
 | Final (e : str)
 | Temp  (e : str).
@@ -364,7 +364,6 @@ Proof.
         intros x Hx. apply split_leaves_fwd in Hx. destruct Hx as [-> | Hx]; auto.
 Qed.
 
-
 Theorem find_split :
     forall (t : ttree) (w : str)
            (Heps : In nil (leaves t))
@@ -394,7 +393,7 @@ Proof.
         destruct (nth_error w k) eqn:E.
             now exists t0.
         rewrite nth_error_None in E. lia.
-    } destruct X as (wk & Hwk).
+    } destruct H as (wk & Hwk).
     destruct (nth_error_split_sig _ _ _ Hwk) as (l1 & l2 & Hw & Hlen).
     assert (Hfirstn : firstn (S k) w = firstn k w ++ [wk]). {
         subst.
@@ -671,27 +670,47 @@ Section Finalize.
     apply bisects_impl_clauses in Hchb as [HL HR].
     repeat split; auto.
   Qed.
-
-  (** Every finalized discriminator is no longer than its origin *)
-  Lemma choose_length : forall e l r,
-    List.length (choose e l r) <= List.length e.
-  Proof.
-    intros e l r. unfold choose.
-    destruct (find (fun e' => bisects e' l r) (rev (suffixes e))) eqn:F;
-        [|reflexivity].
-    apply find_some in F as [Hin _]. apply in_rev in Hin.
-    now apply suffixes_length.
-  Qed.
 End Finalize.
+
+Module Norm := NormalizeDFA s D.
 
 Section Learner.
   Definition ttt_step (t : ttree) (target e q_new : str) : ttree :=
     finalize (split_leaf t target e q_new).
 
+  Definition state_eq_dec (t : ttree) :
+      forall (x y : {q | mem q (leaves t) = true}), {x = y} + {x <> y}.
+  Proof.
+    intros [x Hx] [y Hy].
+    destruct (str_eq x y) as [Heq | Hne].
+    - left. subst y. f_equal. apply UIP_dec, Bool.bool_dec.
+    - right. intro C. inversion C. contradiction.
+  Defined.
+
+  Lemma make_dfa_trans_closed (t : ttree) :
+    Norm.TransClosed (make_dfa t).
+  Proof.
+    unfold Norm.TransClosed. intros [q Hq] a _.
+    set (tgt := D.transition _ (make_dfa t) (exist _ q Hq) a).
+    unfold D.states, make_dfa. cbn.
+    assert (Hmem : In (proj1_sig tgt) (leaves t))
+      by (apply (mem_In str_eq); exact (proj2_sig tgt)).
+    set (Pf := fun (x : str) (Hx : In x (leaves t)) =>
+                 match mem_In str_eq x (leaves t) with conj _ H0 => H0 end Hx).
+    match goal with
+    | [ |- In (exist _ ?v ?pf) (list_with_proof _ _ ?In_proof) ] =>
+        replace (exist (fun q0 => mem q0 (leaves t) = true) v pf)
+           with (exist (fun q0 => mem q0 (leaves t) = true) v (In_proof v Hmem))
+        by (f_equal; apply UIP_dec, Bool.bool_dec)
+    end.
+    apply list_with_proof_complete.
+    intros. apply UIP_dec, Bool.bool_dec.
+  Qed.
+
   Fixpoint ttt_learn (fuel : nat) (t : ttree)
                    (LE : L.num_states_in_minimal - List.length (leaves t) <= fuel)
                    (Hwf : wf t)
-  : { St : Type & {d : D.t St | minimal d} }.
+  : { d : D.t nat | minimal d }.
   Proof.
     destruct (equiv_query (make_dfa t)) eqn:Heq.
     - destruct fuel as [| n].
@@ -719,10 +738,21 @@ Section Learner.
             (split_leaf_count t target e q_new
                 (wf_NoDup t Hwf) HinT Hfresh) as Hcount.
           rewrite finalize_leaves, Hcount. lia.
-    - eexists. exists (make_dfa t). now apply make_dfa_minimal.
+    - pose (m0 := make_dfa t).
+      pose (edec := state_eq_dec t).
+      pose (tc := make_dfa_trans_closed t).
+      exists (Norm.normalize edec m0 tc).
+      pose proof (make_dfa_minimal t Hwf Heq) as [Henc0 Hmin0].
+      split.
+      + intro w. unfold m0 in *.
+        rewrite (Norm.normalize_accept_string edec _ tc w). exact (Henc0 w).
+      + intros state' dfa' Henc'.
+        unfold Norm.normalize, Norm.build, D.states, Norm.ND.n_states. cbn.
+        rewrite length_seq.
+        etransitivity; eauto using dedup_length_le.
   Defined.
 
-  Definition ttt (_ : unit) : { St : Type & {d : D.t St | minimal d} } :=
+  Definition ttt (_ : unit) : { d : D.t nat | minimal d } :=
     ttt_learn num_states_in_minimal (Leaf nil) ltac:(lia) (conj I (or_introl eq_refl)).
 
 End Learner.

@@ -1,8 +1,12 @@
-open Lstar
+open Lstar_DFA
 open Lstar_Moore
 open Lstar_Mealy
-open KV
-open TTT
+open KV_DFA
+open KV_Moore_Binary
+open KV_Mealy_Binary
+open TTT_DFA
+open TTT_Moore_Binary
+open TTT_Mealy_Binary
 open NLstar
 open DFA
 open NFA
@@ -912,7 +916,9 @@ module LstarLearner (T : DFATEACHER) = struct
 
   include Impl
 
-  let lstar () : __ T.D.t = match Impl.lstar () with Coq_existT (_, d) -> d
+  type dfa = int T.D.t
+
+  let lstar () : dfa = Impl.lstar ()
 end
 
 module MooreLstarLearner (T : MOORETEACHER) = struct
@@ -931,7 +937,9 @@ module MooreLstarLearner (T : MOORETEACHER) = struct
 
   include Impl
 
-  let mlstar () : __ T.M.t = match Impl.mlstar () with Coq_existT (_, m) -> m
+  type moore = int T.M.t
+
+  let mlstar () : moore = Impl.mlstar ()
 end
 
 module MealyLstarLearner (T : MEALYTEACHER) = struct
@@ -950,7 +958,9 @@ module MealyLstarLearner (T : MEALYTEACHER) = struct
 
   include Impl
 
-  let mlstar () : __ T.M.t = match Impl.mlstar () with Coq_existT (_, m) -> m
+  type mealy = int T.M.t
+
+  let mlstar () : mealy = Impl.mlstar ()
 end
 
 module KVLearner (T : DFATEACHER) = struct
@@ -970,7 +980,51 @@ module KVLearner (T : DFATEACHER) = struct
 
   include Impl
 
-  let kv () : __ T.D.t = match Impl.kv () with Coq_existT (_, d) -> d
+  type dfa = int T.D.t
+
+  let kv () : dfa = Impl.kv ()
+end
+
+module MooreKVLearner (T : MOORETEACHER) = struct
+  module Impl =
+    KV_Moore_Binary (T.S) (T.O)
+      (struct
+        module M = T.M
+
+        let output_lang = T.output_lang
+
+        let num_states_in_minimal = T.fuel
+      end)
+      (struct
+        let equiv_query = T.equiv_query
+      end)
+
+  include Impl
+
+  type moore = int T.M.t
+
+  let mkv () : moore = Impl.mkv ()
+end
+
+module MealyKVLearner (T : MEALYTEACHER) = struct
+  module Impl =
+    KV_Mealy_Binary (T.S) (T.O)
+      (struct
+        module M = T.M
+
+        let output_lang = T.output_lang
+
+        let num_states_in_minimal = T.fuel
+      end)
+      (struct
+        let equiv_query = T.equiv_query
+      end)
+
+  include Impl
+
+  type mealy = int T.M.t
+
+  let mkv () : mealy = Impl.mkv ()
 end
 
 module TTTLearner (T : DFATEACHER) = struct
@@ -990,7 +1044,51 @@ module TTTLearner (T : DFATEACHER) = struct
 
   include Impl
 
-  let ttt () : __ T.D.t = match Impl.ttt () with Coq_existT (_, d) -> d
+  type dfa = int T.D.t
+
+  let ttt () : dfa = Impl.ttt ()
+end
+
+module MooreTTTLearner (T : MOORETEACHER) = struct
+  module Impl =
+    TTT_Moore_Binary (T.S) (T.O)
+      (struct
+        module M = T.M
+
+        let output_lang = T.output_lang
+
+        let num_states_in_minimal = T.fuel
+      end)
+      (struct
+        let equiv_query = T.equiv_query
+      end)
+
+  include Impl
+
+  type moore = int T.M.t
+
+  let mttt () : moore = Impl.mttt ()
+end
+
+module MealyTTTLearner (T : MEALYTEACHER) = struct
+  module Impl =
+    TTT_Mealy_Binary (T.S) (T.O)
+      (struct
+        module M = T.M
+
+        let output_lang = T.output_lang
+
+        let num_states_in_minimal = T.fuel
+      end)
+      (struct
+        let equiv_query = T.equiv_query
+      end)
+
+  include Impl
+
+  type mealy = int T.M.t
+
+  let mkv () : mealy = Impl.mttt ()
 end
 
 module NLstarLearner (T : NFATEACHER) = struct
@@ -1004,8 +1102,6 @@ module NLstarLearner (T : NFATEACHER) = struct
 
         let member = T.member
 
-        let num_states_in_canonical = T.fuel
-
         let num_residuals = T.fuel
       end)
       (struct
@@ -1014,9 +1110,7 @@ module NLstarLearner (T : NFATEACHER) = struct
 
   include Impl
 
-  let nlstar () : __ T.R.t = match Impl.nlstar () with Coq_existT (_, r) -> r
+  type nfa = int T.R.t
 
-  (** The learned RFSA's underlying NFA, which is what the teacher's
-      equivalence query and {!NFAPrinter} consume. *)
-  let nfa () : __ T.R.N.t = T.R.nfa (nlstar ())
+  let nlstar () : nfa = Impl.nlstar ()
 end

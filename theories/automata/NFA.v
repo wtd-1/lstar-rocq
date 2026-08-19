@@ -20,10 +20,6 @@ Module Residuals (s : Symbol).
         Res(M) = { u^{-1}M | u \in S } *)
     Definition Res (M : lang) (r : lang) : Prop :=
         exists u, lang_eq r (inverse M u).
-
-    (** Every language is its own residual (by the empty word) *)
-    Lemma Res_self : forall M, Res M M.
-    Proof. intros M. exists []. intro. reflexivity. Qed.
 End Residuals.
 
 (** Nondeterministic Finite Automaton *)
@@ -173,19 +169,6 @@ Module Type ResidualLanguage (s : Symbol).
         encodes rfsa.(R.nfa _) /\
         forall q, In q (N.states state (R.nfa state rfsa)) ->
             prime (N.L_state (R.nfa state rfsa) q).
-
-    (** RFSA state minimality *)
-    Definition minimal {state : Type} (rfsa : R.t state) : Prop :=
-        encodes rfsa.(R.nfa _) /\
-        forall (state' : Type) (rfsa' : R.t state'),
-            encodes rfsa'.(R.nfa _) -> 
-            List.length (N.states state rfsa.(R.nfa _)) <= List.length (N.states state' rfsa'.(R.nfa _)).
-
-    (** For every regular language there is a unique minimal canonical RFSA *)
-    Parameter num_states_in_canonical : nat.
-    Parameter exists_rfsa : exists state (r : R.t state),
-        canonical r /\ minimal r /\
-        List.length (N.states state (R.nfa state r)) <= num_states_in_canonical.
 
     (** The target language is regular, so it has finitely many residual languages.*)
     Parameter num_residuals : nat.

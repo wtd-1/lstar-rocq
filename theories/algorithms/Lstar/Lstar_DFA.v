@@ -1,7 +1,7 @@
 (** Rivest-Schapire-style automata learning
     https://www.tifr.res.in/~shibashis.guha/courses/diwali2021/L-starMalharManagoli.pdf *)
 
-From lstar Require Import automata.DFA ListLemmas SetLemmas RS.
+From lstar Require Import automata.DFA ListLemmas SetLemmas RS normalization.norm_dfa.
 From Stdlib Require Import Classes.RelationClasses.
 From Stdlib Require Import Setoids.Setoid.
 From Stdlib Require Import List.
@@ -83,16 +83,6 @@ Proof.
     assumption.
 Qed.
 
-(** But Σ∗ is a superset of all the T's, so IL refines every ≡T. *)
-
-Lemma total_refinement : forall T u v,
-    (fun _ => true) [u == v] -> T [u == v].
-Proof.
-    intros. intros t Tt.
-    specialize (H t eq_refl).
-    assumption.
-Qed.
-
 (** The states Q and T that we maintain will be finite *)
 Definition finite := SetLemmas.finite str.
 Notation update := (SetLemmas.update str str_eq).
@@ -123,14 +113,14 @@ Defined.
 
 (** A set Q ⊆ Σ∗ is said to be separable with respect to T,
     if the elements of Q are pairwise T-distinguishable. *)
-Definition separable (Q T : str -> bool) : Type :=
+Definition separable (Q T : str -> bool) : Set :=
     forall (u v : str), Q u = true -> Q v = true ->
         u <> v ->
         ~ T [u == v].
 
 (** A set Q is said to be closed with respect to T, if
     ∀q ∈ Q ∀a ∈ Σ, ∃q′ ∈ Q such that q · a ≡T q'. *)
-Definition closed (Q T : str -> bool) :=
+Definition closed (Q T : str -> bool) : Set :=
     forall q a,
         Q q = true ->
         {q' : str | Q q' = true /\ T [(q ++ [a]) == q']}.
@@ -176,20 +166,6 @@ Proof.
         now apply Qfin.
         apply t_enumerable.
 Qed.
-
-Definition closed_dec : forall Q T,
-    finite Q ->
-    finite T ->
-    closed Q T + (closed Q T -> Empty_set).
-Proof.
-    intros. destruct (closed_dec_witness Q T X X0).
-        now left.
-    right. intros Contra.
-    destruct s as (q & a & Qq & Tdist).
-    specialize (Contra q a Qq).
-    destruct Contra as (q' & Qq' & Teq).
-    destruct (Tdist q' Qq' Teq).
-Defined.
 
 (** Lemma 1. If Q is closed and separable with respect to T,
     the transition function δ : (q, a) → q′ ∈ Q such that
@@ -316,7 +292,7 @@ Theorem find_separable :
         destruct (nth_error w k) eqn:E.
             now exists t0.
         rewrite nth_error_None in E. lia.
-    } destruct X as (wk & Hwk).
+    } destruct H0 as (wk & Hwk).
     (* q_new := p_k w_k *)
     (* t := w[S k:] *)
     exists (pi H w k ++ [wk]), (skipn (S k) w).
@@ -344,7 +320,7 @@ Theorem find_separable :
     assert (H.(Q) (pi H w (S k)) = true) by
         exact (proj2_sig (run (make_dfa H) (firstn (S k) w))).
     repeat split.
-    - pose proof H.(sep). unfold separable in X.
+    - pose proof H.(sep). unfold separable in H1.
       destruct (H.(Q) (pi H w k ++ [wk])) eqn:HQ; auto.
       destruct Dist.
       assert (pi H w k ++ [wk] = pi H w (S k)). {
@@ -352,7 +328,7 @@ Theorem find_separable :
             easy.
           destruct (H.(sep) _ _ HQ H0 Hneq HTeq).
       } subst.
-      now rewrite <- H1, skipn_len_app, skipn_Slen_cons_app, <- app_assoc.
+      now rewrite <- H2, skipn_len_app, skipn_Slen_cons_app, <- app_assoc.
     - intros u v Qu Qv Neq Contra.
       unfold update, SetLemmas.update in Qu, Qv.
       destruct (str_eq u (pi H w k ++ [wk])),
@@ -497,22 +473,6 @@ Proof with try easy.
         now destruct (str_eq s (q ++ [a])).
       + exists (q ++ [a]). split...
         apply update_eq.
-Defined.
-
-(** If Q is not closed wrt T, we can find a q in Q such that
-    all q' in Q are T-distinguishable from q ++ [a] for all 
-    symbols in the alphabet *)
-Lemma not_closed_impl_distinguishable :
-    forall Q T,
-        (closed Q T -> False) ->
-        finite Q -> finite T ->
-        {q : str & {a : s.t | Q q = true /\
-            forall q', Q q' = true -> ~ T [q ++ [a] == q'] }}.
-Proof.
-    intros Q T QNC Qfin Tfin.
-    destruct (closed_dec_witness Q T Qfin Tfin).
-        contradiction.
-    destruct s as (q & a & Qq & Tdist); eauto.
 Defined.
 
 (** Adds a finite number of strings to Q to make it closed wrt T *)
@@ -826,21 +786,47 @@ Proof.
   rewrite HH'' in *. lia.
 Qed.
 
-(** The main L* implementation *)
+Module Norm := NormalizeDFA s D.
+
+Definition state_eq_dec (H : HypothesisDFA) :
+    forall (x y : {q | H.(Q) q = true}), {x = y} + {x <> y}.
+Proof.
+  intros [x Hx] [y Hy].
+  destruct (str_eq x y) as [Heq | Hne].
+  - left. subst y. f_equal. apply UIP_dec, Bool.bool_dec.
+  - right. intro C. inversion C. contradiction.
+Defined.
+
+Lemma make_dfa_trans_closed (H : HypothesisDFA) :
+    Norm.TransClosed (make_dfa H).
+Proof.
+  unfold Norm.TransClosed. intros [q Hq] a _.
+  set (tgt := D.transition _ (make_dfa H) (exist _ q Hq) a).
+  unfold D.states, make_dfa. cbn.
+  destruct H.(fin_Q) as (l & ND & InQ) eqn:HF.
+  assert (Hmem : In (proj1_sig tgt) l)
+    by (apply (proj1 (InQ (proj1_sig tgt))); exact (proj2_sig tgt)).
+  replace tgt
+    with (exist (fun q0 => Q H q0 = true) (proj1_sig tgt)
+                (proj2 (InQ (proj1_sig tgt)) Hmem)); cycle 1.
+    destruct tgt as [v pf]. cbn. f_equal. apply UIP_dec, Bool.bool_dec.
+  apply (list_with_proof_complete l (fun q0 => Q H q0 = true)
+           (fun x0 p0 q0 => UIP_dec Bool.bool_dec p0 q0)
+           (fun x0 Hin => proj2 (InQ x0) Hin)
+           (proj1_sig tgt) Hmem).
+Qed.
+
+(** The recursive body *)
 Fixpoint lstar_fuel (H : HypothesisDFA) (fuel : nat)
     (LE : L.num_states_in_minimal - num_states H <= fuel)
-    : { T : Type & {d : D.t T | minimal d} }.
+    : { d : D.t nat | minimal d }.
   destruct (equiv_query (make_dfa H)) eqn:Heq.
-  - (* counterexample s - only reachable with fuel = S n *)
+  - (* counterexample s *)
     destruct fuel as [| n].
-    + (* fuel = 0: impossible.
-         LE : num_states_in_minimal - num_states H <= 0, so min <= num_states H,
-         and full_states_no_ce then says there is NO counterexample. *)
-      exfalso.
+    + exfalso.
       assert (Hge : L.num_states_in_minimal <= num_states H) by lia.
       now rewrite (full_states_no_ce H Hge) in Heq.
-    + (* fuel = S n: build a bigger hypothesis DFA and recurse on n *)
-      assert (Hce : accept_string (make_dfa H) s <> member s)
+    + assert (Hce : accept_string (make_dfa H) s <> member s)
         by now apply equiv_query_ce.
       destruct (find_separable H s Hce) as
         (q_new & t & HQnew & (sep' & finQ') & finT').
@@ -871,7 +857,8 @@ Fixpoint lstar_fuel (H : HypothesisDFA) (fuel : nat)
           destruct finQ' as (fl' & NDF' & InF').
           simpl. destruct H, fin_Q0. simpl in *.
           destruct a.
-          change (S (Datatypes.length fl)) with (Datatypes.length (q_new :: fl)).
+          change (S (Datatypes.length fl))
+            with (Datatypes.length (q_new :: fl)).
           apply NoDup_incl_length. constructor; [|assumption].
               intro C. apply (proj2 (InF q_new)) in C. now rewrite C in HQnew.
           unfold incl. intros y Hy.
@@ -882,14 +869,25 @@ Fixpoint lstar_fuel (H : HypothesisDFA) (fuel : nat)
           now destruct (str_eq y q_new) as [e|n']. }
       unfold num_states at 2.
       etransitivity; eassumption.
-  - (* no counterexample: make_dfa H is minimal *)
-    exists {q : str | H.(Q) q = true}.
-    exists (make_dfa H).
-    exact (make_dfa_minimal H Heq).
+  - (* no counterexample: [make_dfa H] is minimal; normalize it *)
+    pose (dfa0 := make_dfa H).
+    pose (edec := state_eq_dec H).
+    pose (tc   := make_dfa_trans_closed H).
+    exists (Norm.normalize edec dfa0 tc).
+    (* transport minimality across [normalize_accept_string] *)
+    pose proof (make_dfa_minimal H Heq) as [Henc0 Hmin0].
+    split.
+    + intro w. unfold dfa0 in *.
+      rewrite (Norm.normalize_accept_string edec _ tc w).
+      exact (Henc0 w).
+    + intros state' dfa' Henc'.
+      unfold Norm.normalize, Norm.build, D.states, Norm.ND.n_states. cbn.
+      rewrite length_seq.
+      etransitivity; eauto using dedup_length_le.
 Defined.
 
 (** The total L* implementation *)
-Definition lstar (_ : unit) : { T : Type & {d : D.t T | minimal d} }.
+Definition lstar (_ : unit) : { d : D.t nat | minimal d }.
     eapply lstar_fuel with (fuel := num_states_in_minimal).
         lia.
     Unshelve.
