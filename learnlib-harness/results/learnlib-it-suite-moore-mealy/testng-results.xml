@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="24" passed="24" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-08-19T13:43:56 CDT" name="Surefire suite" finished-at="2026-08-19T14:13:11 CDT" duration-ms="1754998">
+    <groups>
+    </groups>
+    <test started-at="2026-08-19T13:43:56 CDT" name="Surefire test" finished-at="2026-08-19T14:13:11 CDT" duration-ms="1754998">
+      <class name="de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase">
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@1c1bbc4e, instance params:[]]" started-at="2026-08-19T13:43:56 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleStack" finished-at="2026-08-19T13:43:56 CDT" duration-ms="69" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@1ce24091, instance params:[]]" started-at="2026-08-19T13:43:56 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleRandomStateLocalInputMealy" finished-at="2026-08-19T13:44:02 CDT" duration-ms="6310" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@24269709, instance params:[]]" started-at="2026-08-19T13:44:02 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleGrid" finished-at="2026-08-19T13:44:03 CDT" duration-ms="700" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@24aed80c, instance params:[]]" started-at="2026-08-19T13:44:03 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleStack" finished-at="2026-08-19T13:44:03 CDT" duration-ms="15" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@26794848, instance params:[]]" started-at="2026-08-19T13:44:03 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleShahbazGroz" finished-at="2026-08-19T13:44:03 CDT" duration-ms="25" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@279fedbd, instance params:[]]" started-at="2026-08-19T13:44:03 CDT" name="testLearning" test-instance-name="MooreOCamlLearningAlgorithm[ttt_moore-rocq]/ExampleRandomMoore" finished-at="2026-08-19T13:44:10 CDT" duration-ms="6575" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@2a5c8d3f, instance params:[]]" started-at="2026-08-19T13:44:10 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleTinyMealy" finished-at="2026-08-19T13:44:10 CDT" duration-ms="13" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@2aceadd4, instance params:[]]" started-at="2026-08-19T13:44:10 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleShahbazGroz" finished-at="2026-08-19T13:44:10 CDT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@2cd76f31, instance params:[]]" started-at="2026-08-19T13:44:10 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleRandomStateLocalInputMealy" finished-at="2026-08-19T14:11:38 CDT" duration-ms="1648483" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@302552ec, instance params:[]]" started-at="2026-08-19T14:11:38 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleStack" finished-at="2026-08-19T14:11:38 CDT" duration-ms="28" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@367ffa75, instance params:[]]" started-at="2026-08-19T14:11:38 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleCoffeeMachine" finished-at="2026-08-19T14:11:38 CDT" duration-ms="24" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@3a52dba3, instance params:[]]" started-at="2026-08-19T14:11:38 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleRandomMealy" finished-at="2026-08-19T14:11:45 CDT" duration-ms="6479" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@3d285d7e, instance params:[]]" started-at="2026-08-19T14:11:45 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleRandomMealy" finished-at="2026-08-19T14:12:19 CDT" duration-ms="34644" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@40005471, instance params:[]]" started-at="2026-08-19T14:12:19 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleTinyMealy" finished-at="2026-08-19T14:12:19 CDT" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@49438269, instance params:[]]" started-at="2026-08-19T14:12:19 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleGrid" finished-at="2026-08-19T14:12:20 CDT" duration-ms="595" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@4b2bac3f, instance params:[]]" started-at="2026-08-19T14:12:20 CDT" name="testLearning" test-instance-name="MooreOCamlLearningAlgorithm[kv_moore-rocq]/ExampleRandomMoore" finished-at="2026-08-19T14:12:26 CDT" duration-ms="6281" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@4e08711f, instance params:[]]" started-at="2026-08-19T14:12:26 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleCoffeeMachine" finished-at="2026-08-19T14:12:26 CDT" duration-ms="147" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@55fe41ea, instance params:[]]" started-at="2026-08-19T14:12:26 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleRandomMealy" finished-at="2026-08-19T14:12:33 CDT" duration-ms="6491" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@5dda768f, instance params:[]]" started-at="2026-08-19T14:12:33 CDT" name="testLearning" test-instance-name="MooreOCamlLearningAlgorithm[lstar_moore-rocq]/ExampleRandomMoore" finished-at="2026-08-19T14:13:05 CDT" duration-ms="32215" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@752325ad, instance params:[]]" started-at="2026-08-19T14:13:05 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleRandomStateLocalInputMealy" finished-at="2026-08-19T14:13:11 CDT" duration-ms="5525" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@7a8c8dcf, instance params:[]]" started-at="2026-08-19T14:13:11 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleCoffeeMachine" finished-at="2026-08-19T14:13:11 CDT" duration-ms="27" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@ba2f4ec, instance params:[]]" started-at="2026-08-19T14:13:11 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleShahbazGroz" finished-at="2026-08-19T14:13:11 CDT" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@bcec361, instance params:[]]" started-at="2026-08-19T14:13:11 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleGrid" finished-at="2026-08-19T14:13:11 CDT" duration-ms="274" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+        <test-method signature="testLearning()[pri:0, instance:de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase@fbd1f6, instance params:[]]" started-at="2026-08-19T14:13:11 CDT" name="testLearning" test-instance-name="MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleTinyMealy" finished-at="2026-08-19T14:13:11 CDT" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLearning -->
+      </class> <!-- de.learnlib.testsupport.it.learner.UniversalDeterministicLearnerITCase -->
+    </test> <!-- Surefire test -->
+  </suite> <!-- Surefire suite -->
+</testng-results>

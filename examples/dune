@@ -8,7 +8,11 @@
   vending
   suffix
   socket_learn
-  socket_teach)
+  socket_teach
+  traffic_socket
+  vending_socket
+  suffix_socket
+  keylock_diag)
  (public_names
   dfa.alternating
   dfa.mod3
@@ -18,7 +22,11 @@
   mealy.vending
   nfa.suffix
   dfa.socket_learn
-  dfa.socket_teach)
+  dfa.socket_teach
+  moore.traffic_socket
+  mealy.vending_socket
+  nfa.suffix_socket
+  dfa.keylock_diag)
  (libraries lstar unix threads str)
  (flags
   (:standard -w -26))

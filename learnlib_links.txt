@@ -1,0 +1,36 @@
+=== THE TEST THAT TAKES FOREVER ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/dfa/ExampleKeylock.java
+
+=== IT FRAMEWORK ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learner-it-support/src/main/java/de/learnlib/testsupport/it/learner/AbstractDFALearnerIT.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learner-it-support/src/main/java/de/learnlib/testsupport/it/learner/AbstractMealyLearnerIT.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learner-it-support/src/main/java/de/learnlib/testsupport/it/learner/AbstractMooreLearnerIT.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learner-it-support/src/main/java/de/learnlib/testsupport/it/learner/AbstractLearnerVariantITCase.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learner-it-support/src/main/java/de/learnlib/testsupport/it/learner/LearnerITUtil.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learner-it-support/src/main/java/de/learnlib/testsupport/it/learner/LearnerVariantList.java
+
+=== LEARNLIB'S EQUIVALENT IT TESTS ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/algorithms/active/lstar/src/test/java/de/learnlib/algorithm/lstar/it/ExtensibleLStarDFAIT.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/algorithms/active/nlstar/src/test/java/de/learnlib/algorithm/nlstar/it/NLStarIT.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/algorithms/active/nlstar/src/main/java/de/learnlib/algorithm/nlstar/NLStarLearner.java
+
+=== THE EXAMPLE REGISTRY (LearningExamples.createDFAExamples/createMealyExamples/createMooreExamples) ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/LearningExamples.java
+
+=== DFA EXAMPLES ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/dfa/ExampleAngluin.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/dfa/ExamplePaulAndMary.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/dfa/ExampleTinyDFA.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/dfa/ExampleKeylock.java
+
+=== MEALY EXAMPLES ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleCoffeeMachine.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleGrid.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleShahbazGroz.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleStack.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleRandomMealy.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleTinyMealy.java
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/mealy/ExampleRandomStateLocalInputMealy.java
+
+=== MOORE EXAMPLES ===
+https://github.com/LearnLib/learnlib/blob/learnlib-0.18.0/test-support/learning-examples/src/main/java/de/learnlib/testsupport/example/moore/ExampleRandomMoore.java

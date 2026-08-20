@@ -20,27 +20,31 @@ import net.automatalib.automaton.fsa.DFA;
 import org.testng.annotations.Factory;
 
 /**
- * Runs LearnLib's own DFA learner integration test suite -- the same 5 examples from
- * {@code LearningExamples.createDFAExamples()} (Angluin, Paul-and-Mary, TinyDFA, and two
- * {@code ExampleKeylock} instances), driven with LearnLib's exact {@code SimulatorEQOracle} --
- * against lstar-rocq's extracted L* implementation, via {@link OCamlLearningAlgorithm}.
+ * Runs LearnLib's own DFA learner integration test suite against lstar-rocq's extracted NL*
+ * implementation, via {@link NLStarOCamlLearningAlgorithm}. Mirrors LearnLib's own {@code
+ * NLStarIT} (algorithms/active/nlstar/src/test/java/.../it/NLStarIT.java), which also extends
+ * {@code AbstractDFALearnerIT} and also passes {@code targetSize * targetSize} as the round
+ * cap -- NL* is a black-box learner over a nondeterministic hypothesis, so it can plausibly
+ * need more equivalence-query rounds to converge than a DFA-hypothesis learner does for the
+ * same target, and LearnLib's own maintainers already picked that bound for exactly this
+ * situation.
  *
  * <p>The two {@code ExampleKeylock} cases are run at a substituted size (see {@code
- * scale-sizes.properties}, key {@code keylock.lstar}, default 25) rather than LearnLib's real
- * size 100. Measured directly (see changes.md): the 100-state, single-symbol "chain" shape is
- * the textbook worst case for classical (Angluin '87) observation-table counterexample
- * handling, which lstar-rocq's extracted L* uses -- cost per round compounds (25 states: 39s;
- * 26: 127s; 27: 467s), so the real size-100 case does not complete in any practical amount of
- * time. 25 is the largest size confirmed to finish in well under a minute. KV and TTT don't
- * have this problem (discrimination-tree-based, not observation-table-based) and run the real
- * size-100 cases directly -- see {@link KVOCamlDFAIT}/{@link TTTOCamlDFAIT}.
+ * scale-sizes.properties}, key {@code keylock.nlstar}, default 9) rather than LearnLib's real
+ * size 100 -- the same kind of substitution {@link LstarOCamlDFAIT} makes for L* (there,
+ * key {@code keylock.lstar}, default 25), but NL* needs a much smaller bound: measured
+ * directly, NL*'s wall time on this chain shape roughly doubles per additional state (2.7s at
+ * n=5, 55.4s at n=9, 102.2s at n=10), so 9 is the largest size confirmed to stay under a
+ * minute -- well below L*'s ceiling of 25, consistent with NL*'s residual-language-inclusion
+ * checks being strictly more expensive per table cell than L*'s simple equality checks (see
+ * changes.md).
  */
-public class LstarOCamlDFAIT extends AbstractDFALearnerIT {
+public class NLStarOCamlDFAIT extends AbstractDFALearnerIT {
 
     @Override
     @Factory
     public Object[] createExampleITCases() {
-        int keylockSize = ScaleSizes.get("keylock.lstar");
+        int keylockSize = ScaleSizes.get("keylock.nlstar");
         List<DFALearningExample<?>> examples =
                 List.of(
                         ExampleAngluin.createExample(),
@@ -55,8 +59,6 @@ public class LstarOCamlDFAIT extends AbstractDFALearnerIT {
         return result.toArray();
     }
 
-    /** Mirrors AbstractDFALearnerIT's own (private) createAllVariantsITCase, since this class
-     * needs to call it with a substituted example list rather than the framework's default. */
     private <I> List<UniversalDeterministicLearnerITCase<I, Boolean, DFA<?, I>>> createAllVariantsITCase(
             DFALearningExample<I> example) {
         Alphabet<I> alphabet = example.getAlphabet();
@@ -71,6 +73,8 @@ public class LstarOCamlDFAIT extends AbstractDFALearnerIT {
     protected <I> void addLearnerVariants(
             Alphabet<I> alphabet, int targetSize, DFAMembershipOracle<I> mqOracle, DFALearnerVariantList<I> variants) {
         variants.addLearnerVariant(
-                "lstar-rocq", new OCamlLearningAlgorithm<>("lstar", OCamlBinary.SOCKET_LEARN, alphabet, targetSize, mqOracle));
+                "nlstar-rocq",
+                new NLStarOCamlLearningAlgorithm<>(OCamlBinary.SOCKET_LEARN, alphabet, targetSize, mqOracle),
+                targetSize * targetSize);
     }
 }

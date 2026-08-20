@@ -1,0 +1,64 @@
+################################################################
+# DFA suite raw output
+################################################################
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in org.lstarrocq.harness.ProtocolTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[lstar-rocq]/ExampleTinyDFA ... took [0.086s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleKeylock ... took [58.807s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleTinyDFA ... took [0.014s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleAngluin ... took [0.010s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[lstar-rocq]/ExamplePaulAndMary ... took [0.056s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleKeylock ... took [58.676s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[lstar-rocq]/ExampleAngluin ... took [0.020s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleAngluin ... took [0.009s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExamplePaulAndMary ... took [0.014s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleKeylock ... took [57.708s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExamplePaulAndMary ... took [0.017s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[ttt-rocq]/ExampleKeylock ... took [60.607s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test OCamlLearningAlgorithm[kv-rocq]/ExampleTinyDFA ... took [0.013s]
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 236.3 s -- in TestSuite
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+################################################################
+# Mealy/Moore suite raw output
+################################################################
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in org.lstarrocq.harness.ProtocolTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleStack ... took [0.065s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleRandomStateLocalInputMealy ... took [6.309s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleGrid ... took [0.699s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleStack ... took [0.015s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleShahbazGroz ... took [0.025s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MooreOCamlLearningAlgorithm[ttt_moore-rocq]/ExampleRandomMoore ... took [6.575s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleTinyMealy ... took [0.012s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleShahbazGroz ... took [0.010s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleRandomStateLocalInputMealy ... took [1648.468s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleStack ... took [0.027s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleCoffeeMachine ... took [0.024s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleRandomMealy ... took [6.479s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleRandomMealy ... took [34.643s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleTinyMealy ... took [0.012s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleGrid ... took [0.594s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MooreOCamlLearningAlgorithm[kv_moore-rocq]/ExampleRandomMoore ... took [6.280s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleCoffeeMachine ... took [0.146s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleRandomMealy ... took [6.490s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MooreOCamlLearningAlgorithm[lstar_moore-rocq]/ExampleRandomMoore ... took [32.214s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleRandomStateLocalInputMealy ... took [5.525s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[kv_mealy-rocq]/ExampleCoffeeMachine ... took [0.026s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleShahbazGroz ... took [0.011s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[lstar_mealy-rocq]/ExampleGrid ... took [0.274s]
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test MealyOCamlLearningAlgorithm[ttt_mealy-rocq]/ExampleTinyMealy ... took [0.008s]
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1757 s -- in TestSuite
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+################################################################
+# NFA suite raw output (partial - killed mid-run)
+################################################################
+[INFO] Running org.lstarrocq.harness.ProtocolTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s -- in org.lstarrocq.harness.ProtocolTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Running org.lstarrocq.harness.it.NLStarOCamlDFAIT
+[main] INFO de.learnlib.testsupport.it.learner.AbstractLearnerVariantITCase -  LEARNLIB_EVENT Passed learner integration test NLStarOCamlLearningAlgorithm[nlstar-rocq]/ExamplePaulAndMary ... took [5.104s]
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0

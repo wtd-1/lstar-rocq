@@ -50,15 +50,29 @@ public final class Protocol {
     }
 
     public static String configLine(List<String> alphabet, String target) {
-        StringBuilder syms = new StringBuilder();
-        for (int i = 0; i < alphabet.size(); i++) {
-            if (i > 0) {
-                syms.append(",");
-            }
-            syms.append('"').append(escape(alphabet.get(i))).append('"');
-        }
-        return "{\"type\":\"config\",\"alphabet\":[" + syms + "],\"target\":\""
+        return "{\"type\":\"config\",\"alphabet\":[" + jsonStringArray(alphabet) + "],\"target\":\""
                 + escape(target) + "\"}";
+    }
+
+    /** The Mealy/Moore handshake: same as the two-arg {@code config} line, plus an
+     * {@code "output_alphabet"} field -- a Mealy/Moore hypothesis carries an output alphabet
+     * that {@code AbstractMealyLearnerIT}/{@code AbstractMooreLearnerIT} never hand over (see
+     * {@link org.lstarrocq.harness.it.OutputAlphabetDiscovery}), unlike DFA/NFA's fixed
+     * two-value {@code Boolean}. */
+    public static String configLine(List<String> alphabet, List<String> outputAlphabet, String target) {
+        return "{\"type\":\"config\",\"alphabet\":[" + jsonStringArray(alphabet) + "],\"output_alphabet\":["
+                + jsonStringArray(outputAlphabet) + "],\"target\":\"" + escape(target) + "\"}";
+    }
+
+    private static String jsonStringArray(List<String> items) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < items.size(); i++) {
+            if (i > 0) {
+                sb.append(",");
+            }
+            sb.append('"').append(escape(items.get(i))).append('"');
+        }
+        return sb.toString();
     }
 
     /**
@@ -162,6 +176,26 @@ public final class Protocol {
         return type(json).map("eq"::equals).orElse(false);
     }
 
+    public static boolean isMqMealy(String json) {
+        return type(json).map("mq_mealy"::equals).orElse(false);
+    }
+
+    public static boolean isEqMealy(String json) {
+        return type(json).map("eq_mealy"::equals).orElse(false);
+    }
+
+    public static boolean isMqMoore(String json) {
+        return type(json).map("mq_moore"::equals).orElse(false);
+    }
+
+    public static boolean isEqMoore(String json) {
+        return type(json).map("eq_moore"::equals).orElse(false);
+    }
+
+    public static boolean isEqNfa(String json) {
+        return type(json).map("eq_nfa"::equals).orElse(false);
+    }
+
     /** Raw comma-separated symbol tokens carried by an {@code "mq"} request. */
     public static List<String> wordOf(String json) {
         Optional<String> raw = extractStringField("word", json);
@@ -215,6 +249,122 @@ public final class Protocol {
                             Integer.parseInt(transMatcher.group(3))));
         }
         return new Hypothesis(initial, ids, transitions, maxId + 1);
+    }
+
+    public record MealyTransitionEntry(int from, String input, int to, String output) {}
+
+    public record MealyHypothesis(int initialState, List<Integer> stateIds, List<MealyTransitionEntry> transitions) {}
+
+    /** Parses an {@code "eq_mealy"} request's hypothesis, as sent by
+     * lib/SocketTeacher.ml's {@code MakeProtocolMealyTeacher.serialize_mealy_to_json}: states
+     * carry no attribute of their own (Mealy output lives on transitions), so {@code "states"}
+     * entries are bare {@code {"id":I}}. */
+    public static MealyHypothesis parseMealyHypothesis(String json) {
+        int initial = extractIntField("initial_state", json);
+        List<Integer> stateIds = new ArrayList<>();
+        Matcher stateMatcher = Pattern.compile("\\{\"id\":\\s*(\\d+)\\}").matcher(json);
+        while (stateMatcher.find()) {
+            stateIds.add(Integer.parseInt(stateMatcher.group(1)));
+        }
+        List<MealyTransitionEntry> transitions = new ArrayList<>();
+        Matcher transMatcher =
+                Pattern.compile(
+                                "\\{\"from\":\\s*(\\d+),\\s*\"input\":\\s*\"([^\"]*)\",\\s*\"to\":\\s*(\\d+),\\s*"
+                                        + "\"output\":\\s*\"([^\"]*)\"\\}")
+                        .matcher(json);
+        while (transMatcher.find()) {
+            transitions.add(
+                    new MealyTransitionEntry(
+                            Integer.parseInt(transMatcher.group(1)),
+                            transMatcher.group(2),
+                            Integer.parseInt(transMatcher.group(3)),
+                            transMatcher.group(4)));
+        }
+        return new MealyHypothesis(initial, stateIds, transitions);
+    }
+
+    public record StateOutputEntry(int id, String output) {}
+
+    public record MooreHypothesis(
+            int initialState, List<StateOutputEntry> stateOutputs, List<TransitionEntry> transitions) {}
+
+    /** Parses an {@code "eq_moore"} request's hypothesis, as sent by
+     * lib/SocketTeacher.ml's {@code MakeProtocolMooreTeacher.serialize_moore_to_json}: output
+     * lives on states ({@code "state_outputs"}), not transitions, unlike Mealy. */
+    public static MooreHypothesis parseMooreHypothesis(String json) {
+        int initial = extractIntField("initial_state", json);
+        List<StateOutputEntry> stateOutputs = new ArrayList<>();
+        Matcher outputMatcher =
+                Pattern.compile("\\{\"id\":\\s*(\\d+),\\s*\"output\":\\s*\"([^\"]*)\"\\}").matcher(json);
+        while (outputMatcher.find()) {
+            stateOutputs.add(new StateOutputEntry(Integer.parseInt(outputMatcher.group(1)), outputMatcher.group(2)));
+        }
+        List<TransitionEntry> transitions = new ArrayList<>();
+        Matcher transMatcher =
+                Pattern.compile(
+                                "\\{\"from\":\\s*(\\d+),\\s*\"input\":\\s*\"([^\"]*)\",\\s*\"to\":\\s*(\\d+)\\}")
+                        .matcher(json);
+        while (transMatcher.find()) {
+            transitions.add(
+                    new TransitionEntry(
+                            Integer.parseInt(transMatcher.group(1)),
+                            transMatcher.group(2),
+                            Integer.parseInt(transMatcher.group(3))));
+        }
+        return new MooreHypothesis(initial, stateOutputs, transitions);
+    }
+
+    public record NFAHypothesis(
+            int numStates, List<Integer> acceptingIds, List<Integer> initialStates, List<TransitionEntry> transitions) {}
+
+    /** Parses an {@code "eq_nfa"} request's hypothesis, as sent by lib/SocketTeacher.ml's
+     * {@code MakeProtocolNFATeacher.serialize_nfa_to_json}: a set of initial states
+     * ({@code "initial_states"}) rather than one, and repeated {@code "transitions"} entries
+     * for the same (state, symbol) pair accumulate into a genuine relation rather than
+     * overwriting, since NL*'s hypothesis is an RFSA, not a DFA. */
+    public static NFAHypothesis parseNFAHypothesis(String json) {
+        List<Integer> initialStates = extractIntArrayField("initial_states", json);
+        List<Integer> acceptingIds = new ArrayList<>();
+        Matcher stateMatcher =
+                Pattern.compile("\\{\"id\":\\s*(\\d+),\\s*\"accept\":\\s*true\\}").matcher(json);
+        while (stateMatcher.find()) {
+            acceptingIds.add(Integer.parseInt(stateMatcher.group(1)));
+        }
+        Matcher idMatcher = Pattern.compile("\\{\"id\":\\s*(\\d+),\\s*\"accept\":\\s*(true|false)\\}").matcher(json);
+        int maxId = -1;
+        while (idMatcher.find()) {
+            maxId = Math.max(maxId, Integer.parseInt(idMatcher.group(1)));
+        }
+        List<TransitionEntry> transitions = new ArrayList<>();
+        Matcher transMatcher =
+                Pattern.compile(
+                                "\\{\"from\":\\s*(\\d+),\\s*\"input\":\\s*\"([^\"]*)\",\\s*\"to\":\\s*(\\d+)\\}")
+                        .matcher(json);
+        while (transMatcher.find()) {
+            transitions.add(
+                    new TransitionEntry(
+                            Integer.parseInt(transMatcher.group(1)),
+                            transMatcher.group(2),
+                            Integer.parseInt(transMatcher.group(3))));
+        }
+        return new NFAHypothesis(maxId + 1, acceptingIds, initialStates, transitions);
+    }
+
+    private static List<Integer> extractIntArrayField(String field, String json) {
+        Matcher arrayMatcher =
+                Pattern.compile("\"" + Pattern.quote(field) + "\"\\s*:\\s*\\[([^]]*)\\]").matcher(json);
+        if (!arrayMatcher.find()) {
+            return List.of();
+        }
+        String inner = arrayMatcher.group(1).trim();
+        if (inner.isEmpty()) {
+            return List.of();
+        }
+        List<Integer> items = new ArrayList<>();
+        for (String tok : inner.split(",")) {
+            items.add(Integer.parseInt(tok.trim()));
+        }
+        return items;
     }
 
     private static Pattern fieldStringPattern(String field) {

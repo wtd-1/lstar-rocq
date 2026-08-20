@@ -58,7 +58,7 @@ let targets = [alternating; ends_in_01; mod3]
 let config_line (t : target) : string =
   SocketProtocol.config_line
     ~alphabet:(Stdlib.List.init t.alphabet_size string_of_int)
-    ~target:t.name
+    ~target:t.name ()
 
 (** Runs [word] through the client's hypothesis automaton, as described by
     the ["eq"] request's parsed fields (see {!SocketProtocol.parse_transitions}

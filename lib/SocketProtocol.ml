@@ -127,12 +127,17 @@ let word_of_json (json : string) : string list =
   | Some raw ->
       String.split_on_char ',' raw
 
-type config = {alphabet: string list; target: string}
+type config = {alphabet: string list; output_alphabet: string list; target: string}
 
+(** [output_alphabet] is only present on the handshake for Mealy/Moore
+    targets (a DFA/NFA hypothesis carries no output alphabet at all); when
+    the field is absent, [extract_string_array_field] already returns
+    [[]], so this is safe to read unconditionally. *)
 let parse_config (json : string) : config option =
   if is_config json then
     Some
       { alphabet= extract_string_array_field "alphabet" json
+      ; output_alphabet= extract_string_array_field "output_alphabet" json
       ; target=
           ( match extract_string_field "target" json with
           | Some t ->
@@ -142,11 +147,19 @@ let parse_config (json : string) : config option =
   else
     None
 
-let config_line ~(alphabet : string list) ~(target : string) : string =
-  let syms =
-    String.concat "," (Stdlib.List.map (Printf.sprintf "%S") alphabet)
+let config_line ?(output_alphabet : string list = [])
+    ~(alphabet : string list) ~(target : string) () : string =
+  let quote_list l =
+    String.concat "," (Stdlib.List.map (Printf.sprintf "%S") l)
   in
-  Printf.sprintf {|{"type":"config","alphabet":[%s],"target":%S}|} syms target
+  let output_field =
+    if output_alphabet = [] then
+      ""
+    else
+      Printf.sprintf {|,"output_alphabet":[%s]|} (quote_list output_alphabet)
+  in
+  Printf.sprintf {|{"type":"config","alphabet":[%s]%s,"target":%S}|}
+    (quote_list alphabet) output_field target
 
 let done_line = {|{"type":"done"}|}
 
