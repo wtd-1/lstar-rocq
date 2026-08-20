@@ -109,11 +109,14 @@ Or from learnlib-harness/, a subset:
 `mvn -o verify -Dit.test=LstarOCamlDFAIT,NLStarOCamlDFAIT`
 
 Change a substituted size without touching code:
+
 `# edit learnlib-harness/scale-sizes.properties, or:`
 
 `mvn -o verify -Dit.test=NLStarOCamlDFAIT -Dkeylock.nlstar=15`
 
+
 Raw per-case log:
+
 `mvn -o verify -Dit.test=... > /tmp/run.log 2>&1`
 
 `grep "Passed learner integration test\|Tests run\|BUILD" /tmp/run.log`
