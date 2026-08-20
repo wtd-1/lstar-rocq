@@ -102,6 +102,7 @@ See more [examples](./examples/).
 ## How to run the tests yourself:
 
 `dune build                                    # build the OCaml side (socket_learn.exe)`
+
 `make harness-it                               # everything: dune build + full 44-case suite`
 
 Or from learnlib-harness/, a subset:
@@ -109,8 +110,10 @@ Or from learnlib-harness/, a subset:
 
 Change a substituted size without touching code:
 `# edit learnlib-harness/scale-sizes.properties, or:`
+
 `mvn -o verify -Dit.test=NLStarOCamlDFAIT -Dkeylock.nlstar=15`
 
 Raw per-case log:
 `mvn -o verify -Dit.test=... > /tmp/run.log 2>&1`
+
 `grep "Passed learner integration test\|Tests run\|BUILD" /tmp/run.log`
