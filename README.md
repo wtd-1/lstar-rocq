@@ -103,6 +103,8 @@ See more [examples](./examples/).
 
 `dune build                                    # build the OCaml side (socket_learn.exe)`
 
+THEN, run: `git checkout learnlib-harness` to switch to the learnlib-harness branch. After that:
+
 `make harness-it                               # everything: dune build + full 44-case suite`
 
 Or from learnlib-harness/, a subset:
